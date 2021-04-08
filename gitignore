@@ -1,8 +1,0 @@
-// Ignore python cache
-__pycache__/
-
-// Ignore the FairMOT paper
-2004.01888v5.pdf
-
-// Ignore jupyter checkpoints
-.ipynb_checkpoints/
