@@ -1,11 +1,4 @@
-import os.path as osp
-import os
-import numpy as np
-import json
-
-def mkdirs(d):
-    if not osp.exists(d):
-        os.makedirs(d)
+from src.download import mkdir
 
 def make_file(filename, dct):
     with open(filename, 'w') as f:

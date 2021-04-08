@@ -10,21 +10,19 @@ import numpy as np
 
 from cord.client import CordClient  # pip install cord-client-python
 
+from src.gen_labels import gen_seq_name_list, load_cord_data
 
 def mkdirs(d):
     """make dir if not exist"""
     if not osp.exists(d):
         os.makedirs(d)
 
+class SeqReadError(Exception):
+    pass
 
 def download_mp4(path='/content/drive/MyDrive/car_data/', seqs=None):
     if seqs is None:
-        seqs = [
-            'Heavy_traffic.mp4', 
-            'Highway_traffic_2.mp4', 
-            'Highway_traffic.mp4', 
-            'Light_traffic.mp4',
-        ]
+        raise SeqReadError('Error occured during reading seq_name from server')
     for seq in seqs:
         with open(path + seq + '/objects.json', "r") as f:
             data = json.load(f)
@@ -168,12 +166,13 @@ def save_mp4_frame_gen_seqini(seqs=None,
 
 
 if __name__ == '__main__':
-    seqs = [
-        'Heavy_traffic.mp4', 
-        'Highway_traffic_2.mp4', 
-        'Highway_traffic.mp4', 
-        'Light_traffic.mp4',
-    ]
+#    seqs = [
+#        'Heavy_traffic.mp4', 
+#        'Highway_traffic_2.mp4', 
+#        'Highway_traffic.mp4', 
+#        'Light_traffic.mp4',
+#    ]
+    seqs = gen_seq_name_list(load_cord_data())
     path = '/content/drive/MyDrive/car_data_MCMOT/'
     # save_root = '/content/drive/MyDrive/car_data_MCMOT/images/train'
     download_mp4(path, seqs)

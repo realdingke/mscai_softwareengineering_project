@@ -84,6 +84,20 @@ def gen_gt_txt(client, obj_type_dict, data_root):
             json.dump(cls2id, f, indent=3)
         with open(osp.join(cls_json_path, 'id2cls.json'), 'w') as f:
             json.dump(id2cls, f, indent=3)
+            
+    
+
+def gen_seq_name_list(client):
+    """
+    returns a list of all seq_names present in the current dataset
+    """
+    project = client.get_project()
+    
+    try:
+        return [client.get_label_row(label_uid)['data_title'] for label_uid in project.get_labels_list()]
+    except:
+        return None
+
 
 
 def gen_label_files(client, data_path, save_path, obj_type_dict):
