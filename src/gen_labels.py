@@ -2,7 +2,7 @@ import json
 import os.path as osp
 import numpy as np
 
-from src.cord_loader import load_cord_data, mkdirs
+from src.cord_loader import mkdirs
 
 
 def gen_gt_information(client, data_root):
@@ -79,7 +79,7 @@ def gen_gt_information(client, data_root):
             tid2objhash[val] = key
         with open(osp.join(seq_path, f"{seqs_str}/{seqs_str}_tid2objhash.json"), 'w') as f:
             json.dump(tid2objhash, f, indent=3)
-        
+
     # Generate cls and id relationship
     cls2id = obj_type_dict
     id2cls = {}

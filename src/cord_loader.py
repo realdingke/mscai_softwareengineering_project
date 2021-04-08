@@ -26,7 +26,7 @@ def load_cord_data(project_id='eec20d90-c014-4cd4-92ea-72341c3a1ab5',
 
 def gen_seq_name_list(client):
     """
-    returns a list of all seq_names present in the current dataset
+    returns a list of all seq_names present in the current project
     """
     project = client.get_project()
 
