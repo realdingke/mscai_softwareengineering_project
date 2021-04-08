@@ -89,7 +89,7 @@ def gen_gt_txt(client, obj_type_dict, data_root):
 
 def gen_seq_name_list(client):
     """
-    returns a list of all seq_names present in the current dataset
+    returns a list of all seq_names present in the current project
     """
     project = client.get_project()
     
