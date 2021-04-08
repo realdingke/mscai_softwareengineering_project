@@ -6,7 +6,7 @@ import random
 # random.seed(10) 
 
 
-def gen_data_path_half(save_path, 
+def _gen_data_path_half(save_path,
                        root_path, 
                        seq_list, 
                        mot_path='car_data_MCMOT/images/train'):
@@ -32,7 +32,7 @@ def gen_data_path_half(save_path,
     f.close()
 
 
-def gen_data_path_val(save_path, 
+def _gen_data_path_val(save_path,
                       root_path, 
                       seq_list, 
                       mot_path='car_data_MCMOT/images/train'):
@@ -56,7 +56,7 @@ def gen_data_path_val(save_path,
     f.close()
 
 
-def gen_data_path_emb(save_path, 
+def _gen_data_path_emb(save_path,
                       root_path, 
                       seq_list, 
                       mot_path='car_data_MCMOT/images/train'):
@@ -80,7 +80,7 @@ def gen_data_path_emb(save_path,
     f.close()
 
 
-def gen_data_path_all(save_path, 
+def _gen_data_path_all(save_path,
                       root_path, 
                       seq_list, 
                       mot_path='car_data_MCMOT/images/train'):
@@ -165,7 +165,7 @@ def gen_car_all_path(root_path,
             f.close()
 
 
-def generate_json(name, 
+def _generate_json(name,
                   root_path, 
                   cfg_path='/content/drive/MyDrive/FairMOT/FairMOT/src/lib/cfg/'):
     car_json = {
@@ -187,32 +187,40 @@ def generate_json(name,
         json.dump(car_json, f, indent=4)
 
 
-if __name__ == '__main__':
-    root_path = '/content/drive/MyDrive'
-    save_path = '/content/drive/MyDrive/MCMOT/src/data/'
-    cfg_path = '/content/drive/MyDrive/FairMOT/FairMOT/src/lib/cfg/'
-    mot_path = 'car_data_MCMOT/images/train'
-    name_lst = ['car_heavy', 'car_all', 'car_high1', 'car_high2']
-    seq_list = []
-    for name in name_lst:
-        if name == 'car_heavy':
-            seq_list = ['Heavy traffic.mp4']
-        elif name == 'car_high1':
-            seq_list = ['Highway traffic.mp4']
-        elif name == 'car_high2':
-            seq_list = ['Highway traffic2.mp4']
-        elif name == 'car_all':
-            seq_list = [
-                'Light traffic.mp4', 
-                'Heavy traffic.mp4', 
-                'Highway traffic.mp4', 
-                'Highway traffic2.mp4',
-            ]
-        # gen_data_path_half(save_path, root_path, seq_list, mot_path)
-        gen_data_path_val(save_path, root_path, seq_list, mot_path)
-        gen_data_path_emb(save_path, root_path, seq_list, mot_path)
-        gen_data_path_all(save_path, root_path, seq_list, mot_path)
-        generate_json(name, root_path, cfg_path)
+def generate_paths(name, root_path, seq_list, mot_path):
+    save_path = root_path + 'MCMOT/src/data/'
+    cfg_path = root_path + 'MCMOT/src/lib/cfg/'
+    _gen_data_path_val(save_path, root_path, seq_list, mot_path)
+    _gen_data_path_emb(save_path, root_path, seq_list, mot_path)
+    _gen_data_path_all(save_path, root_path, seq_list, mot_path)
+    _generate_json(name, root_path, cfg_path)
+
+# if __name__ == '__main__':
+#     root_path = '/content/drive/MyDrive/'
+#     save_path = '/content/drive/MyDrive/MCMOT/src/data/'
+#     cfg_path = '/content/drive/MyDrive/MCMOT/src/lib/cfg/'
+#     mot_path = 'car_data_MCMOT/images/train'
+#     name_lst = ['car_heavy', 'car_all', 'car_high1', 'car_high2']
+#     seq_list = []
+#     for name in name_lst:
+#         if name == 'car_heavy':
+#             seq_list = ['Heavy traffic.mp4']
+#         elif name == 'car_high1':
+#             seq_list = ['Highway traffic.mp4']
+#         elif name == 'car_high2':
+#             seq_list = ['Highway traffic2.mp4']
+#         elif name == 'car_all':
+#             seq_list = [
+#                 'Light traffic.mp4',
+#                 'Heavy traffic.mp4',
+#                 'Highway traffic.mp4',
+#                 'Highway traffic2.mp4',
+#             ]
+#         # gen_data_path_half(save_path, root_path, seq_list, mot_path)
+#         gen_data_path_val(save_path, root_path, seq_list, mot_path)
+#         gen_data_path_emb(save_path, root_path, seq_list, mot_path)
+#         gen_data_path_all(save_path, root_path, seq_list, mot_path)
+#         generate_json(name, root_path, cfg_path)
     # name_list = [
     #     'Light traffic.mp4', 
     #     'Heavy traffic.mp4', 

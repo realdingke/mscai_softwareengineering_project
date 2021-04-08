@@ -13,3 +13,5 @@ openpyxl==3.0.6
 Pillow==8.1.0
 tensorboardX==2.1
 ipykernel
+cord-client-python
+moviepy

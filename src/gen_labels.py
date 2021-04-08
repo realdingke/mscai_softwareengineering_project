@@ -1,47 +1,46 @@
-from cord.client import CordClient  # pip install cord-client-python
-
 import json
 import os.path as osp
 import numpy as np
 
-
-def mkdirs(d):
-    """make dir if not exist"""
-    if not osp.exists(d):
-        os.makedirs(d)
+from src.cord_loader import load_cord_data, mkdirs
 
 
-def load_cord_data(project_id='eec20d90-c014-4cd4-92ea-72341c3a1ab5',
-                   api_key='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ'):
-    client = CordClient.initialise(
-        project_id,  # Project ID of car
-        api_key  # API key
-    )
-
-    # Get project info (labels, datasets)
-    project = client.get_project()
-
-    return client
-
-
-def gen_gt_txt(client, obj_type_dict, data_root):
+def gen_gt_information(client, data_root):
     """generate gt.txt file for car dataset"""
     project = client.get_project()
+    obj_type_dict = {}
+    feature_hash_dict = {}
     seq_path = data_root + 'train/'
+    cls_json_path = seq_path
+    count = 0
     for label_uid in project.get_labels_list():
+        if count == 4:
+            break  # for car dataset only
+        count += 1
         gt_list = []
         obj_hash_dict = {}
         label = client.get_label_row(label_uid)
-        mkdirs(seq_path + f"{label['data_title']}/gt/")
-        seq_ini_file = osp.join(seq_path, f"{label['data_title']}", 'seqinfo.ini')
+        seqs_str = label['data_title']
+        ##swap all space in between the seq_name to '_'
+        pattern = '(?<=\w)\s(?=\w)'
+        try:
+            seqs_str = re.sub(pattern, '_', seqs_str)
+        except:
+            seqs_str = seqs_str
+        mkdirs(seq_path + f"{seqs_str}/gt/")
+        seq_ini_file = osp.join(seq_path, f"{seqs_str}", 'seqinfo.ini')
         seq_info = open(seq_ini_file).read()
         seq_width = int(seq_info[seq_info.find('imWidth=') + 8:seq_info.find('\nimHeight')])
         seq_height = int(seq_info[seq_info.find('imHeight=') + 9:seq_info.find('\nimExt')])
-        gt_path = osp.join(seq_path + f"{label['data_title']}", 'gt/gt.txt')
+        gt_path = osp.join(seq_path + f"{seqs_str}", 'gt/gt.txt')
         for frame in list(label['data_units'].values())[0]['labels'].keys():
             for obj in list(label['data_units'].values())[0]['labels'][frame]['objects']:
                 if obj['objectHash'] not in obj_hash_dict.keys():
                     obj_hash_dict[obj['objectHash']] = len(obj_hash_dict.keys()) + 1
+                if obj['value'] not in obj_type_dict.keys():
+                    obj_type_dict[obj['value']] = len(obj_type_dict)
+                if obj['featureHash'] not in feature_hash_dict.keys():
+                    feature_hash_dict[obj['featureHash']] = len(feature_hash_dict.keys())
 
                 gt_str = '{:d},{:d},{:.6f},{:.6f},{:.6f},{:.6f},{:d},{:d},{:d}\n'.format(
                     int(frame) + 1,
@@ -74,35 +73,36 @@ def gen_gt_txt(client, obj_type_dict, data_root):
 
             with open(gt_path, 'a') as f:
                 f.write(gt_str)
+        # generate the obj_hash-tid relation json
+        tid2objhash = {}
+        for key, val in obj_hash_dict.items():
+            tid2objhash[val] = key
+        with open(osp.join(seq_path, f"{seqs_str}/{seqs_str}_tid2objhash.json"), 'w') as f:
+            json.dump(tid2objhash, f, indent=3)
         
-        # Generate cls and id relationship        
-        cls2id = obj_type_dict
-        id2cls = {}
-        for key,val in cls2id.items():
-            id2cls[val] = key
-        with open(osp.join(cls_json_path, 'cls2id.json'), 'w') as f:
-            json.dump(cls2id, f, indent=3)
-        with open(osp.join(cls_json_path, 'id2cls.json'), 'w') as f:
-            json.dump(id2cls, f, indent=3)
-            
-    
+    # Generate cls and id relationship
+    cls2id = obj_type_dict
+    id2cls = {}
+    for key, val in cls2id.items():
+        id2cls[val] = key
+    with open(osp.join(cls_json_path, 'cls2id.json'), 'w') as f:
+        json.dump(cls2id, f, indent=3)
+    with open(osp.join(cls_json_path, 'id2cls.json'), 'w') as f:
+        json.dump(id2cls, f, indent=3)
+    reverse_featureHash_dct = {}
+    for key, val in feature_hash_dict.items():
+        reverse_featureHash_dct[val] = key
+    with open(osp.join(cls_json_path, 'featureHash.json'), 'w') as f:
+        json.dump(reverse_featureHash_dct, f, indent=3)
 
-def gen_seq_name_list(client):
-    """
-    returns a list of all seq_names present in the current dataset
-    """
+
+def gen_label_files(client, data_path, save_path, cls2id_dct):
     project = client.get_project()
-    
-    try:
-        return [client.get_label_row(label_uid)['data_title'] for label_uid in project.get_labels_list()]
-    except:
-        return None
-
-
-
-def gen_label_files(client, data_path, save_path, obj_type_dict):
-    project = client.get_project()
+    count = 0
     for label_uid in project.get_labels_list():
+        if count == 4:
+            break  # for car dataset only
+        count += 1
         label = client.get_label_row(label_uid)
         gt_path = data_path + f"train/{label['data_title']}/"
         gt_file_path = gt_path + 'gt/' + 'gt.txt'
@@ -117,7 +117,7 @@ def gen_label_files(client, data_path, save_path, obj_type_dict):
         idx = np.lexsort(gt_file.T[:2, :])  
         
         gt_file = gt_file[idx, :]
-        num_of_class = len(obj_type_dict) 
+        num_of_class = len(cls2id_dct)
         tid_last = dict()
         tid_curr = dict()
         for i in range(num_of_class):
@@ -164,18 +164,18 @@ def gen_label_files(client, data_path, save_path, obj_type_dict):
                 f.write(label_str)
 
 
-if __name__ == '__main__':
-    project_id = 'eec20d90-c014-4cd4-92ea-72341c3a1ab5'
-    api_key = 'T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ'
-    obj_type_dict = {
-        'bus': 4, 
-        'car': 0, 
-        'motorbike': 3, 
-        'pedestrian': 2, 
-        'truck': 1,
-    } # 从json读？
-    data_root = '/content/drive/MyDrive/car_data_MCMOT/images/'
-    label_path = '/content/drive/MyDrive/car_data_MCMOT/labels_with_ids/'
-    client = load_cord_data(project_id, api_key)
-    gen_gt_txt(client, obj_type_dict, data_root)
-    gen_label_files(client, data_root, label_path, obj_type_dict)
+# if __name__ == '__main__':
+#     project_id = 'eec20d90-c014-4cd4-92ea-72341c3a1ab5'
+#     api_key = 'T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ'
+#     obj_type_dict = {
+#         'bus': 4,
+#         'car': 0,
+#         'motorbike': 3,
+#         'pedestrian': 2,
+#         'truck': 1,
+#     } # 从json读？
+#     data_root = '/content/drive/MyDrive/car_data_MCMOT/images/'
+#     label_path = '/content/drive/MyDrive/car_data_MCMOT/labels_with_ids/'
+#     client = load_cord_data(project_id, api_key)
+#     gen_gt_txt(client, obj_type_dict, data_root)
+#     gen_label_files(client, data_root, label_path, obj_type_dict)

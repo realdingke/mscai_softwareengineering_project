@@ -4,51 +4,42 @@ import json
 import requests
 import time
 import cv2
-import moviepy
 import moviepy.editor as mpy  # pip install moviepy
 import numpy as np
 
-from cord.client import CordClient  # pip install cord-client-python
+from src.cord_loader import mkdirs
 
-from src.gen_labels import gen_seq_name_list, load_cord_data
-
-def mkdirs(d):
-    """make dir if not exist"""
-    if not osp.exists(d):
-        os.makedirs(d)
 
 class SeqReadError(Exception):
     pass
 
+
 def download_mp4(path='/content/drive/MyDrive/car_data/', seqs=None):
     if seqs is None:
         raise SeqReadError('Error occured during reading seq_name from server')
-    for seq in seqs:
-        with open(path + seq + '/objects.json', "r") as f:
+    for s in seqs:
+        with open(path + s + '/objects.json', "r") as f:
             data = json.load(f)
-        mkdirs(path + "/images/train/" + seq)
+        mkdirs(path + "/images/train/" + s)
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' + \
             ' AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
         }
-        url = data['dataLink']
+        url = data['data_link']
         movie_url = url
-        movie_name = data['dataTitle']
+        movie_name = data['data_title']
         downsize = 0
         print('Starting download')
-        start_time = time.time()
+        startTime = time.time()
         req = requests.get(movie_url, headers=headers, stream=True, verify=False)
-        with(open(path + "/images/train/" + seq + '/' + movie_name, 'wb')) as f:
+        with(open(path + "/images/train/" + s + '/' + movie_name, 'wb')) as f:
             for chunk in req.iter_content(chunk_size=10000):
                 if chunk:
                     f.write(chunk)
                     downsize += len(chunk)
-                    line = 'downloading %d KB/s - %.2f MBÃ¯Â¼Å’ in total %.2f MB'
+                    line = 'downloading %d KB/s - %.2f MB， in total %.2f MB'
                     line = line % (
-                        downsize / 1024 / (time.time() - start_time), 
-                        downsize / 1024 / 1024, 
-                        downsize / 1024 / 1024,
-                    )
+                        downsize / 1024 / (time.time() - startTime), downsize / 1024 / 1024, downsize / 1024 / 1024)
                     print(line)
 
 
@@ -65,8 +56,8 @@ def download_pics(path='/content/drive/MyDrive/food_data/'):
 
 
 class LoadVideo:  # for inference
-    def __init__(self, 
-                 save_root='/content/drive/MyDrive/car_data_MCMOT/images/train', 
+    def __init__(self,
+                 save_root='/content/drive/MyDrive/car_data_MCMOT/images/train',
                  seq_name='Heavy_traffic.mp4'):
         self.path = osp.join(save_root, seq_name, seq_name)
         self.save_path = osp.join(save_root, f"{seq_name}/img1")
@@ -98,7 +89,7 @@ class LoadVideo:  # for inference
 
             if ret is True:
                 cv2.imwrite(
-                    (self.save_path + "/{:06d}.jpg".format(frame_idx + 1)), 
+                    (self.save_path + "/{:06d}.jpg".format(frame_idx + 1)),
                     frame1,
                 )
 
@@ -121,25 +112,26 @@ class LoadVideo:  # for inference
         return self
 
 
-def generate_seqinfo(video, seq, path):
+def _generate_seqinfo(video, seq, path):
     """generate seqinfo.ini file for current seq dataset"""
     width = video.width
     height = video.height
     length = video.vn
     frame_rate = video.frame_rate
     info = '[Sequence]\nname=' + seq + '\nimDir=img1\n' + \
-            'frameRate={:.6f}\nseqLength={:d}\nimWidth={:d}\nimHeight={:d}\n'.format(
-                frame_rate, 
-                length, 
-                width, 
-                height,
-            ) + 'imExt=.jpg\n'
+           'frameRate={:.6f}\nseqLength={:d}\nimWidth={:d}\nimHeight={:d}\n'.format(
+               frame_rate,
+               length,
+               width,
+               height,
+           ) + 'imExt=.jpg\n'
     with open(path + 'images/train/' + seq + '/seqinfo.ini', 'w') as f:
         f.write(info)
-        
-def extract_images(path, save_dir):
+
+
+def _extract_images(path, save_dir):
     myclip = mpy.VideoFileClip(path)
-    times = np.linspace(0, myclip.duration, num= round(myclip.duration * myclip.fps))
+    times = np.linspace(0, myclip.duration, num=round(myclip.duration * myclip.fps))
     frame_count = 1
     mkdirs(save_dir)
     for time in times:
@@ -148,33 +140,32 @@ def extract_images(path, save_dir):
         frame_count += 1
 
 
-def save_mp4_frame_gen_seqini(seqs=None, 
+def save_mp4_frame_gen_seqini(seqs=None,
                               path='/content/drive/MyDrive/car_data_MCMOT/'):
     if seqs is None:
         seqs = [
-            'Heavy_traffic.mp4', 
+            'Heavy_traffic.mp4',
             'Highway_traffic_2.mp4',
-            'Highway_traffic.mp4', 
+            'Highway_traffic.mp4',
             'Light_traffic.mp4',
         ]
     save_root = path + 'images/train'
     for seq in seqs:
         v1 = LoadVideo(save_root=save_root, seq_name=seq)
-        #v1.save_imgs()    #save imgs func now being superceded by the moviepy method
-        extract_images(v1.path, v1.save_path)
-        generate_seqinfo(v1, seq, path)
+        # v1.save_imgs()    #save imgs func now being superceded by the moviepy method
+        _extract_images(v1.path, v1.save_path)
+        _generate_seqinfo(v1, seq, path)
 
-
-if __name__ == '__main__':
+# if __name__ == '__main__':
 #    seqs = [
 #        'Heavy_traffic.mp4', 
 #        'Highway_traffic_2.mp4', 
 #        'Highway_traffic.mp4', 
 #        'Light_traffic.mp4',
 #    ]
-    seqs = gen_seq_name_list(load_cord_data())
-    path = '/content/drive/MyDrive/car_data_MCMOT/'
-    # save_root = '/content/drive/MyDrive/car_data_MCMOT/images/train'
-    download_mp4(path, seqs)
-    # download_pics(path='/content/drive/MyDrive/food_data/') # for food
-    save_mp4_frame_gen_seqini(seqs, path)
+#     seqs = gen_seq_name_list(load_cord_data())
+#     path = '/content/drive/MyDrive/car_data_MCMOT/'
+#     # save_root = '/content/drive/MyDrive/car_data_MCMOT/images/train'
+#     download_mp4(path, seqs)
+#     # download_pics(path='/content/drive/MyDrive/food_data/') # for food
+#     save_mp4_frame_gen_seqini(seqs, path)

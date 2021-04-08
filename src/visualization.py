@@ -11,6 +11,21 @@ from cord.utils import label_utils
 from cord.client import CordClient  # ! pip install cord-client-python
 
 
+COLORS = [
+    '#D33115',
+    '#1979a9',
+    '#e07b39',
+    '#edb06b',
+    '#69bdd2',
+    '#80391e',
+    '#1c100b',
+    '#ebdab4',
+    '#042f66',
+    '#b97455',
+    '#44bcd8',
+]
+
+
 def mkdirs(d):
     if not osp.exists(d):
         os.makedirs(d)
@@ -32,7 +47,8 @@ def gen_new_obj(tid,
                 conf, 
                 clsid, 
                 seq_width, 
-                seq_height, 
+                seq_height,
+                id2color_dict,
                 tid2objhash_dct, 
                 id2cls_dict, 
                 featureHash_dct,
@@ -42,7 +58,7 @@ def gen_new_obj(tid,
 
     data_dct['name'] = id2cls_dict[clsid][0].capitalize() + \
                        id2cls_dict[clsid][1:]
-    data_dct['color'] = '#D33115'
+    data_dct['color'] = id2color_dict[clsid]
     data_dct['shape'] = 'bounding_box'
     data_dct['value'] = id2cls_dict[clsid]
     data_dct['createdAt'] = datetime.utcnow().strftime(gmt_format)
@@ -74,6 +90,9 @@ def upload_results(client,
         id2cls_dict = json.load(f)
     with open(featureHash_dct_path, 'r') as f:
         featureHash_dct = json.load(f)
+    id2color_dict = dict()
+    for idx, clsid in enumerate(id2cls_dict.keys()):
+        id2color_dict[clsid] = COLORS[idx]
     project = client.get_project()
     for label_uid in project.get_labels_list():
         label = client.get_label_row(label_uid)
@@ -124,7 +143,8 @@ def upload_results(client,
                 conf, 
                 clsid, 
                 seq_width, 
-                seq_height, 
+                seq_height,
+                id2color_dict,
                 tid2objhash_dct, 
                 id2cls_dict,
                 featureHash_dct, 
