@@ -94,7 +94,7 @@ def _init_parser():
         "--data_root",
         type=str,
         nargs='?',
-        default='data/',
+        default='/data/',
         help="User input the root directory for storing data",
     )
 
@@ -185,8 +185,8 @@ def main():
         
         name = args.json_name
         mot_path = args.data_root + 'images/train'
-        mkdirs(root_path + 'MCMOT/src/data/')
-        mkdirs(root_path + 'MCMOT/src/lib/cfg/')
+        mkdirs(root_path + '/MCMOT/src/data/')
+        mkdirs(root_path + '/MCMOT/src/lib/cfg/')
         gen_data_path.generate_paths(name, root_path, seqs, mot_path)
 
 

@@ -11,7 +11,7 @@ def _gen_data_path_half(save_path,
                        root_path, 
                        seq_list, 
                        mot_path='car_data_MCMOT/images/train'):
-    real_path = osp.join(root_path, mot_path)
+    real_path = root_path + mot_path
     seq_names = [s for s in sorted(os.listdir(real_path))]
     with open(save_path + 'car_all.half', 'w') as f:
         for seq_name in seq_names:
@@ -37,7 +37,7 @@ def _gen_data_path_val(save_path,
                       root_path, 
                       seq_list, 
                       mot_path='car_data_MCMOT/images/train'):
-    real_path = osp.join(root_path, mot_path)
+    real_path = root_path + mot_path
     seq_names = [s for s in sorted(os.listdir(real_path))]
     with open(save_path + 'car_all.val', 'w') as f:
         for seq_name in seq_names:
@@ -61,7 +61,7 @@ def _gen_data_path_emb(save_path,
                       root_path, 
                       seq_list, 
                       mot_path='car_data_MCMOT/images/train'):
-    real_path = osp.join(root_path, mot_path)
+    real_path = root_path + mot_path
     seq_names = [s for s in sorted(os.listdir(real_path))]
     with open(save_path + 'car_all.emb', 'w') as f:
         for seq_name in seq_names:
@@ -85,7 +85,7 @@ def _gen_data_path_all(save_path,
                       root_path, 
                       seq_list, 
                       mot_path='car_data_MCMOT/images/train'):
-    real_path = os.path.join(root_path, mot_path)
+    real_path = root_path + mot_path
     seq_names = [s for s in sorted(os.listdir(real_path))]
     with open(save_path + 'car_all.train', 'w') as f:
         for seq_name in seq_names:
@@ -346,8 +346,8 @@ def _generate_json(name,
 
 
 def generate_paths(name, root_path, seq_list, mot_path):
-    save_path = root_path + 'MCMOT/src/data/'
-    cfg_path = root_path + 'MCMOT/src/lib/cfg/'
+    save_path = root_path + '/MCMOT/src/data/'
+    cfg_path = root_path + '/MCMOT/src/lib/cfg/'
     _gen_data_path_val(save_path, root_path, seq_list, mot_path)
     _gen_data_path_emb(save_path, root_path, seq_list, mot_path)
     _gen_data_path_all(save_path, root_path, seq_list, mot_path)

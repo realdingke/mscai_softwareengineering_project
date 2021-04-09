@@ -25,7 +25,7 @@ def download_mp4(path='/content/drive/MyDrive/car_data_MCMOT/', seqs=None):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' + \
             ' AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
         }
-        url = data['data_units'].values()[0]['data_link']
+        url = list(data['data_units'].values())[0]['data_link']
         movie_url = url
         movie_name = data['data_title']
         downsize = 0
