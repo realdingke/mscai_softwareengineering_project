@@ -207,7 +207,7 @@ def gen_all_data_path(root_path = '/content/drive/MyDrive' ,
                                 trk_id_old = trk_id
                                 trk_id_new += 1   
                             line[1] = str(trk_id_new)   
-                            line[0] = str(frame - len_train -first_frame_idx +1 )
+                            line[0] = str(frame - len_train - first_frame_idx +1 )
                             obj_str = ",".join(line)
                             f.write(obj_str)
                         
