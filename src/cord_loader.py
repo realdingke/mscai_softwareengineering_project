@@ -4,6 +4,9 @@ import os
 import os.path as osp
 import json
 
+class ClientError(Exception):
+    pass
+
 
 def mkdirs(d):
     """make dir if not exist"""
@@ -13,15 +16,18 @@ def mkdirs(d):
 
 def load_cord_data(project_id='eec20d90-c014-4cd4-92ea-72341c3a1ab5',
                    api_key='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ'):
-    client = CordClient.initialise(
-        project_id,  # Project ID of car
-        api_key  # API key
-    )
+    try:
+        client = CordClient.initialise(
+            project_id,  # Project ID of car
+            api_key  # API key
+        )
+        # Get project info (labels, datasets)
+        project = client.get_project()
 
-    # Get project info (labels, datasets)
-    project = client.get_project()
+        return client
 
-    return client
+    except:
+        raise ClientError('Unable to load, please check the project id and API key')
 
 
 def gen_seq_name_list(client):

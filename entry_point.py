@@ -2,8 +2,8 @@ import argparse
 
 from src import preprocess, gen_labels, gen_data_path
 from src.cord_loader import load_cord_data, gen_seq_name_list, get_cls_info, mkdirs
-        
-        
+
+
 def _init_parser():
     """
     Parser for command line arguments for the program
@@ -11,8 +11,8 @@ def _init_parser():
 
     parser = argparse.ArgumentParser(
         description="Decision tree training on "
-        "clean and noisy data sets. "
-        "With pruning capabilities",
+                    "clean and noisy data sets. "
+                    "With pruning capabilities",
         allow_abbrev=False,
     )
     # parser.add_argument(
@@ -61,6 +61,20 @@ def _init_parser():
         help="test the whole parser function",
     )
 
+    parser.add_argument(
+        "--project",
+        type=str,
+        default='eec20d90-c014-4cd4-92ea-72341c3a1ab5',
+        help="Input the project ID",
+    )
+
+    parser.add_argument(
+        "--api",
+        type=str,
+        default='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ',
+        help="Input the API key",
+    )
+
     args = parser.parse_args()
     return args
 
@@ -107,8 +121,8 @@ def main():
     #     )
     #     functions.train_and_plot_tree(noisy_data, args.FOLD, args.prune)
     if args.test:
-        project_id = 'eec20d90-c014-4cd4-92ea-72341c3a1ab5'
-        api_key = 'T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ'
+        project_id = args.project
+        api_key = args.api
         client = load_cord_data(project_id, api_key)
         seqs = gen_seq_name_list(client)
         root_path = 'E:/GroupProject/'
@@ -128,8 +142,5 @@ def main():
         gen_data_path.generate_paths(name, root_path, seqs, mot_path)
 
 
-
 if __name__ == "__main__":
     main()
-
-    
