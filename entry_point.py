@@ -63,11 +63,23 @@ def _init_parser():
     )
 
     parser.add_argument(
+        "--load_api",
+        action="store_true",
+        help="test the whole parser function",
+    )
+
+    parser.add_argument(
+        "--gen_info",
+        action="store_true",
+        help="test the whole parser function",
+    )
+
+    parser.add_argument(
         "--project",
         type=str,
         nargs='?',
         default='eec20d90-c014-4cd4-92ea-72341c3a1ab5',
-        help="Input the project ID",
+        help="User input the project ID",
     )
 
     parser.add_argument(
@@ -75,7 +87,23 @@ def _init_parser():
         type=str,
         nargs='?',
         default='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ',
-        help="Input the API key",
+        help="User input the API key",
+    )
+
+    parser.add_argument(
+        "--data_root",
+        type=str,
+        nargs='?',
+        default='data/',
+        help="User input the root directory for storing data",
+    )
+
+    parser.add_argument(
+        "--json_name",
+        type=str,
+        nargs='?',
+        default='user_input',
+        help="User input the name for training information json file",
     )
 
     args = parser.parse_args()
@@ -123,13 +151,24 @@ def main():
     #         )
     #     )
     #     functions.train_and_plot_tree(noisy_data, args.FOLD, args.prune)
+    if args.load_api:
+        project_id = args.project
+        api_key = args.api
+        args.client = load_cord_data(project_id, api_key)
+    if args.gen_info:
+        root_path = os.getcwd()
+        print(root_path)
+        data_path = root_path + args.data_root
+        mkdirs(data_path)
+        seqs = gen_seq_name_list(args.client)
+        gen_obj_json(data_path, client=args.client)
     if args.test:
         project_id = args.project
         api_key = args.api
         client = load_cord_data(project_id, api_key)
         
         root_path = os.getcwd()
-        data_path = root_path + 'data/'
+        data_path = root_path + args.data_root
         mkdirs(data_path)
         
         seqs = gen_seq_name_list(client)
@@ -144,8 +183,8 @@ def main():
         cls2id_dct, _ = get_cls_info(data_root + 'train/')
         gen_labels.gen_label_files(client, data_root, label_path, cls2id_dct)
         
-        name = 'test'
-        mot_path = 'data/images/train'
+        name = args.json_name
+        mot_path = args.data_root + 'images/train'
         mkdirs(root_path + 'MCMOT/src/data/')
         mkdirs(root_path + 'MCMOT/src/lib/cfg/')
         gen_data_path.generate_paths(name, root_path, seqs, mot_path)
