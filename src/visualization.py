@@ -6,25 +6,27 @@ import numpy as np
 import json
 import re
 import uuid
+import random
 from datetime import datetime
 from cord.utils import label_utils
 from cord.client import CordClient  # ! pip install cord-client-python
 
 
-COLORS = [
-    '#D33115',
-    '#1979a9',
-    '#e07b39',
-    '#edb06b',
-    '#69bdd2',
-    '#80391e',
-    '#1c100b',
-    '#ebdab4',
-    '#042f66',
-    '#b97455',
-    '#44bcd8',
-]
+#COLORS = [
+#    '#D33115',
+#    '#1979a9',
+#    '#e07b39',
+#    '#edb06b',
+#    '#69bdd2',
+#    '#80391e',
+#    '#1c100b',
+#    '#ebdab4',
+#    '#042f66',
+#    '#b97455',
+#    '#44bcd8',
+#]
 
+gen_random_hexcolor = lambda: '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))
 
 def mkdirs(d):
     if not osp.exists(d):
@@ -92,7 +94,10 @@ def upload_results(client,
         featureHash_dct = json.load(f)
     id2color_dict = dict()
     for idx, clsid in enumerate(id2cls_dict.keys()):
-        id2color_dict[clsid] = COLORS[idx]
+        hexcolor_code = gen_random_hexcolor()
+        while hexcolor_code in id2color_dict.values():
+            hexcolor_code = gen_random_hexcolor()
+        id2color_dict[clsid] = hexcolor_code
     project = client.get_project()
     for label_uid in project.get_labels_list():
         label = client.get_label_row(label_uid)
