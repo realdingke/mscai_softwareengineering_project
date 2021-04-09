@@ -1,6 +1,6 @@
 import argparse
 
-from src import download, gen_labels, gen_data_path
+from src import preprocess, gen_labels, gen_data_path
 from src.cord_loader import load_cord_data, gen_seq_name_list, get_cls_info, mkdirs
         
         
@@ -114,8 +114,8 @@ def main():
         root_path = 'E:/GroupProject/'
         data_path = root_path + 'data/'
         mkdirs(data_path)
-        download.download_mp4(data_path, seqs)
-        download.save_mp4_frame_gen_seqini(seqs, data_path)
+        preprocess.download_mp4(data_path, seqs)
+        preprocess.save_mp4_frame_gen_seqini(seqs, data_path)
         data_root = data_path + 'images/'
         label_path = data_path + 'labels_with_ids/'
         gen_labels.gen_gt_information(client, data_root)
