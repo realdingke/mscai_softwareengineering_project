@@ -53,3 +53,14 @@ def get_cls_info(root='/content/drive/MyDrive/car_data_MCMOT/images/train/'):
             id2cls_dct_new[int(i)] = id2cls_dct[i]
 
     return cls2id_dct, id2cls_dct_new
+
+
+def gen_obj_json(root='/content/drive/MyDrive/car_data_MCMOT/', client=load_cord_data()):
+    project = client.get_project()
+    for label_uid in project.get_labels_list():
+        label = client.get_label_row(label_uid)
+        seq_name = label['data_title']
+        filename = root + seq_name + '/objects.json'
+        with open(filename, 'w') as f:
+            json.dump(label, f)
+        

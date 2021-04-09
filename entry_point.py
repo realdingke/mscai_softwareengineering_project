@@ -1,7 +1,8 @@
 import argparse
+import os
 
 from src import preprocess, gen_labels, gen_data_path
-from src.cord_loader import load_cord_data, gen_seq_name_list, get_cls_info, mkdirs
+from src.cord_loader import load_cord_data, gen_seq_name_list, get_cls_info, gen_obj_json, mkdirs
 
 
 def _init_parser():
@@ -64,6 +65,7 @@ def _init_parser():
     parser.add_argument(
         "--project",
         type=str,
+        nargs='?',
         default='eec20d90-c014-4cd4-92ea-72341c3a1ab5',
         help="Input the project ID",
     )
@@ -71,6 +73,7 @@ def _init_parser():
     parser.add_argument(
         "--api",
         type=str,
+        nargs='?',
         default='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ',
         help="Input the API key",
     )
@@ -124,17 +127,23 @@ def main():
         project_id = args.project
         api_key = args.api
         client = load_cord_data(project_id, api_key)
-        seqs = gen_seq_name_list(client)
-        root_path = 'E:/GroupProject/'
+        
+        root_path = os.getcwd()
         data_path = root_path + 'data/'
         mkdirs(data_path)
+        
+        seqs = gen_seq_name_list(client)
+        gen_obj_json(data_path, client=client)
+        
         preprocess.download_mp4(data_path, seqs)
         preprocess.save_mp4_frame_gen_seqini(seqs, data_path)
+        
         data_root = data_path + 'images/'
         label_path = data_path + 'labels_with_ids/'
         gen_labels.gen_gt_information(client, data_root)
         cls2id_dct, _ = get_cls_info(data_root + 'train/')
         gen_labels.gen_label_files(client, data_root, label_path, cls2id_dct)
+        
         name = 'test'
         mot_path = 'data/images/train'
         mkdirs(root_path + 'MCMOT/src/data/')

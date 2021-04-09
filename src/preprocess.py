@@ -14,7 +14,7 @@ class SeqReadError(Exception):
     pass
 
 
-def download_mp4(path='/content/drive/MyDrive/car_data/', seqs=None):
+def download_mp4(path='/content/drive/MyDrive/car_data_MCMOT/', seqs=None):
     if seqs is None:
         raise SeqReadError('Error occured during reading seq_name from server')
     for s in seqs:
@@ -25,7 +25,7 @@ def download_mp4(path='/content/drive/MyDrive/car_data/', seqs=None):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' + \
             ' AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
         }
-        url = data['data_link']
+        url = data['data_units'].values()[0]['data_link']
         movie_url = url
         movie_name = data['data_title']
         downsize = 0
@@ -48,8 +48,8 @@ def download_pics(path='/content/drive/MyDrive/food_data/'):
         with open(path + s + '/objects.json', "r") as f:
             data = json.load(f)
         mkdirs(path + "/images/train/" + s)
-        for i, link in enumerate(data['imageLabels']):
-            url = link['dataLink']
+        for i, link in enumerate(data['data_units'].values()):
+            url = link['data_link']
             r = requests.get(url, allow_redirects=True)
             with open(path + "/images/train/" + s + f"/frame{i}.jpg", 'wb') as f:
                 f.write(r.content)
