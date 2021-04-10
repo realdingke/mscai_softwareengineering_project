@@ -135,12 +135,12 @@ def main():
         gen_data_path.generate_json(name, root_path, cfg_path)
         
         test_data_path = 'test_'
-        for i in range(len(gen_seq_name_list(client)):
+        for i in range(len(gen_seq_name_list(client))):
             if len(args.split_perc)!=0:
                 test_data_path += str(args.split_perc[i]) + '_'
             else:
                 break
-        
+        # modified gen_all_data_path
         gen_all_data_path(
             root_path = paths.ROOT_PATH,
             project_name = paths.DATA_REL_PATH,
