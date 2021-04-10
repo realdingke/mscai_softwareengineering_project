@@ -1,0 +1,12 @@
+{
+    "root": "/content/drive/MyDrive/",
+    "train": {
+        "car_all": "./data/truck_and_bus.train"
+    },
+    "test_emb": {
+        "car_all": "./data/truck_and_bus.train"
+    },
+    "test": {
+        "car_all": "./data/truck_and_bus.train"
+    }
+}

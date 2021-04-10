@@ -1,0 +1,12 @@
+{
+    "root": "/content/drive/MyDrive/",
+    "train": {
+        "car_heavy": "./data/car_heavy.train"
+    },
+    "test_emb": {
+        "car_heavy": "./data/car_heavy.train"
+    },
+    "test": {
+        "car_heavy": "./data/car_heavy.train"
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "root": "/content/drive/MyDrive/",
+    "train": {
+        "cattle": "./data/cattle.train"
+    },
+    "test_emb": {
+        "cattle": "./data/cattle.train"
+    },
+    "test": {
+        "cattle": "./data/cattle.train"
+    }
+}
