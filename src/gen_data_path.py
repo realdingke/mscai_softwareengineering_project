@@ -323,7 +323,7 @@ def gen_all_data_path(root_path = '/content/drive/MyDrive' ,
                     f.close()
 
 
-def _generate_json(name,
+def generate_json(name,
                   root_path, 
                   cfg_path='/content/drive/MyDrive/FairMOT/FairMOT/src/lib/cfg/'):
     car_json = {
@@ -337,21 +337,24 @@ def _generate_json(name,
                 f"{name}": f"./data/{name}.emb"
             },
         "test":
+#            {
+#                f"{name}": f"./data/{name}.val"
+#            }
             {
-                f"{name}": f"./data/{name}.val"
+                f"{name}": f"./data/{name}.test"
             }
     }
     with open(cfg_path + f"{name}.json", "w") as f:
         json.dump(car_json, f, indent=4)
 
 
-def generate_paths(name, root_path, seq_list, mot_path):
-    save_path = root_path + '/MCMOT/src/data/'
-    cfg_path = root_path + '/MCMOT/src/lib/cfg/'
-    _gen_data_path_val(save_path, root_path, seq_list, mot_path)
-    _gen_data_path_emb(save_path, root_path, seq_list, mot_path)
-    _gen_data_path_all(save_path, root_path, seq_list, mot_path)
-    _generate_json(name, root_path, cfg_path)
+#def generate_paths(name, root_path, seq_list, mot_path):
+#    save_path = root_path + '/MCMOT/src/data/'
+#    cfg_path = root_path + '/MCMOT/src/lib/cfg/'
+#    _gen_data_path_val(save_path, root_path, seq_list, mot_path)
+#    _gen_data_path_emb(save_path, root_path, seq_list, mot_path)
+#    _gen_data_path_all(save_path, root_path, seq_list, mot_path)
+#    _generate_json(name, root_path, cfg_path)
 
 # if __name__ == '__main__':
 #     root_path = '/content/drive/MyDrive/'
