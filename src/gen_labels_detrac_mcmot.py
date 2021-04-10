@@ -9,7 +9,7 @@ import numpy as np
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 from tqdm import tqdm
-from gen_mcmot_for_detect import target_types, classes, bbox_format
+
 import json
 
 # class name and class id mapping
