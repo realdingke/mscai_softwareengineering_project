@@ -5,10 +5,11 @@ import motmetrics as mm
 mm.lap.default_solver = 'lap'
  
 
-from tracking_utils.io import read_results, unzip_objs, read_MC_results, unzip_mc_objs
+from lib.tracking_utils.io import read_results, unzip_objs, read_MC_results, unzip_mc_objs
+# from tracking_utils.io import read_results, unzip_objs, read_MC_results, unzip_mc_objs
 from gen_labels_detrac_mcmot import get_cls_info
 
-CLS_NAME_DCT = {4: 'bus', 0: 'car', 3: 'motorbike', 2: 'pedestrian', 1: 'truck'}
+# CLS_NAME_DCT = {4: 'bus', 0: 'car', 3: 'motorbike', 2: 'pedestrian', 1: 'truck'}
 CLS_NAME_DCT = get_cls_info(root='/content/drive/MyDrive/car_data_MCMOT/images/train/')[1]
 
 class Evaluator(object):
@@ -137,7 +138,8 @@ class MCEvaluator(object):
         
     
     def load_annotations(self):
-        """override the single class evaluator's loading func"""
+        """override the single class evaluator's loading func
+        """
         assert self.data_type == 'mot'
 
         gt_filename = os.path.join(self.data_root, self.seq_name, 'gt', 'gt.txt')
@@ -147,7 +149,8 @@ class MCEvaluator(object):
         
         
     def eval_frame(self, frame_id, trk_tlwhs, trk_ids, trk_cls_ids):
-        """override the single class evaluator's eval_frame()"""
+        """override the single class evaluator's eval_frame()
+        """
         
         trk_tlwhs = np.copy(trk_tlwhs)
         trk_ids = np.copy(trk_ids)
@@ -171,7 +174,7 @@ class MCEvaluator(object):
                     gt_class_bboxes[cls_id].append(gt_tlwh)
                     gt_class_tid[cls_id].append(gt_id)
                     
-        #populate tracking class-bbox dict
+        # populate tracking class-bbox dict
         trk_class_bboxes = {}
         trk_class_tid = {}
         for cls_num in set(trk_cls_ids):
@@ -185,13 +188,16 @@ class MCEvaluator(object):
                     trk_class_bboxes[trk_cls_id].append(trk_tlwh)
                     trk_class_tid[trk_cls_id].append(trk_id)
         
-        # ious_allcls_perframe = [mm.distances.iou_matrix(gt_bbox_info, trk_class_bboxes[cls_num], max_iou=0.5) for cls_num, gt_bbox_info in gt_class_bboxes.items() if cls_num in trk_class_bboxes.keys()]
+#        ious_allcls_perframe = [mm.distances.iou_matrix(gt_bbox_info, trk_class_bboxes[cls_num], max_iou=0.5)
+#                                for cls_num, gt_bbox_info in gt_class_bboxes.items()
+#                                if cls_num in trk_class_bboxes.keys()]
         
         # self.accumulator_lst = self.reset_accumulator(len(CLS_NAME_DCT))
 
         # update accs
-        # for cls_num in gt_class_bboxes.keys():
-        #     self.accumulator_lst[cls_num].update(gt_class_tid[cls_num], trk_class_tid[cls_num], ious_allcls_perframe[cls_num])
+#        for cls_num in gt_class_bboxes.keys():
+#            self.accumulator_lst[cls_num].update(gt_class_tid[cls_num], trk_class_tid[cls_num],
+#                                                 ious_allcls_perframe[cls_num])
         
         # for cls_num in range(len(CLS_NAME_DCT)):
         #     if cls_num in gt_class_bboxes.keys() and cls_num in trk_class_bboxes.keys():
@@ -210,14 +216,6 @@ class MCEvaluator(object):
                 self.accumulator_lst[cls_num].update(gt_class_tid[cls_num], [], iou)
             else:
                 continue
-        
-        
-
-        # if rtn_events and iou_distance.size > 0 and hasattr(self.acc, 'last_mot_events'):
-        #     events = self.acc.last_mot_events  # only supported by https://github.com/longcw/py-motmetrics
-        # else:
-        #     events = None
-        # return events
         
         return None
     
@@ -279,7 +277,8 @@ class MCEvaluator(object):
     @staticmethod
     def calculate_overlap(tlwh_track, tlwh_gt):
         """
-        Calculate the spatial overlap of ground truth bounding box and tracking result bounding box. Will return the ratio of intersection over union. Assuming that w, h parallel to x, y axis
+        Calculate the spatial overlap of ground truth bounding box and tracking result bounding box.
+        Will return the ratio of intersection over union. Assuming that w, h parallel to x, y axis
         :param tlwh_track: The top left x,y & width, height of tracking bounding box
         :param tlwh_gt: The top left x,y & width, height of ground truth bounding box
         :return: The overlap ratio

@@ -255,7 +255,7 @@ class opts(object):
         #                          help='load data from cfg')
         self.parser.add_argument('--data_dir',
                                  type=str,
-                                 default='/content/drive/MyDrive')
+                                 default=os.getcwd())     #root_path
 
         # loss
         self.parser.add_argument('--mse_loss',  # default: false
