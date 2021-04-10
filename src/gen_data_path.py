@@ -4,7 +4,7 @@ import os.path as osp
 import json
 import random
 import shutil
-# random.seed(10) 
+from src.cord_loader import mkdirs
 
 
 def _gen_data_path_half(save_path,
@@ -106,121 +106,119 @@ def _gen_data_path_all(save_path,
                     if os.path.isfile(labels[i]):
                         print(image[23:], file=f)
     f.close()
-    
 
-# split dataset
-def gen_all_data_path(root_path = '/content/drive/MyDrive' ,
-                     project_name = 'car_data_MCMOT', 
-                     dataset_name_list=[], 
-                     percentage=[], 
-                     random_split = False,
-                     train_file = 'car_split_all_random.train',
-                     test_file = 'car_split_all_random.test',
-                     random_seed = 10,
-                     test_dir_name = "test_half"):
+
+def train_test_split(root_path='mscai_softwareengineering_project',
+                     project_name='car_data_MCMOT',
+                     dataset_name_list=[],
+                     percentage=[],
+                     random_split=False,
+                     train_file='car_split_all_random.train',
+                     test_file='car_split_all_random.test',
+                     random_seed=10,
+                     test_dir_name="test_half"):
     """
-    split intra video
+    Split training and testing intra videos. Generate images, image paths, corresponding gt file
+    and info.ini for testing videos.
     """
+
     data_path = f'{project_name}/images/train'
     label_root = os.path.join(root_path, f"{project_name}/labels_with_ids/train")
-    real_path = os.path.join(root_path, label_root)
     test_path = os.path.join(root_path, f'{project_name}/images/test/{test_dir_name}')
     mkdirs(test_path)
     rand_idx = 0
     for idx, seq_name in enumerate(dataset_name_list):
-        seq_path = os.path.join(real_path, seq_name, "img1")
-        #label_path = os.path.join(label_root, seq_name, "img1")
+        seq_path = os.path.join(label_root, seq_name, "img1")
         labels = sorted(glob.glob(seq_path + '/*.txt'))
         len_all = len(labels)
+
+        # Write training image paths
         len_train = int(len_all * percentage[idx])
         first_frame_idx = int(labels[0][-10:-4])
         if random_split:
             max_idx = len_all - len_train
-            rand_idx = random.Random(random_seed).randrange(0, max_idx)  
-            train_list = labels[rand_idx: rand_idx+len_train]
+            rand_idx = random.Random(random_seed).randrange(0, max_idx)
+            train_list = labels[rand_idx: rand_idx + len_train]
         else:
             train_list = labels[:len_train]
-        images_train = [
-            label_path.replace('labels_with_ids', 'images')[:-3] +
-            'jpg' for label_path in train_list
-        ]
-        # write training image paths
+        images_train = [label_path.replace('labels_with_ids', 'images')[:-3] + 'jpg'
+                        for label_path in train_list]
 
         with open(f'{root_path}/MCMOT/src/data/{train_file}', 'a') as f:
             for i in range(len_train):
                 image = images_train[i]
-                print(image[23:], file=f)                  
+                print(image[len(root_path) + 1:], file=f)
         f.close()
 
-        # test
         origin_seqinfo_path = os.path.join(root_path, project_name, "images/train", seq_name, "seqinfo.ini")
         if len_train != len_all:
+
+            # Write testing image paths if spliting data from the beginning
             if rand_idx == 0:
-                test_list = labels[len_train:] # sort test_dataset
-                images_test = [
-                    label_path.replace('labels_with_ids', 'images')[:-3] +
-                    'jpg' for label_path in test_list
-                ]
-                # write testing image paths
+                test_list = labels[len_train:]
+                images_test = [label_path.replace('labels_with_ids', 'images')[:-3] + 'jpg'
+                               for label_path in test_list]
 
                 with open(f'{root_path}/MCMOT/src/data/{test_file}', 'a') as f:
                     for image in images_test:
-                        print(image[23:], file=f)                  
+                        print(image[len(root_path) + 1:], file=f)
                 f.close()
 
-                # generate new testing images
-
+                # Generate testing images and seqinfo.ini
                 test_img_path = os.path.join(test_path, f"test_{seq_name}", 'img1')
                 mkdirs(test_img_path)
                 seqinfo_path = os.path.join(test_path, f"test_{seq_name}")
                 shutil.copy(origin_seqinfo_path, seqinfo_path)
                 for img_path in images_test:
                     shutil.copy(img_path, test_img_path)
+
+                # Generate new gt files
                 gt_org_path = os.path.join(root_path, data_path, seq_name, 'gt/gt.txt')
                 gt_new_path = os.path.join(test_path, f"test_{seq_name}", 'gt')
                 mkdirs(gt_new_path)
                 gt_org_list = []
 
-                # read the original gt file
-
+                # Read the original overall gt file
                 with open(gt_org_path, 'r') as f:
                     for line in f:
                         gt_org_list.append(line)
                 f.close()
 
-                # extract the frame_id of testing data
+                # Extract the frame_id of testing data
                 gt_new_frame = []
                 for path in images_test:
                     gt_new_frame.append(int(path[-10:-4]))
                 trk_id_new = 0
                 trk_id_old = 0
 
-                # write new gt file for testing data
-
-                with open(gt_new_path+'/gt.txt', 'w') as f:
+                # Write new gt file for testing data
+                with open(gt_new_path + '/gt.txt', 'w') as f:
                     for idx, line in enumerate(gt_org_list):
                         if int(line.split(',')[0]) in gt_new_frame:
                             trk_id = line.split(",")[1]
                             line = line.split(",")
                             frame = int(line[0])
-                            if trk_id !=trk_id_old:
+                            if trk_id != trk_id_old:
                                 trk_id_old = trk_id
-                                trk_id_new += 1   
-                            line[1] = str(trk_id_new)   
-                            line[0] = str(frame - len_train - first_frame_idx +1 )
+                                trk_id_new += 1
+                            line[1] = str(trk_id_new)
+                            line[0] = str(frame - len_train - first_frame_idx + 1)
                             obj_str = ",".join(line)
                             f.write(obj_str)
-                        
+
                 f.close()
-            else: 
+            else:
+
+                # Treat with testing data which are splited into two parts
+                # Treat with the first part of testing data
                 test_list_1 = labels[0:rand_idx]
-                images_test_1 = [
-                    label_path.replace('labels_with_ids', 'images')[:-3] +
-                    'jpg' for label_path in test_list_1
-                ]
+                images_test_1 = [label_path.replace('labels_with_ids', 'images')[:-3] + 'jpg'
+                                 for label_path in test_list_1]
+
+                # Write testing image paths
                 with open(f'{root_path}/MCMOT/src/data/{test_file}', 'a') as f:
                     for image in images_test_1:
-                        print(image[23:], file=f)                  
+                        print(image[len(root_path) + 1:], file=f)
                 f.close()
 
                 test_img_path = os.path.join(test_path, f"test_1_{seq_name}", 'img1')
@@ -234,49 +232,47 @@ def gen_all_data_path(root_path = '/content/drive/MyDrive' ,
                 mkdirs(gt_new_path)
                 gt_org_list = []
 
-                # read the original gt file
-
-
+                # Read the original gt file
                 with open(gt_org_path, 'r') as f:
                     for line in f:
                         gt_org_list.append(line)
                 f.close()
 
-                # extract the frame_id of testing data
+                # Extract the frame_id of testing data
                 gt_new_frame = []
                 for path in images_test_1:
                     gt_new_frame.append(int(path[-10:-4]))
                 trk_id_new = 0
                 trk_id_old = 0
 
-                # write new gt file for testing data
-
-                with open(gt_new_path+'/gt.txt', 'w') as f:
+                # Write new gt file for testing data
+                with open(gt_new_path + '/gt.txt', 'w') as f:
                     for idx, line in enumerate(gt_org_list):
                         if int(line.split(',')[0]) in gt_new_frame:
                             trk_id = line.split(",")[1]
                             line = line.split(",")
                             frame = int(line[0])
-                            if trk_id !=trk_id_old:
+                            if trk_id != trk_id_old:
                                 trk_id_old = trk_id
-                                trk_id_new += 1   
-                            line[1] = str(trk_id_new)   
-                            line[0] = str(frame  -first_frame_idx +1 )
+                                trk_id_new += 1
+                            line[1] = str(trk_id_new)
+                            line[0] = str(frame - first_frame_idx + 1)
                             obj_str = ",".join(line)
 
                             f.write(obj_str)
-                    
+
                 f.close()
 
-                if (rand_idx+len_train) != len_all:
-                    test_list_2 = labels[rand_idx+len_train:]
-                    images_test_2 = [
-                        label_path.replace('labels_with_ids', 'images')[:-3] +
-                        'jpg' for label_path in test_list_2
-                    ]
+                # Treat with the second part of testing data
+                if (rand_idx + len_train) != len_all:
+                    test_list_2 = labels[rand_idx + len_train:]
+                    images_test_2 = [label_path.replace('labels_with_ids', 'images')[:-3] + 'jpg'
+                                     for label_path in test_list_2]
+
+                    # Write testing image paths
                     with open(f'{root_path}/MCMOT/src/data/{test_file}', 'a') as f:
                         for image in images_test_2:
-                            print(image[23:], file=f)                  
+                            print(image[len(root_path) + 1:], file=f)
                     f.close()
                     test_img_path = os.path.join(test_path, f"test_2_{seq_name}", 'img1')
                     mkdirs(test_img_path)
@@ -289,37 +285,38 @@ def gen_all_data_path(root_path = '/content/drive/MyDrive' ,
                     mkdirs(gt_new_path)
                     gt_org_list = []
 
-                    # read the original gt file
-
+                    # Read the original gt file
                     with open(gt_org_path, 'r') as f:
                         for line in f:
                             gt_org_list.append(line)
                     f.close()
 
-                    # extract the frame_id of testing data
+                    # Extract the frame_id of testing data
                     gt_new_frame = []
                     for path in images_test_2:
                         gt_new_frame.append(int(path[-10:-4]))
                     trk_id_new = 0
                     trk_id_old = 0
 
-                    # write new gt file for testing data
-
-                    with open(gt_new_path+'/gt.txt', 'w') as f:
+                    # Write new gt file for testing data
+                    with open(gt_new_path + '/gt.txt', 'w') as f:
                         for idx, line in enumerate(gt_org_list):
                             if int(line.split(',')[0]) in gt_new_frame:
                                 trk_id = line.split(",")[1]
                                 line = line.split(",")
                                 frame = int(line[0])
-                                if trk_id !=trk_id_old:
+                                if trk_id != trk_id_old:
                                     trk_id_old = trk_id
-                                    trk_id_new += 1   
-                                line[1] = str(trk_id_new)   
-                                line[0] = str(frame - (rand_idx+len_train) - first_frame_idx + 1)
+                                    trk_id_new += 1
+                                line[1] = str(trk_id_new)
+                                line[0] = str(frame
+                                              - (rand_idx + len_train)
+                                              - first_frame_idx
+                                              + 1)
                                 obj_str = ",".join(line)
 
                                 f.write(obj_str)
-                        
+
                     f.close()
 
 
