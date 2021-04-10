@@ -322,8 +322,7 @@ def eval_seq(opt,
         frame_id += 1
 
     # write track/detection results
-    if opt.save_track_time:
-        write_results_dict(result_f_name, results_dict, data_type)
+    write_results_dict(result_f_name, results_dict, data_type)
 
     return frame_id, timer.average_time, timer.calls
 
@@ -396,12 +395,13 @@ def main(opt,
         all_time, 1.0 / avg_time))
 
     # write to txt
-    write_time(opt, 
-               data_root, 
-               exp_name, 
-               total_time, 
-               seqs, 
-               time_sequences)
+    if opt.save_track_time:
+        write_time(opt,
+                   data_root,
+                   exp_name, 
+                   total_time,
+                   seqs,
+                   time_sequences)
     # get summary
     metrics = mm.metrics.motchallenge_metrics
     mh = mm.metrics.create()
