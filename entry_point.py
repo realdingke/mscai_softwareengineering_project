@@ -145,9 +145,15 @@ def main():
         project_id = args.project
         api_key = args.api
         client = load_cord_data(project_id, api_key)
-        project = client.get_project()
+        
+        pattern = '(?<=\w)\s(?=\w)'
+        project_name = client.get_project()['title']
+        try:
+            project_name = re.sub(pattern, '_', project_name)
+        except:
+            project_name = project_name
         root_path = paths.ROOT_PATH
-        data_path = osp.join(root_path, '..', paths.DATA_REL_PATH, project['title'])
+        data_path = osp.join(root_path, '..', paths.DATA_REL_PATH, project_name)
         mkdirs(data_path)
         
         seqs = gen_seq_name_list(client)
