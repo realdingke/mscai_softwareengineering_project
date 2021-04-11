@@ -25,6 +25,9 @@ from lib.logger import Logger
 from lib.datasets.dataset_factory import get_dataset
 from lib.trains.train_factory import train_factory
 
+# add paths
+import paths
+
 def mkdirs(d):
     if not os.path.exists(d):
         os.makedirs(d)
@@ -43,9 +46,7 @@ def add_test_loader(opt, data_config, transforms):
     return test_dataset, opt_2
 
 def plot_loss_curves(opt, data_config, train_losses = None, test_losses = None):
-        sub_path = os.path.join(data_config['root'], 'Loss Figure', opt.exp_id)
-        path = os.path.join(data_config['root'], 'Loss Figure', opt.exp_id)
-        mkdirs(sub_path)
+        path = os.path.join(paths.DATA_PATH, 'Loss Figure', opt.exp_id)
         mkdirs(path)
         if len(test_losses) == 0:
             fig, ax = plt.subplots(2,2)
@@ -70,7 +71,7 @@ def plot_loss_curves(opt, data_config, train_losses = None, test_losses = None):
                 for j in range(2):
                     ax[i,j].set_xlabel('epochs')
                     ax[i,j].legend()
-            plot_path = os.path.join(sub_path, 'sub_loss.png')
+            plot_path = os.path.join(path, 'sub_loss.png')
             plt.savefig(plot_path)  
             plt.figure()
             plt.plot(np.arange(1, opt.num_epochs+1), 
@@ -117,7 +118,7 @@ def plot_loss_curves(opt, data_config, train_losses = None, test_losses = None):
                     ax[i,j].set_xlabel('epochs')
                     ax[i,j].legend()
             
-            plot_path = os.path.join(sub_path, 'sub_loss.png')
+            plot_path = os.path.join(path, 'sub_loss.png')
             plt.savefig(plot_path)       
             plt.figure()
             plt.plot(np.arange(1, opt.num_epochs+1), 
@@ -133,7 +134,7 @@ def plot_loss_curves(opt, data_config, train_losses = None, test_losses = None):
             plt.savefig(plot_path)
 
 def save_training_time(opt, data_config, epoch_time=None, total_time=None):
-    time_path = os.path.join(data_config['root'], 'training_time.txt')
+    time_path = os.path.join(paths.DATA_PATH, 'training_time.txt')
     epoch_time_str = ", ".join(epoch_time)
     with open(time_path, 'a') as f:
         f.write(f"exp id: {opt.exp_id}, arch: {opt.arch}, epoch: {opt.num_epochs}"
