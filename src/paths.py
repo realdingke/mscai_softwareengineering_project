@@ -13,7 +13,7 @@ LABEL_PATH = DATA_PATH + '/labels_with_ids'
 
 TRAIN_DATA_PATH = IMG_ROOT_PATH + '/train'
 
-CFG_DATA_PATH = osp.join(ROOT_PATH, '/lib', '/cfg')
+CFG_DATA_PATH = osp.join(ROOT_PATH, 'lib', 'cfg')
 
 OUTPUTS_PATH = DATA_PATH + '/outputs'
 

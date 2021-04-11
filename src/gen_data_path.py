@@ -360,7 +360,7 @@ def generate_json(name,
                 f"{name}": f"./data/{name}.test"
             }
     }
-    with open(cfg_path + f"{name}.json", "w") as f:
+    with open(osp.join(cfg_path, f"{name}.json"), "w") as f:
         json.dump(car_json, f, indent=4)
 
 

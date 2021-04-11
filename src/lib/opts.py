@@ -5,7 +5,7 @@ from __future__ import print_function
 import argparse
 import os
 # add import paths
-from src import paths
+import paths
 
 class opts(object):
     def __init__(self):
@@ -256,7 +256,7 @@ class opts(object):
         #                          help='load data from cfg')
         self.parser.add_argument('--data_dir',
                                  type=str,
-                                 default=os.getcwd())     #root_path
+                                 default=os.path.join(paths.ROOT_PATH, '..', 'dataset'))     #root_path
 
         # loss
         self.parser.add_argument('--mse_loss',  # default: false
