@@ -4,7 +4,8 @@ from __future__ import print_function
 
 import argparse
 import os
-
+# add import paths
+import paths
 
 class opts(object):
     def __init__(self):
@@ -363,7 +364,9 @@ class opts(object):
             opt.chunk_sizes.append(slave_chunk_size)
         print('training chunk_sizes:', opt.chunk_sizes)
 
-        opt.root_dir = os.path.join(os.path.dirname(__file__), '..', '..')
+        # modified
+        # opt.root_dir = os.path.join(os.path.dirname(__file__), '..', '..')
+        opt.root_dir = os.path.join(paths.ROOT_PATH, '..')
         opt.exp_dir = os.path.join(opt.root_dir, 'exp', opt.task)
         # print("type opt:", type(opt))
         # print("exp_dir:", opt.exp_dir)

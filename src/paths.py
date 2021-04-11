@@ -15,7 +15,9 @@ TRAIN_DATA_PATH = IMG_ROOT_PATH + '/train'
 
 CFG_DATA_PATH = osp.join(ROOT_PATH, '/lib', '/cfg')
 
+OUTPUTS_PATH = DATA_PATH + '/outputs'
 
+RESULTS_PATH = DATA_PATH + '/results'
 
 
 
