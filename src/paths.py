@@ -5,7 +5,7 @@ import os.path as osp
 #ROOT_PATH = os.getcwd()
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 
-DATA_PATH = osp.join(ROOT_PATH, '..') + '/dataset'
+DATA_PATH = osp.join(ROOT_PATH, '..') + '/dataset'  # /car_data
 
 IMG_ROOT_PATH = DATA_PATH + '/images'
 

@@ -142,9 +142,9 @@ def main():
         project_id = args.project
         api_key = args.api
         client = load_cord_data(project_id, api_key)
-        
+        project = client.get_project()
         root_path = paths.ROOT_PATH
-        data_path = osp.join(root_path, '..') + paths.DATA_REL_PATH
+        data_path = osp.join(root_path, '..', paths.DATA_REL_PATH, project['title'])
         mkdirs(data_path)
         
         seqs = gen_seq_name_list(client)
