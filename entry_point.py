@@ -22,9 +22,8 @@ def _init_parser():
     """
 
     parser = argparse.ArgumentParser(
-        description="Decision tree training on "
-                    "clean and noisy data sets. "
-                    "With pruning capabilities",
+        description="""This helps run the parser functionalities for training a new model
+                    """,
         allow_abbrev=False,
     )
     
@@ -44,7 +43,7 @@ def _init_parser():
     parser.add_argument(
         "--gen_info",
         action="store_true",
-        help="test the whole parser function",
+        help="print out the root path and basic project info",
     )
 
     parser.add_argument(
@@ -63,12 +62,21 @@ def _init_parser():
         help="User input the API key",
     )
 
+#    parser.add_argument(
+#        "--data_root",
+#        type=str,
+#        nargs='?',
+#        default='/data/',
+#        help="User input the root directory for storing data",
+#    )
+    
     parser.add_argument(
-        "--data_root",
+        "-ds",
+        "--dataset_selection",
         type=str,
-        nargs='?',
-        default='/data/',
-        help="User input the root directory for storing data",
+        action="append",
+        default=[],
+        help="User input the API key",
     )
 
     parser.add_argument(
@@ -122,10 +130,13 @@ def main():
         args.client = load_cord_data(project_id, api_key)
     if args.gen_info:
         root_path = paths.ROOT_PATH
-        print(root_path)
+        print(f"The root path is:\n{root_path}")
         data_path = root_path + paths.DATA_REL_PATH
         mkdirs(data_path)
         seqs = gen_seq_name_list(args.client)
+        print('The project contains the below datasets:')
+        for seq in seqs:
+            print(' '*6 + seq)
         gen_obj_json(data_path, client=args.client)
     if args.test:
         project_id = args.project
@@ -137,6 +148,13 @@ def main():
         mkdirs(data_path)
         
         seqs = gen_seq_name_list(client)
+        
+        # user-select datasets to be used
+        if len(args.dataset_selection)!=0:
+            seqs = args.dataset_selection
+        else:
+            seqs = seqs
+        
         gen_obj_json(data_path, client=client)
         
         preprocess.download_mp4(data_path, seqs)
@@ -144,10 +162,11 @@ def main():
         
         data_root = paths.IMG_ROOT_PATH
         label_path = paths.LABEL_PATH
-        gen_labels.gen_gt_information(client, data_root)
+        bad_seqs = gen_labels.gen_gt_information(client, data_root)
+        seqs = [seq_w_label for seq in seqs if seq not in bad_seqs]  #filter out the seqs with no label
         train_data_path = paths.TRAIN_DATA_PATH
         cls2id_dct, _ = get_cls_info(train_data_path)
-        gen_labels.gen_label_files(client, data_root, label_path, cls2id_dct)
+        gen_labels.gen_label_files(seqs, data_root, label_path, cls2id_dct)
         
         name = args.json_name
         cfg_path = paths.CFG_DATA_PATH
@@ -169,7 +188,7 @@ def main():
             test_file = f"{name}.test",
             random_seed = args.rseed,
             test_dir_name = test_data_path,
-            random_split=args.rand_split
+            random_split=args.rand_split,
         )
 
 
