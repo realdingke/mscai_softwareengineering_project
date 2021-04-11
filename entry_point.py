@@ -153,7 +153,7 @@ def main():
         except:
             project_name = project_name
         root_path = paths.ROOT_PATH
-        data_path = osp.join(root_path, '..', paths.DATA_REL_PATH, project_name)
+        data_path = osp.join(osp.join(root_path, '..') + paths.DATA_REL_PATH, project_name)
         mkdirs(data_path)
         
         seqs = gen_seq_name_list(client)
