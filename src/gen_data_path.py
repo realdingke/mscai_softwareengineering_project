@@ -121,6 +121,14 @@ def train_test_split(root_path='mscai_softwareengineering_project',
     Split training and testing intra videos. Generate images, image paths, corresponding gt file
     and info.ini for testing videos.
     """
+    if len(percentage) == 0 or len(percentage) > len(dataset_name_list):
+        percentage = [0.8]*len(dataset_name_list)
+        for dataset in dataset_name_list:
+            print(f'{dataset}: Train percentage: 0.8 | Test percentage: 0.2')
+    else:
+        percentage = percentage+[0.8]*(len(dataset_name_list)-len(percentage))
+        for i, dataset in enumerate(dataset_name_list):
+            print(f'{dataset}: Train percentage: {percentage[i]} | Test percentage: {1-percentage[i]}')
 
     data_path = f'{project_name}/images/train'
     label_root = os.path.join(root_path, f"{project_name}/labels_with_ids/train")

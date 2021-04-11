@@ -141,13 +141,11 @@ def main():
             else:
                 break
         # modified gen_all_data_path
-        gen_all_data_path(
+        gen_data_path.train_test_split(
             root_path = paths.ROOT_PATH,
             project_name = paths.DATA_REL_PATH,
             dataset_name_list = seqs,
-            percentage = [
-                random.random() for i in range(len(gen_seq_name_list(client)))
-                ] if len(args.split_perc)==0 else args.split_perc,
+            percentage = args.split_perc,
             train_file = f"{name}.train",
             test_file = f"{name}.test",
             random_seed = args.rseed,
