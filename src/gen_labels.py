@@ -137,7 +137,7 @@ def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
         for i in range(num_of_class):
             tid_last[i] = 0
             tid_curr[i] = 0
-        for fid, tid, x, y, w, h, mark, cls, vis_ratio in gt_file:
+        for idx, (fid, tid, x, y, w, h, mark, cls, vis_ratio) in enumerate(gt_file):
             # frame_id, track_id, top, left, width, height, mark, class, visibility ratio
 
             # if mark == 0:  # mark为0时忽略(不在当前帧的考虑范围)
@@ -150,7 +150,7 @@ def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
             tid = int(tid)
 
             # 判断是否是同一个track, 记录上一个track和当前track
-            if not tid == tid_last[cls]:  # not 的优先级比 == 高
+            if not tid == tid_last[cls] or idx == 0:  # not 的优先级比 == 高
                 tid_curr[cls] += 1
                 tid_last[cls] = tid
 
