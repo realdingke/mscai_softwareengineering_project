@@ -163,7 +163,7 @@ def main():
         data_root = paths.IMG_ROOT_PATH
         label_path = paths.LABEL_PATH
         bad_seqs = gen_labels.gen_gt_information(client, data_root)
-        seqs = [seq_w_label for seq in seqs if seq not in bad_seqs]  #filter out the seqs with no label
+        seqs = [seq for seq in seqs if seq not in bad_seqs]  #filter out the seqs with no label
         train_data_path = paths.TRAIN_DATA_PATH
         cls2id_dct, _ = get_cls_info(train_data_path)
         gen_labels.gen_label_files(seqs, data_root, label_path, cls2id_dct)
@@ -173,8 +173,8 @@ def main():
         gen_data_path.generate_json(name, root_path, cfg_path)
         
         test_data_path = 'test_'
-        for i in range(len(gen_seq_name_list(client))):
-            if len(args.split_perc)!=0:
+        for i in range(len(seqs)):
+            if len(args.split_perc) != 0:
                 test_data_path += str(args.split_perc[i]) + '_'
             else:
                 break

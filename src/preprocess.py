@@ -139,8 +139,10 @@ def _extract_images(path, save_dir):
     for time in times:
         imgpath = osp.join(save_dir, "{:0>6d}.jpg".format(frame_count))
         myclip.save_frame(imgpath, time)
+        if frame_count % 100 == 0:
+            print(f"{frame_count} images generated")
         frame_count += 1
-
+    print(f"{frame_count} images in total")
 
 
 def save_mp4_frame_gen_seqini(seqs=None,
