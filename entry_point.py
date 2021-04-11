@@ -204,7 +204,7 @@ def main():
         #     random_split=args.rand_split,
         # )
         gen_data_path.train_test_split(
-            root_path = paths.ROOT_PATH,
+            root_path = paths.DATA_PATH,
             project_name = project_name,
             dataset_name_list = seqs,
             percentage = args.split_perc,

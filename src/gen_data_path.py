@@ -152,7 +152,7 @@ def train_test_split(root_path='mscai_softwareengineering_project',
         images_train = [label_path.replace('labels_with_ids', 'images')[:-3] + 'jpg'
                         for label_path in train_list]
 
-        with open(f'{root_path}/MCMOT/src/data/{train_file}', 'a') as f:
+        with open(f'{root_path}/../src/data/{train_file}', 'a') as f:
             for i in range(len_train):
                 image = images_train[i]
                 print(image[len(root_path) + 1:], file=f)
@@ -167,7 +167,7 @@ def train_test_split(root_path='mscai_softwareengineering_project',
                 images_test = [label_path.replace('labels_with_ids', 'images')[:-3] + 'jpg'
                                for label_path in test_list]
 
-                with open(f'{root_path}/MCMOT/src/data/{test_file}', 'a') as f:
+                with open(f'{root_path}/../src/data/{test_file}', 'a') as f:
                     for image in images_test:
                         print(image[len(root_path) + 1:], file=f)
                 f.close()
@@ -224,7 +224,7 @@ def train_test_split(root_path='mscai_softwareengineering_project',
                                  for label_path in test_list_1]
 
                 # Write testing image paths
-                with open(f'{root_path}/MCMOT/src/data/{test_file}', 'a') as f:
+                with open(f'{root_path}/../src/data/{test_file}', 'a') as f:
                     for image in images_test_1:
                         print(image[len(root_path) + 1:], file=f)
                 f.close()
@@ -278,7 +278,7 @@ def train_test_split(root_path='mscai_softwareengineering_project',
                                      for label_path in test_list_2]
 
                     # Write testing image paths
-                    with open(f'{root_path}/MCMOT/src/data/{test_file}', 'a') as f:
+                    with open(f'{root_path}/../src/data/{test_file}', 'a') as f:
                         for image in images_test_2:
                             print(image[len(root_path) + 1:], file=f)
                     f.close()
