@@ -91,6 +91,8 @@ def _init_parser():
     parser.add_argument(
         "-sp",
         "--split_perc",
+        type=float,
+        nargs='+',
         action="append",
         default = [],
         help="user input split percentage(0-1)",
@@ -106,9 +108,7 @@ def _init_parser():
 
     parser.add_argument(
         "--rand_split",
-        type=str2bool,
-        nargs='?',
-        const=True,
+        action="store_true",
         help="Random split the dataset by specific split_perc"
     )
 
@@ -184,13 +184,7 @@ def main():
         name = args.json_name
         cfg_path = paths.CFG_DATA_PATH
         gen_data_path.generate_json(name, root_path, cfg_path)
-        
-        test_data_path = 'test_'
-        for i in range(len(seqs)):
-            if len(args.split_perc) != 0:
-                test_data_path += str(args.split_perc[i]) + '_'
-            else:
-                break
+
         # modified gen_all_data_path
         # gen_data_path.train_test_split(
         #     root_path = paths.ROOT_PATH,
@@ -211,8 +205,7 @@ def main():
             train_file = f"{name}.train",
             test_file = f"{name}.test",
             random_seed = args.rseed,
-            test_dir_name = test_data_path,
-            random_split=args.rand_split,
+            random_split = args.rand_split
         )
 
 if __name__ == "__main__":

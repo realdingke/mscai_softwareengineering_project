@@ -116,19 +116,30 @@ def train_test_split(root_path='mscai_softwareengineering_project',
                      train_file='car_split_all_random.train',
                      test_file='car_split_all_random.test',
                      random_seed=10,
-                     test_dir_name="test_half"):
+                     default_percentage=0.80):
     """
     Split training and testing intra videos. Generate images, image paths, corresponding gt file
     and info.ini for testing videos.
     """
     if len(percentage) == 0 or len(percentage) > len(dataset_name_list):
-        percentage = [0.8]*len(dataset_name_list)
+        percentage = [default_percentage]*len(dataset_name_list)
         for dataset in dataset_name_list:
-            print(f'{dataset}: Train percentage: 0.8 | Test percentage: 0.2')
+            print(f'{dataset}: Train percentage: {default_percentage:.2f} | Test percentage: {(1-default_percentage):.2f}')
+        test_dir_name = 'test_'+f'{default_percentage}_'*(len(dataset_name_list)-1)+f'{default_percentage}'
     else:
-        percentage = percentage+[0.8]*(len(dataset_name_list)-len(percentage))
+        percentage = percentage+[default_percentage]*(len(dataset_name_list)-len(percentage))
+        percentage = [float('%.2f' % number) for number in percentage]
         for i, dataset in enumerate(dataset_name_list):
-            print(f'{dataset}: Train percentage: {percentage[i]} | Test percentage: {1-percentage[i]}')
+            print(f'{dataset}: Train percentage: {percentage[i]:.2f} | Test percentage: {(1-percentage[i]):.2f}')
+        test_dir_name = 'test_'
+        for i in range(len(dataset_name_list)):
+            if (len(percentage) - 1) >= i:
+                test_dir_name += str(percentage[i]) + '_'
+            else:
+                test_dir_name += f'{default_percentage}_'
+        list_test_dir_name = list(test_dir_name)
+        del(list_test_dir_name[-1])
+        test_dir_name = ''.join(list_test_dir_name)
 
     data_path = f'{project_name}/images/train'
     label_root = os.path.join(root_path, f"{project_name}/labels_with_ids/train")
