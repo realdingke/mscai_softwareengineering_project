@@ -1,9 +1,19 @@
 import argparse
 import os
+import os.path as osp
 import random
 
 from src import preprocess, gen_labels, gen_data_path, paths
 from src.cord_loader import load_cord_data, gen_seq_name_list, get_cls_info, gen_obj_json, mkdirs
+
+
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Unsupported value encountered.')
 
 
 def _init_parser():
@@ -85,13 +95,16 @@ def _init_parser():
         help="User input the random seed for the splitting of dataset",
     )
 
-    args = parser.parse_args()
-
     parser.add_argument(
         "--rand_split",
-        action="store_true",
-        help="Random split the dataset by specific split_perc",
+        type=str2bool,
+        nargs='?',
+        const=True,
+        help="Random split the dataset by specific split_perc"
     )
+
+    args = parser.parse_args()
+
     return args
 
 
@@ -120,7 +133,7 @@ def main():
         client = load_cord_data(project_id, api_key)
         
         root_path = paths.ROOT_PATH
-        data_path = root_path + paths.DATA_REL_PATH
+        data_path = osp.join(root_path, '..') + paths.DATA_REL_PATH
         mkdirs(data_path)
         
         seqs = gen_seq_name_list(client)

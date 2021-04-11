@@ -10,7 +10,7 @@ def gen_gt_information(client, data_root):
     project = client.get_project()
     obj_type_dict = {}
     feature_hash_dict = {}
-    seq_path = data_root + 'train/'
+    seq_path = data_root + '/train'
     cls_json_path = seq_path
     count = 0
     for label_uid in project.get_labels_list():
@@ -27,12 +27,12 @@ def gen_gt_information(client, data_root):
             seqs_str = re.sub(pattern, '_', seqs_str)
         except:
             seqs_str = seqs_str
-        mkdirs(seq_path + f"{seqs_str}/gt/")
+        mkdirs(seq_path + f"/{seqs_str}/gt")
         seq_ini_file = osp.join(seq_path, f"{seqs_str}", 'seqinfo.ini')
         seq_info = open(seq_ini_file).read()
         seq_width = int(seq_info[seq_info.find('imWidth=') + 8:seq_info.find('\nimHeight')])
         seq_height = int(seq_info[seq_info.find('imHeight=') + 9:seq_info.find('\nimExt')])
-        gt_path = osp.join(seq_path + f"{seqs_str}", 'gt/gt.txt')
+        gt_path = osp.join(seq_path, f"{seqs_str}", 'gt/gt.txt')
         for frame in list(label['data_units'].values())[0]['labels'].keys():
             for obj in list(label['data_units'].values())[0]['labels'][frame]['objects']:
                 if obj['objectHash'] not in obj_hash_dict.keys():
@@ -104,10 +104,17 @@ def gen_label_files(client, data_path, save_path, cls2id_dct):
             break  # for car dataset only
         count += 1
         label = client.get_label_row(label_uid)
-        gt_path = data_path + f"train/{label['data_title']}/"
-        gt_file_path = gt_path + 'gt/' + 'gt.txt'
-        mkdirs(save_path + f"train/{label['data_title']}/img1/")
-        seq_ini_file = osp.join(data_path, 'train', f"{label['data_title']}", 'seqinfo.ini')
+        seqs_str = label['data_title']
+        ##swap all space in between the seq_name to '_'
+        pattern = '(?<=\w)\s(?=\w)'
+        try:
+            seqs_str = re.sub(pattern, '_', seqs_str)
+        except:
+            seqs_str = seqs_str
+        gt_path = osp.join(data_path, f"train/{seqs_str}")
+        gt_file_path = osp.join(gt_path, 'gt', 'gt.txt')
+        mkdirs(save_path + f"/train/{seqs_str}/img1")
+        seq_ini_file = osp.join(data_path, 'train', f"{seqs_str}", 'seqinfo.ini')
         seq_info = open(seq_ini_file).read()
         seq_width = int(seq_info[seq_info.find('imWidth=') + 8:seq_info.find('\nimHeight')])
         seq_height = int(seq_info[seq_info.find('imHeight=') + 9:seq_info.find('\nimExt')])
@@ -156,7 +163,8 @@ def gen_label_files(client, data_path, save_path, cls2id_dct):
             )  
             # print(label_str.strip())
             label_fpath = osp.join(
-                save_path + f"train/{label['data_title']}/img1/", 
+                save_path, 
+                f"train/{seqs_str}/img1", 
                 '{:06d}.txt'.format(int(fid)),
             )
 

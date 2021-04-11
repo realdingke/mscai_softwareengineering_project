@@ -59,8 +59,10 @@ class LoadVideo:  # for inference
     def __init__(self,
                  save_root='/content/drive/MyDrive/car_data_MCMOT/images/train',
                  seq_name='Heavy_traffic.mp4'):
-        self.path = osp.join(save_root, seq_name, seq_name)
+        video_name = seq_name.replace('_', ' ')
+        self.path = osp.join(save_root, seq_name, video_name)
         self.save_path = osp.join(save_root, f"{seq_name}/img1")
+        print(self.path)
         self.cap = cv2.VideoCapture(self.path)
         self.frame_rate = self.cap.get(cv2.CAP_PROP_FPS)
         self.vw = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -125,7 +127,7 @@ def _generate_seqinfo(video, seq, path):
                width,
                height,
            ) + 'imExt=.jpg\n'
-    with open(path + 'images/train/' + seq + '/seqinfo.ini', 'w') as f:
+    with open(osp.join(path, 'images/train', seq, 'seqinfo.ini'), 'w') as f:
         f.write(info)
 
 
@@ -138,6 +140,7 @@ def _extract_images(path, save_dir):
         imgpath = osp.join(save_dir, "{:0>6d}.jpg".format(frame_count))
         myclip.save_frame(imgpath, time)
         frame_count += 1
+
 
 
 def save_mp4_frame_gen_seqini(seqs=None,
