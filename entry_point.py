@@ -76,7 +76,7 @@ def _init_parser():
         type=str,
         action="append",
         default=[],
-        help="User input the API key",
+        help="User defines the datasets to be used",
     )
 
     parser.add_argument(
@@ -124,20 +124,23 @@ def main():
     # parse command line arguments
     args = _init_parser()
 
-    if args.load_api:
+#    if args.load_api:
+#        project_id = args.project
+#        api_key = args.api
+#        args.client = load_cord_data(project_id, api_key)
+    if args.gen_info:
         project_id = args.project
         api_key = args.api
-        args.client = load_cord_data(project_id, api_key)
-    if args.gen_info:
+        client = load_cord_data(project_id, api_key)
         root_path = paths.ROOT_PATH
         print(f"The root path is:\n{root_path}")
         data_path = root_path + paths.DATA_REL_PATH
         mkdirs(data_path)
-        seqs = gen_seq_name_list(args.client)
+        seqs = gen_seq_name_list(client)
         print('The project contains the below datasets:')
         for seq in seqs:
             print(' '*6 + seq)
-        gen_obj_json(data_path, client=args.client)
+        gen_obj_json(data_path, client=client)
     if args.test:
         project_id = args.project
         api_key = args.api
