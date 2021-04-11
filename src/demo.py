@@ -22,7 +22,7 @@ from lib.opts import opts  # import opts
 from lib.tracking_utils.utils import mkdir_if_missing
 from lib.tracking_utils.log import logger
 import lib.datasets.dataset.jde as datasets
-from track import eval_seq, eval_imgs_output_dets
+from mctrack import eval_seq, eval_imgs_output_dets
 from lib.datasets.dataset.jde import letterbox
 from lib.models.model import create_model, load_model
 from lib.models.decode import mot_decode
