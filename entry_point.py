@@ -86,6 +86,12 @@ def _init_parser():
     )
 
     args = parser.parse_args()
+
+    parser.add_argument(
+        "--rand_split",
+        action="store_true",
+        help="Random split the dataset by specific split_perc",
+    )
     return args
 
 
@@ -149,7 +155,8 @@ def main():
             train_file = f"{name}.train",
             test_file = f"{name}.test",
             random_seed = args.rseed,
-            test_dir_name = test_data_path,           
+            test_dir_name = test_data_path,
+            random_split=args.rand_split
         )
 
 
