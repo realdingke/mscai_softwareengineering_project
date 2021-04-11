@@ -149,7 +149,7 @@ def save_mp4_frame_gen_seqini(seqs=None,
             'Highway_traffic.mp4',
             'Light_traffic.mp4',
         ]
-    save_root = path + 'images/train'
+    save_root = path + '/images/train'
     for seq in seqs:
         v1 = LoadVideo(save_root=save_root, seq_name=seq)
         # v1.save_imgs()    #save imgs func now being superceded by the moviepy method

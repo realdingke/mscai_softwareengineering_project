@@ -1,5 +1,5 @@
 from cord.client import CordClient  # pip install cord-client-python
-
+import re
 import os
 import os.path as osp
 import json
@@ -35,9 +35,18 @@ def gen_seq_name_list(client):
     returns a list of all seq_names present in the current project
     """
     project = client.get_project()
-
+    pattern = '(?<=\w)\s(?=\w)'
+    seqs = []
     try:
-        return [client.get_label_row(label_uid)['data_title'] for label_uid in project.get_labels_list()]
+        for label_uid in project.get_labels_list():
+            seq = client.get_label_row(label_uid)['data_title']
+            try:
+                seq = re.sub(pattern, '_', seq)
+                seqs.append(seq)
+            except:
+                seq = seq
+                seqs.append(seq)
+        return seqs
     except:
         return None
 
@@ -57,11 +66,17 @@ def get_cls_info(root='/content/drive/MyDrive/car_data_MCMOT/images/train/'):
 
 def gen_obj_json(root='/content/drive/MyDrive/car_data_MCMOT/', client=load_cord_data()):
     project = client.get_project()
+    pattern = '(?<=\w)\s(?=\w)'
     for label_uid in project.get_labels_list():
         label = client.get_label_row(label_uid)
         seq_name = label['data_title']
-        mkdirs(root + seq_name)
-        filename = root + seq_name + '/objects.json'
+        try:
+            seq_name = re.sub(pattern, '_', seq_name)
+        except:
+            seq_name = seq_name
+        path = osp.join(root, seq_name)
+        mkdirs(path)
+        filename = path + '/objects.json'
         with open(filename, 'w') as f:
             json.dump(label, f)
         
