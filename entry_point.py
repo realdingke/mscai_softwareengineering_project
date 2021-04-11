@@ -183,7 +183,8 @@ def main():
         
         name = args.json_name
         cfg_path = paths.CFG_DATA_PATH
-        gen_data_path.generate_json(name, root_path, cfg_path)
+        json_root_path = osp.join(root_path, '..', 'dataset')
+        gen_data_path.generate_json(name, json_root_path, cfg_path)
 
         # modified gen_all_data_path
         # gen_data_path.train_test_split(
