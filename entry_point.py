@@ -169,12 +169,15 @@ def main():
         
         preprocess.download_mp4(data_path, seqs)
         preprocess.save_mp4_frame_gen_seqini(seqs, data_path)
-        
-        data_root = paths.IMG_ROOT_PATH
-        label_path = paths.LABEL_PATH
+        # modified the data root and label path
+        # data_root = paths.IMG_ROOT_PATH
+        data_root = osp.join(data_path, 'images')
+        # label_path = paths.LABEL_PATH
+        label_path = osp.join(data_path, 'labels_with_ids')
         bad_seqs = gen_labels.gen_gt_information(client, data_root)
         seqs = [seq for seq in seqs if seq not in bad_seqs]  #filter out the seqs with no label
-        train_data_path = paths.TRAIN_DATA_PATH
+        # train_data_path = paths.TRAIN_DATA_PATH
+        train_data_path = osp.join(data_root, 'train')
         cls2id_dct, _ = get_cls_info(train_data_path)
         gen_labels.gen_label_files(seqs, data_root, label_path, cls2id_dct)
         
@@ -189,9 +192,20 @@ def main():
             else:
                 break
         # modified gen_all_data_path
+        # gen_data_path.train_test_split(
+        #     root_path = paths.ROOT_PATH,
+        #     project_name = paths.DATA_REL_PATH,
+        #     dataset_name_list = seqs,
+        #     percentage = args.split_perc,
+        #     train_file = f"{name}.train",
+        #     test_file = f"{name}.test",
+        #     random_seed = args.rseed,
+        #     test_dir_name = test_data_path,
+        #     random_split=args.rand_split,
+        # )
         gen_data_path.train_test_split(
             root_path = paths.ROOT_PATH,
-            project_name = paths.DATA_REL_PATH,
+            project_name = project_name,
             dataset_name_list = seqs,
             percentage = args.split_perc,
             train_file = f"{name}.train",
@@ -200,7 +214,6 @@ def main():
             test_dir_name = test_data_path,
             random_split=args.rand_split,
         )
-
 
 if __name__ == "__main__":
     main()
