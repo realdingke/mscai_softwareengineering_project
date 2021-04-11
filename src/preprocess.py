@@ -18,7 +18,7 @@ def download_mp4(path='/content/drive/MyDrive/car_data_MCMOT/', seqs=None):
     if seqs is None:
         raise SeqReadError('Error occured during reading seq_name from server')
     for s in seqs:
-        with open(path + s + '/objects.json', "r") as f:
+        with open(path + '/' + s + '/objects.json', "r") as f:
             data = json.load(f)
         mkdirs(path + "/images/train/" + s)
         headers = {
