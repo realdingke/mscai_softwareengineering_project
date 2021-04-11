@@ -26,7 +26,7 @@ from lib.datasets.dataset_factory import get_dataset
 from lib.trains.train_factory import train_factory
 
 # add paths
-import paths
+from src import paths
 
 def mkdirs(d):
     if not os.path.exists(d):
