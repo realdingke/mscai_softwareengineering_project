@@ -5,7 +5,7 @@ from __future__ import print_function
 import argparse
 import os
 # add import paths
-import paths
+from src import paths
 
 class opts(object):
     def __init__(self):
