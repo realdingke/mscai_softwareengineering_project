@@ -3,6 +3,8 @@ import os
 import os.path as osp
 import random
 import re
+# pickle
+import pickle
 
 from src import preprocess, gen_labels, gen_data_path, paths
 from src.cord_loader import load_cord_data, gen_seq_name_list, get_cls_info, gen_obj_json, mkdirs
@@ -198,16 +200,23 @@ def main():
         #     test_dir_name = test_data_path,
         #     random_split=args.rand_split,
         # )
-        gen_data_path.train_test_split(
-            root_path = paths.DATA_PATH,
-            project_name = project_name,
-            dataset_name_list = seqs,
-            percentage = args.split_perc,
-            train_file = f"{name}.train",
-            test_file = f"{name}.test",
-            random_seed = args.rseed,
-            random_split = args.rand_split
+        test_dir_name = gen_data_path.train_test_split(
+            root_path=paths.DATA_PATH,
+            project_name=project_name,
+            dataset_name_list=seqs,
+            percentage=args.split_perc,
+            train_file=f"{name}.train",
+            test_file=f"{name}.test",
+            random_seed=args.rseed,
+            random_split=args.rand_split
         )
+
+        # save project_name to file_name.data
+        file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
+        file_name_dict = {'pn': project_name, 'dn': test_dir_name}
+        with open(file_name_path, 'wb') as f:
+            pickle.dump(file_name_dict, f)
+        f.close()
 
 if __name__ == "__main__":
     main()

@@ -337,7 +337,7 @@ def train_test_split(root_path='mscai_softwareengineering_project',
                                 f.write(obj_str)
 
                     f.close()
-
+    return test_dir_name
 
 def generate_json(name,
                   root_path, 
