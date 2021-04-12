@@ -6,8 +6,8 @@ import re
 # pickle
 import pickle
 
-from src import preprocess, gen_labels, gen_data_path, paths
-from src.cord_loader import load_cord_data, gen_seq_name_list, get_cls_info, gen_obj_json, mkdirs
+import preprocess, gen_labels, gen_data_path, paths
+from cord_loader import load_cord_data, gen_seq_name_list, get_cls_info, gen_obj_json, mkdirs
 
 
 def str2bool(v):

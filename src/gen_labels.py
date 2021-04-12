@@ -2,7 +2,7 @@ import json
 import os.path as osp
 import numpy as np
 import re
-from src.cord_loader import mkdirs
+from cord_loader import mkdirs
 
 
 def gen_gt_information(client, data_root):

@@ -7,7 +7,7 @@ import cv2
 import moviepy.editor as mpy  # pip install moviepy
 import numpy as np
 
-from src.cord_loader import mkdirs
+from cord_loader import mkdirs
 
 
 class SeqReadError(Exception):

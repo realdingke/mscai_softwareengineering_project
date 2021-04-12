@@ -4,7 +4,7 @@ import os.path as osp
 import json
 import random
 import shutil
-from src.cord_loader import mkdirs
+from cord_loader import mkdirs
 
 
 def _gen_data_path_half(save_path,
