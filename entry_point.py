@@ -207,7 +207,7 @@ def main():
             root_path=paths.DATA_PATH,
             project_name=project_name,
             dataset_name_list=seqs,
-            percentage=args.split_perc,
+            percentage=args.split_perc[0],
             train_file=f"{name}.train",
             test_file=f"{name}.test",
             random_seed=args.rseed,
