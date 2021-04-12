@@ -156,22 +156,22 @@ def main():
         except:
             project_name = project_name
         
+        paths_loader = paths.paths_loader(project_name)
         root_path = paths.ROOT_PATH
         # save project_name to file_name.data
         mkdirs(osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH))
-        file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
-        file_name_dict = {'pn': project_name}
-        with open(file_name_path, 'wb') as f:
-            pickle.dump(file_name_dict, f)
+        # file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
+        # file_name_dict = {'pn': project_name}
+        # with open(file_name_path, 'wb') as f:
+        #     pickle.dump(file_name_dict, f)
             
         # change the data_path to include project_name
-        paths_loader = paths.paths_loader(file_name_path)
 #        data_path = osp.join(osp.join(root_path, '..') + paths.DATA_REL_PATH, project_name)
         data_path = paths_loader.DATA_PATH
         mkdirs(data_path)
         
         seqs = gen_seq_name_list(client)
-        
+        print(args.dataset_selection)
         # user-select datasets to be used
         if len(args.dataset_selection)!=0:
             seqs = args.dataset_selection
