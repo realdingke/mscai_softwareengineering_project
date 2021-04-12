@@ -158,8 +158,9 @@ def main():
         
         root_path = paths.ROOT_PATH
         # save project_name to file_name.data
+        mkdirs(osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH))
         file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
-        file_name_dict = {'pn': project_name, 'dn': test_dir_name}
+        file_name_dict = {'pn': project_name}
         with open(file_name_path, 'wb') as f:
             pickle.dump(file_name_dict, f)
             
