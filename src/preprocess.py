@@ -6,7 +6,7 @@ import time
 import cv2
 import moviepy.editor as mpy  # pip install moviepy
 import numpy as np
-
+import re
 from cord_loader import mkdirs
 
 
@@ -18,6 +18,7 @@ def download_mp4(path='/content/drive/MyDrive/car_data_MCMOT/', seqs=None):
     if seqs is None:
         raise SeqReadError('Error occured during reading seq_name from server')
     for s in seqs:
+
         with open(path + '/' + s + '/objects.json', "r") as f:
             data = json.load(f)
         mkdirs(path + "/images/train/" + s)
@@ -28,6 +29,11 @@ def download_mp4(path='/content/drive/MyDrive/car_data_MCMOT/', seqs=None):
         url = list(data['data_units'].values())[0]['data_link']
         movie_url = url
         movie_name = data['data_title']
+        pattern = '(?<=\w)\s(?=\w)'
+        try:
+            movie_name = re.sub(pattern, '_', movie_name)
+        except:
+            movie_name = movie_name
         downsize = 0
         print('Starting download')
         startTime = time.time()
@@ -59,8 +65,8 @@ class LoadVideo:  # for inference
     def __init__(self,
                  save_root='/content/drive/MyDrive/car_data_MCMOT/images/train',
                  seq_name='Heavy_traffic.mp4'):
-        video_name = seq_name.replace('_', ' ')
-        self.path = osp.join(save_root, seq_name, video_name)
+
+        self.path = osp.join(save_root, seq_name, seq_name)
         self.save_path = osp.join(save_root, f"{seq_name}/img1")
         print(self.path)
         self.cap = cv2.VideoCapture(self.path)

@@ -7,6 +7,7 @@ import os
 # add import paths
 import paths
 
+
 class opts(object):
     def __init__(self):
         self.parser = argparse.ArgumentParser()
@@ -17,7 +18,8 @@ class opts(object):
         self.parser.add_argument('--exp_id', default='default')
         self.parser.add_argument('--test', action='store_true')
         self.parser.add_argument('--load_model',
-                                 default='../exp/mot/default/mcmot_last_track_resdcn_18.pth',  # mcmot_last_track_resdcn_18, mcmot_last_track_resdcn_18_visdrone
+                                 default='../exp/mot/default/mcmot_last_track_resdcn_18.pth',
+                                 # mcmot_last_track_resdcn_18, mcmot_last_track_resdcn_18_visdrone
                                  help='path to pretrained model')
         self.parser.add_argument('--resume',
                                  action='store_true',
@@ -128,7 +130,7 @@ class opts(object):
         self.parser.add_argument('--plot_loss',
                                  action='store_true',
                                  help='plot and save loss curves')
-         # save training time
+        # save training time
         self.parser.add_argument('--save_time',
                                  action='store_true',
                                  help='save training time')
@@ -219,7 +221,7 @@ class opts(object):
         # 输入的video文件路径
         self.parser.add_argument('--input_video',
                                  type=str,
-                                 default='../videos/uav_339.mp4',
+                                 default='',
                                  help='path to the input video')
 
         # 输入的image目录
@@ -242,7 +244,7 @@ class opts(object):
                                  type=str,
                                  default='tracking_results',
                                  help='expected output root path')
-         # modify
+        # modify
         self.parser.add_argument('--save_track_time',
                                  action='store_true',
                                  help='save track time')
@@ -256,7 +258,7 @@ class opts(object):
         #                          help='load data from cfg')
         self.parser.add_argument('--data_dir',
                                  type=str,
-                                 default=os.path.join(paths.ROOT_PATH, '..', 'dataset'))     #root_path
+                                 default=os.path.join(paths.ROOT_PATH, '..', 'dataset'))  # root_path
 
         # loss
         self.parser.add_argument('--mse_loss',  # default: false
@@ -327,14 +329,9 @@ class opts(object):
         self.parser.add_argument('--not_reg_offset',
                                  action='store_true',
                                  help='not regress local offset.')
+
         self.parser.add_argument(
-            "--track",
-            action="store_true",
-            help="save the video paths for later tracking",
-        )
-        self.parser.add_argument(
-            "-t",
-            "--test",
+            "--train_track",
             action="store_true",
             help="test the whole parser function",
         )
@@ -372,7 +369,7 @@ class opts(object):
             default='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ',
             help="User input the API key",
         )
-    
+
         self.parser.add_argument(
             "-ds",
             "--dataset_selection",
@@ -386,6 +383,7 @@ class opts(object):
             "-vs",
             "--tracking_video_selection",
             type=str,
+            nargs='+',
             action="append",
             default=[],
             help="User defines the videos to be directly tracked",
@@ -398,17 +396,17 @@ class opts(object):
             default='user_input',
             help="User input the name for training information json file",
         )
-    
+
         self.parser.add_argument(
             "-sp",
             "--split_perc",
             type=float,
             nargs='+',
             action="append",
-            default = [],
+            default=[],
             help="user input split percentage(0-1)",
         )
-    
+
         self.parser.add_argument(
             "--rseed",
             type=int,
@@ -436,7 +434,7 @@ class opts(object):
         opt.lr_step = [int(i) for i in opt.lr_step.split(',')]
 
         opt.fix_res = not opt.keep_res
-        print('Fix size testing.' if opt.fix_res else 'Keep resolution testing.')
+        # print('Fix size testing.' if opt.fix_res else 'Keep resolution testing.')
 
         opt.reg_offset = not opt.not_reg_offset
 
@@ -457,7 +455,7 @@ class opts(object):
             if i < rest_batch_size % (len(opt.gpus) - 1):
                 slave_chunk_size += 1
             opt.chunk_sizes.append(slave_chunk_size)
-        print('training chunk_sizes:', opt.chunk_sizes)
+        # print('training chunk_sizes:', opt.chunk_sizes)
 
         # modified
         # opt.root_dir = os.path.join(os.path.dirname(__file__), '..', '..')
@@ -468,7 +466,7 @@ class opts(object):
         opt.save_dir = os.path.join(opt.exp_dir, opt.exp_id)
         # print("save_dir:", opt.save_dir)
         opt.debug_dir = os.path.join(opt.save_dir, 'debug')
-        print('The output will be saved to ', opt.save_dir)
+        # print('The output will be saved to ', opt.save_dir)
 
         if opt.resume and opt.load_model == '':
             model_path = opt.save_dir[:-4] if opt.save_dir.endswith('TEST') \
@@ -518,7 +516,6 @@ class opts(object):
         else:
             assert 0, 'task not defined!'
 
-        print('heads: ', opt.heads)
         return opt
 
     def init(self, args=''):
@@ -541,7 +538,7 @@ class opts(object):
 
         h_w = default_dataset_info[opt.task]['default_input_wh']
         opt.img_size = (h_w[1], h_w[0])
-        print('Net input image size: {:d}×{:d}'.format(h_w[1], h_w[0]))
+        # print('Net input image size: {:d}×{:d}'.format(h_w[1], h_w[0]))
 
         dataset = Struct(default_dataset_info[opt.task])
         opt.dataset = dataset.dataset
