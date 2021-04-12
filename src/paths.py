@@ -39,6 +39,24 @@ class paths_loader(object):
 
         self.TEST_DIR_NAME_PATH = self.IMG_ROOT_PATH + '/test/'
     
-    def __str__():
-        return f"This is the project path loader class"
+    def update(self):
+        self.IMG_ROOT_PATH = self.DATA_PATH + '/images'
+
+        self.LABEL_PATH = self.DATA_PATH + '/labels_with_ids'
+
+        self.TRAIN_DATA_PATH = self.IMG_ROOT_PATH + '/train'
+
+        self.CFG_DATA_PATH = osp.join(paths_loader.ROOT_PATH, 'lib', 'cfg')
         
+        self.DS_JSON_PATH= osp.join(paths_loader.ROOT_PATH, '..', 'dataset')
+
+        self.OUTPUTS_PATH = self.DATA_PATH + '/outputs'
+
+        self.RESULTS_PATH = self.DATA_PATH + '/results'
+
+        self.LOSS_CURVES_PATH = self.DATA_PATH + '/Loss_Figure'
+
+        self.TEST_DIR_NAME_PATH = self.IMG_ROOT_PATH + '/test/'
+    
+    def __str__(self):
+        return f"This is the project path loader class"
