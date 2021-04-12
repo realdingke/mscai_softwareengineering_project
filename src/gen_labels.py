@@ -108,6 +108,12 @@ def gen_gt_information(client, data_root):
 
 def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
 #    count = 0
+    num_of_class = len(cls2id_dct)
+    tid_last = dict()
+    tid_curr = dict()
+    for i in range(num_of_class):
+        tid_last[i] = 0
+        tid_curr[i] = 0
     for seqs_str in seq_names:
 #        if count == 4:
 #            break  # for car dataset only
@@ -131,12 +137,7 @@ def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
         idx = np.lexsort(gt_file.T[:2, :])  
         
         gt_file = gt_file[idx, :]
-        num_of_class = len(cls2id_dct)
-        tid_last = dict()
-        tid_curr = dict()
-        for i in range(num_of_class):
-            tid_last[i] = 0
-            tid_curr[i] = 0
+
         for idx, (fid, tid, x, y, w, h, mark, cls, vis_ratio) in enumerate(gt_file):
             # frame_id, track_id, top, left, width, height, mark, class, visibility ratio
 
