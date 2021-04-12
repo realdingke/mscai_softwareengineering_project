@@ -156,22 +156,23 @@ def main():
         except:
             project_name = project_name
         
+        paths_loader = paths.paths_loader()
+        paths_loader.DATA_PATH = osp.join(paths_loader.DATA_PATH, project_name)
+        paths_loader.update()
         root_path = paths.ROOT_PATH
-        # save project_name to file_name.data
+        print(paths_loader.DATA_PATH)
         mkdirs(osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH))
-        file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
-        file_name_dict = {'pn': project_name}
-        with open(file_name_path, 'wb') as f:
-            pickle.dump(file_name_dict, f)
+        # file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
+        # file_name_dict = {'pn': project_name}
+        # with open(file_name_path, 'wb') as f:
+        #     pickle.dump(file_name_dict, f)
             
         # change the data_path to include project_name
-        paths_loader = paths.paths_loader(file_name_path)
 #        data_path = osp.join(osp.join(root_path, '..') + paths.DATA_REL_PATH, project_name)
         data_path = paths_loader.DATA_PATH
         mkdirs(data_path)
         
         seqs = gen_seq_name_list(client)
-        
         # user-select datasets to be used
         if len(args.dataset_selection)!=0:
             seqs = args.dataset_selection
@@ -184,6 +185,7 @@ def main():
         preprocess.save_mp4_frame_gen_seqini(seqs, data_path)
         # modified the data root and label path
         data_root = paths_loader.IMG_ROOT_PATH
+        print(data_root)
 #        data_root = osp.join(data_path, 'images')
         label_path = paths_loader.LABEL_PATH
 #        label_path = osp.join(data_path, 'labels_with_ids')
@@ -222,12 +224,14 @@ def main():
             random_split=args.rand_split
         )
         paths_loader.TEST_DIR_NAME_PATH += test_dir_name
-        # # save project_name to file_name.data
-        # file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
-        # file_name_dict = {'pn': project_name, 'dn': test_dir_name}
-        # with open(file_name_path, 'wb') as f:
-        #     pickle.dump(file_name_dict, f)
-        # f.close()
+        # save project_name to file_name.data
+        file_name_path = osp.join(
+            paths.ROOT_PATH, 
+            '..' + paths.DATA_REL_PATH, 
+            'path_names_obj.data',
+        )
+        with open(file_name_path, 'wb') as f:
+            pickle.dump(paths_loader, f)
 
 if __name__ == "__main__":
     main()
