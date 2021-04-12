@@ -1,5 +1,6 @@
 import os
 import os.path as osp
+import pickle
 
 # summarises all absolute paths
 #ROOT_PATH = os.getcwd()
