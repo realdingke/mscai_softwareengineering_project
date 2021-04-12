@@ -6,7 +6,7 @@ import re
 # pickle
 import pickle
 
-from src import preprocess, gen_labels, gen_data_path, paths
+from src import preprocess, gen_labels, gen_data_path, paths, _init_paths
 from src.cord_loader import load_cord_data, gen_seq_name_list, get_cls_info, gen_obj_json, mkdirs
 
 
@@ -155,8 +155,11 @@ def main():
             project_name = re.sub(pattern, '_', project_name)
         except:
             project_name = project_name
+        
+        _init_paths.gen_init_data_path(project_name)
         root_path = paths.ROOT_PATH
-        data_path = osp.join(osp.join(root_path, '..') + paths.DATA_REL_PATH, project_name)
+#        data_path = osp.join(osp.join(root_path, '..') + paths.DATA_REL_PATH, project_name)
+        data_path = paths.DATA_PATH
         mkdirs(data_path)
         
         seqs = gen_seq_name_list(client)
