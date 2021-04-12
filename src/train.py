@@ -14,7 +14,7 @@ import torch
 # my_visible_devs = '1'  # '0, 3'  # 设置可运行GPU编号
 # os.environ['CUDA_VISIBLE_DEVICES'] = my_visible_devs
 # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-
+import pickle
 import json
 import torch.utils.data
 from torchvision.transforms import transforms as T
@@ -46,7 +46,14 @@ def add_test_loader(opt, data_config, transforms):
     return test_dataset, opt_2
 
 def plot_loss_curves(opt, data_config, train_losses = None, test_losses = None):
-        path = os.path.join(paths.paths_loader.LOSS_CURVES_PATH, opt.exp_id)
+        path_object = os.path.join(
+            paths.ROOT_PATH,
+            '..' + paths.DATA_REL_PATH,
+            'path_names_obj.data',
+        )
+        with open(path_object, 'rb') as f:
+            path_object = pickle.load(f)
+        path = os.path.join(path_object.LOSS_CURVES_PATH, opt.exp_id)
         mkdirs(path)
         if len(test_losses) == 0:
             fig, ax = plt.subplots(2,2)
@@ -134,7 +141,15 @@ def plot_loss_curves(opt, data_config, train_losses = None, test_losses = None):
             plt.savefig(plot_path)
 
 def save_training_time(opt, data_config, epoch_time=None, total_time=None):
-    time_path = os.path.join(paths.DATA_PATH, 'training_time.txt')
+    path_object = os.path.join(
+        paths.ROOT_PATH,
+        '..' + paths.DATA_REL_PATH,
+        'path_names_obj.data',
+    )
+    with open(path_object, 'rb') as f:
+        path_object = pickle.load(f)
+    path = path_object.DATA_PATH
+    time_path = os.path.join(path, 'training_time.txt')
     epoch_time_str = ", ".join(epoch_time)
     with open(time_path, 'a') as f:
         f.write(f"exp id: {opt.exp_id}, arch: {opt.arch}, epoch: {opt.num_epochs}"

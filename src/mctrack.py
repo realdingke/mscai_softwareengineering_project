@@ -424,13 +424,20 @@ if __name__ == '__main__':
     opt = opts().init()
 
     if not opt.val_mot16:
+        path_object = os.path.join(
+            paths.ROOT_PATH,
+            '..' + paths.DATA_REL_PATH,
+            'path_names_obj.data',
+        )
+        with open(path_object, 'rb') as f:
+            path_object = pickle.load(f)
+        data_root = path_object.TEST_DIR_NAME_PATH
         # file_name_path = os.path.join(opt.data_dir, 'file_name.data')
         # if os.path.exists(file_name_path):
         #     with open(file_name_path, 'rb') as f:
         #         file_name_dict = pickle.load(f)
         # proj_name = file_name_dict['pn']
         # dir_name = file_name_dict['dn']
-        data_root = paths.paths_loader.TEST_DIR_NAME_PATH
         seqs_str = os.listdir(data_root)
         seqs_str = '  \n'.join(seqs_str)
 
