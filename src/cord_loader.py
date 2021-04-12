@@ -67,6 +67,7 @@ def get_cls_info(root='/content/drive/MyDrive/car_data_MCMOT/images/train/'):
 def gen_obj_json(root='/content/drive/MyDrive/car_data_MCMOT/', client=load_cord_data()):
     project = client.get_project()
     pattern = '(?<=\w)\s(?=\w)'
+    obj_jsons_list = []
     for label_uid in project.get_labels_list():
         label = client.get_label_row(label_uid)
         seq_name = label['data_title']
@@ -79,4 +80,21 @@ def gen_obj_json(root='/content/drive/MyDrive/car_data_MCMOT/', client=load_cord
         filename = path + '/objects.json'
         with open(filename, 'w') as f:
             json.dump(label, f)
+        obj_jsons_list.append(label)
+    return obj_jsons_list
+
+
+def judge_video_info(obj_jsons_list):
+    empty_seqs = []
+    pattern = '(?<=\w)\s(?=\w)'
+    for obj_json in obj_jsons_list:
+        if len(list(obj_json["data_units"].values())[0]["labels"].keys()) <= 1 and \
+          len(list(obj_json["data_units"].values())[0]["labels"]["0"]["objects"]) == 0: 
+            seq_name = obj_json['data_title']
+            try:
+                seq_name = re.sub(pattern, '_', seq_name)
+            except:
+                seq_name = seq_name
+            empty_seqs.append(seq_name)
+    return empty_seqs
         
