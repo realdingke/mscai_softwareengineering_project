@@ -197,7 +197,7 @@ def main(opt):
         print("The videos that have no gt labels:")
         for seq in empty_seqs:
             print(' ' * 6 + seq)
-    if opt.test:
+    if opt.train_track:
         project_id = opt.project
         api_key = opt.api
         client = cord_loader.load_cord_data(project_id, api_key)
