@@ -327,6 +327,101 @@ class opts(object):
         self.parser.add_argument('--not_reg_offset',
                                  action='store_true',
                                  help='not regress local offset.')
+        self.parser.add_argument(
+            "--track",
+            action="store_true",
+            help="save the video paths for later tracking",
+        )
+        self.parser.add_argument(
+            "-t",
+            "--test",
+            action="store_true",
+            help="test the whole parser function",
+        )
+
+        self.parser.add_argument(
+            "--track",
+            action="store_true",
+            help="save the video paths for later tracking",
+        )
+
+        self.parser.add_argument(
+            "--load_api",
+            action="store_true",
+            help="test the whole parser function",
+        )
+
+        self.parser.add_argument(
+            "--gen_info",
+            action="store_true",
+            help="print out the root path and basic project info",
+        )
+
+        self.parser.add_argument(
+            "--project",
+            type=str,
+            nargs='?',
+            default='eec20d90-c014-4cd4-92ea-72341c3a1ab5',
+            help="User input the project ID",
+        )
+
+        self.parser.add_argument(
+            "--api",
+            type=str,
+            nargs='?',
+            default='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ',
+            help="User input the API key",
+        )
+    
+        self.parser.add_argument(
+            "-ds",
+            "--dataset_selection",
+            type=str,
+            action="append",
+            default=[],
+            help="User defines the datasets to be used",
+        )
+
+        self.parser.add_argument(
+            "-vs",
+            "--tracking_video_selection",
+            type=str,
+            action="append",
+            default=[],
+            help="User defines the videos to be directly tracked",
+        )
+
+        self.parser.add_argument(
+            "--json_name",
+            type=str,
+            nargs='?',
+            default='user_input',
+            help="User input the name for training information json file",
+        )
+    
+        self.parser.add_argument(
+            "-sp",
+            "--split_perc",
+            type=float,
+            nargs='+',
+            action="append",
+            default = [],
+            help="user input split percentage(0-1)",
+        )
+    
+        self.parser.add_argument(
+            "--rseed",
+            type=int,
+            nargs='?',
+            default=10,
+            help="User input the random seed for the splitting of dataset",
+        )
+
+        self.parser.add_argument(
+            "--rand_split",
+            action="store_true",
+            help="Random split the dataset by specific split_perc"
+        )
 
     def parse(self, args=''):
         if args == '':
