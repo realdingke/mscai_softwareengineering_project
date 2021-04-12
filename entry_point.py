@@ -164,9 +164,9 @@ def main():
             pickle.dump(file_name_dict, f)
             
         # change the data_path to include project_name
-        paths.init_path(file_name_path)
+        paths_loader = paths.paths_loader(file_name_path)
 #        data_path = osp.join(osp.join(root_path, '..') + paths.DATA_REL_PATH, project_name)
-        data_path = paths.DATA_PATH
+        data_path = paths_loader.DATA_PATH
         mkdirs(data_path)
         
         seqs = gen_seq_name_list(client)
@@ -182,20 +182,20 @@ def main():
         preprocess.download_mp4(data_path, seqs)
         preprocess.save_mp4_frame_gen_seqini(seqs, data_path)
         # modified the data root and label path
-        # data_root = paths.IMG_ROOT_PATH
-        data_root = osp.join(data_path, 'images')
-        # label_path = paths.LABEL_PATH
-        label_path = osp.join(data_path, 'labels_with_ids')
+        data_root = paths_loader.IMG_ROOT_PATH
+#        data_root = osp.join(data_path, 'images')
+        label_path = paths_loader.LABEL_PATH
+#        label_path = osp.join(data_path, 'labels_with_ids')
         bad_seqs = gen_labels.gen_gt_information(client, data_root)
         seqs = [seq for seq in seqs if seq not in bad_seqs]  #filter out the seqs with no label
-        # train_data_path = paths.TRAIN_DATA_PATH
-        train_data_path = osp.join(data_root, 'train')
+        train_data_path = paths.TRAIN_DATA_PATH
+#        train_data_path = osp.join(data_root, 'train')
         cls2id_dct, _ = get_cls_info(train_data_path)
         gen_labels.gen_label_files(seqs, data_root, label_path, cls2id_dct)
         
         name = args.json_name
-        cfg_path = paths.CFG_DATA_PATH
-        json_root_path = osp.join(root_path, '..', 'dataset')
+        cfg_path = paths_loader.CFG_DATA_PATH
+        json_root_path = paths_loader.DS_JSON_PATH
         gen_data_path.generate_json(name, json_root_path, cfg_path)
 
         # modified gen_all_data_path
@@ -211,7 +211,7 @@ def main():
         #     random_split=args.rand_split,
         # )
         test_dir_name = gen_data_path.train_test_split(
-            root_path=paths.DATA_PATH,
+            root_path=paths_loader.DATA_PATH + '/..',
             project_name=project_name,
             dataset_name_list=seqs,
             percentage=args.split_perc[0],
