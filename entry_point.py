@@ -189,7 +189,7 @@ def main():
 #        label_path = osp.join(data_path, 'labels_with_ids')
         bad_seqs = gen_labels.gen_gt_information(client, data_root)
         seqs = [seq for seq in seqs if seq not in bad_seqs]  #filter out the seqs with no label
-        train_data_path = paths.TRAIN_DATA_PATH
+        train_data_path = paths_loader.TRAIN_DATA_PATH
 #        train_data_path = osp.join(data_root, 'train')
         cls2id_dct, _ = get_cls_info(train_data_path)
         gen_labels.gen_label_files(seqs, data_root, label_path, cls2id_dct)
@@ -221,13 +221,13 @@ def main():
             random_seed=args.rseed,
             random_split=args.rand_split
         )
-
-        # save project_name to file_name.data
-        file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
-        file_name_dict = {'pn': project_name, 'dn': test_dir_name}
-        with open(file_name_path, 'wb') as f:
-            pickle.dump(file_name_dict, f)
-        f.close()
+        paths_loader.TEST_DIR_NAME_PATH += test_dir_name
+        # # save project_name to file_name.data
+        # file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
+        # file_name_dict = {'pn': project_name, 'dn': test_dir_name}
+        # with open(file_name_path, 'wb') as f:
+        #     pickle.dump(file_name_dict, f)
+        # f.close()
 
 if __name__ == "__main__":
     main()

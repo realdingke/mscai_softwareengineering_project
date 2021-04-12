@@ -46,7 +46,7 @@ def add_test_loader(opt, data_config, transforms):
     return test_dataset, opt_2
 
 def plot_loss_curves(opt, data_config, train_losses = None, test_losses = None):
-        path = os.path.join(paths.DATA_PATH, 'Loss Figure', opt.exp_id)
+        path = os.path.join(paths.paths_loader.LOSS_CURVES_PATH, opt.exp_id)
         mkdirs(path)
         if len(test_losses) == 0:
             fig, ax = plt.subplots(2,2)

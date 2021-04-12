@@ -34,6 +34,10 @@ class paths_loader(object):
         self.OUTPUTS_PATH = self.DATA_PATH + '/outputs'
 
         self.RESULTS_PATH = self.DATA_PATH + '/results'
+
+        self.LOSS_CURVES_PATH = self.DATA_PATH + '/Loss_Figure'
+
+        self.TEST_DIR_NAME_PATH = self.IMG_ROOT_PATH + '/test/'
     
     def __str__():
         return f"This is the project path loader class"

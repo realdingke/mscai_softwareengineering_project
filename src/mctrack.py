@@ -17,6 +17,7 @@ import torch
 import re
 # pickle
 import pickle
+import paths
 
 from collections import defaultdict
 from lib.tracker.multitracker import JDETracker, MCJDETracker, id2cls
@@ -423,23 +424,15 @@ if __name__ == '__main__':
     opt = opts().init()
 
     if not opt.val_mot16:
-        file_name_path = os.path.join(opt.data_dir, 'file_name.data')
-        if os.path.exists(file_name_path):
-            with open(file_name_path, 'rb') as f:
-                file_name_dict = pickle.load(f)
-            proj_name = file_name_dict['pn']
-            dir_name = file_name_dict['dn']
-            data_root = os.path.join(opt.data_dir, proj_name ,'images/test', dir_name)
-            seqs_str = os.listdir(data_root)
-            seqs_str = '  \n'.join(seqs_str)
-        else:
-            seqs_str = '''KITTI-13
-                      KITTI-17
-                      ADL-Rundle-6
-                      PETS09-S2L1
-                      TUD-Campus
-                      TUD-Stadtmitte'''
-            data_root = os.path.join(opt.data_dir, 'MOT15/images/train')
+        # file_name_path = os.path.join(opt.data_dir, 'file_name.data')
+        # if os.path.exists(file_name_path):
+        #     with open(file_name_path, 'rb') as f:
+        #         file_name_dict = pickle.load(f)
+        # proj_name = file_name_dict['pn']
+        # dir_name = file_name_dict['dn']
+        data_root = paths.paths_loader.TEST_DIR_NAME_PATH
+        seqs_str = os.listdir(data_root)
+        seqs_str = '  \n'.join(seqs_str)
     else:
         seqs_str = '''MOT16-02
                       MOT16-04
