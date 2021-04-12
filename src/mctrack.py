@@ -433,15 +433,7 @@ if __name__ == '__main__':
         data_root = paths.paths_loader.TEST_DIR_NAME_PATH
         seqs_str = os.listdir(data_root)
         seqs_str = '  \n'.join(seqs_str)
-    else:
-        seqs_str = '''MOT16-02
-                      MOT16-04
-                      MOT16-05
-                      MOT16-09
-                      MOT16-10
-                      MOT16-11
-                      MOT16-13'''
-        data_root = os.path.join(opt.data_dir, 'MOT16/train')
+
     if opt.test_mot16:
         seqs_str = '''MOT16-01
                       MOT16-03

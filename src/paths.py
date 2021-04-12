@@ -31,9 +31,9 @@ class paths_loader(object):
         
         self.DS_JSON_PATH= osp.join(paths_loader.ROOT_PATH, '..', 'dataset')
 
-        self.OUTPUTS_PATH = self.DATA_PATH + '/outputs'
-
-        self.RESULTS_PATH = self.DATA_PATH + '/results'
+        # self.OUTPUTS_PATH = self.IMG_ROOT_PATH + '/test/outputs'
+        #
+        # self.RESULTS_PATH = self.IMG_ROOT_PATH + '/test/results'
 
         self.LOSS_CURVES_PATH = self.DATA_PATH + '/Loss_Figure'
 
