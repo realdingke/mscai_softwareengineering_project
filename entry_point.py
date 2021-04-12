@@ -156,9 +156,9 @@ def main():
         except:
             project_name = project_name
         
-        paths_loader = paths.paths_loader(project_name)
+        paths_loader = paths.paths_loader()
+        paths_loader.DATA_PATH = osp.join(paths_loader.DATA_PATH, project_name)
         root_path = paths.ROOT_PATH
-        # save project_name to file_name.data
         mkdirs(osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH))
         # file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
         # file_name_dict = {'pn': project_name}
