@@ -6,8 +6,8 @@ import re
 # pickle
 import pickle
 
-import preprocess, gen_labels, gen_data_path, paths
-from cord_loader import load_cord_data, gen_seq_name_list, get_cls_info, gen_obj_json, mkdirs
+import preprocess, gen_labels, gen_data_path, paths, cord_loader, demo
+from lib.opts import opts
 
 
 def str2bool(v):
@@ -35,6 +35,12 @@ def _init_parser():
         "--test",
         action="store_true",
         help="test the whole parser function",
+    )
+
+    parser.add_argument(
+        "--track",
+        action="store_true",
+        help="save the video paths for later tracking",
     )
 
     parser.add_argument(
@@ -83,6 +89,15 @@ def _init_parser():
     )
 
     parser.add_argument(
+        "-vs",
+        "--tracking_video_selection",
+        type=str,
+        action="append",
+        default=[],
+        help="User defines the videos to be directly tracked",
+    )
+
+    parser.add_argument(
         "--json_name",
         type=str,
         nargs='?',
@@ -119,35 +134,55 @@ def _init_parser():
     return args
 
 
-def main():
+def main(opt):
     """
     Entry point for program, call other functions here
     """
 
     # parse command line arguments
-    args = _init_parser()
 
-#    if args.load_api:
-#        project_id = args.project
-#        api_key = args.api
-#        args.client = load_cord_data(project_id, api_key)
-    if args.gen_info:
-        project_id = args.project
-        api_key = args.api
-        client = load_cord_data(project_id, api_key)
+    if opt.gen_info:
+        project_id = opt.project
+        api_key = opt.api
+        client = cord_loader.load_cord_data(project_id, api_key)
+        
+        pattern = '(?<=\w)\s(?=\w)'
+        project_name = client.get_project()['title']
+        try:
+            project_name = re.sub(pattern, '_', project_name)
+        except:
+            project_name = project_name
+        
+        paths_loader = paths.paths_loader()
+        paths_loader.DATA_PATH = osp.join(paths_loader.DATA_PATH, project_name)
+        paths_loader.update()
+
         root_path = paths.ROOT_PATH
+        data_path = paths_loader.DATA_PATH
+        cord_loader.mkdirs(data_path)
+        seqs = cord_loader.gen_seq_name_list(client)
+        
+        obj_jsons_list = cord_loader.gen_obj_json(data_path, client=client)
+        # preprocess.download_mp4(data_path, seqs)
+        empty_seqs = cord_loader.judge_video_info(obj_jsons_list)
+
+        # with open(file_name_path, 'wb') as f:
+        #     pickle.dump(paths_loader, f)
         print(f"The root path is:\n{root_path}")
-        data_path = root_path + paths.DATA_REL_PATH
-        mkdirs(data_path)
-        seqs = gen_seq_name_list(client)
         print('The project contains the below datasets:')
         for seq in seqs:
             print(' '*6 + seq)
-        gen_obj_json(data_path, client=client)
-    if args.test:
-        project_id = args.project
-        api_key = args.api
-        client = load_cord_data(project_id, api_key)
+        print("The videos that have gt labels and can used to train:")
+        for seq in seqs:
+            if seq not in empty_seqs:
+                print(' '*6 + seq) 
+        print("The videos that have no gt labels:")
+        for seq in empty_seqs:
+            print(' '*6 + seq)
+    if opt.test:
+        project_id = opt.project
+        api_key = opt.api
+        client = cord_loader.load_cord_data(project_id, api_key)
         
         pattern = '(?<=\w)\s(?=\w)'
         project_name = client.get_project()['title']
@@ -160,28 +195,17 @@ def main():
         paths_loader.DATA_PATH = osp.join(paths_loader.DATA_PATH, project_name)
         paths_loader.update()
         root_path = paths.ROOT_PATH
-        print(paths_loader.DATA_PATH)
-        mkdirs(osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH))
-        # file_name_path = osp.join(paths.ROOT_PATH, '..' + paths.DATA_REL_PATH, 'file_name.data')
-        # file_name_dict = {'pn': project_name}
-        # with open(file_name_path, 'wb') as f:
-        #     pickle.dump(file_name_dict, f)
-            
+
         # change the data_path to include project_name
-#        data_path = osp.join(osp.join(root_path, '..') + paths.DATA_REL_PATH, project_name)
         data_path = paths_loader.DATA_PATH
-        mkdirs(data_path)
         
-        seqs = gen_seq_name_list(client)
+        seqs = cord_loader.gen_seq_name_list(client)
         # user-select datasets to be used
-        if len(args.dataset_selection)!=0:
-            seqs = args.dataset_selection
+        if len(opt.dataset_selection)!=0:
+            seqs = opt.dataset_selection
         else:
             seqs = seqs
         
-        gen_obj_json(data_path, client=client)
-        
-        preprocess.download_mp4(data_path, seqs)
         preprocess.save_mp4_frame_gen_seqini(seqs, data_path)
         # modified the data root and label path
         data_root = paths_loader.IMG_ROOT_PATH
@@ -193,10 +217,10 @@ def main():
         seqs = [seq for seq in seqs if seq not in bad_seqs]  #filter out the seqs with no label
         train_data_path = paths_loader.TRAIN_DATA_PATH
 #        train_data_path = osp.join(data_root, 'train')
-        cls2id_dct, _ = get_cls_info(train_data_path)
+        cls2id_dct, _ = cord_loader.get_cls_info(train_data_path)
         gen_labels.gen_label_files(seqs, data_root, label_path, cls2id_dct)
         
-        name = args.json_name
+        name = opt.json_name
         cfg_path = paths_loader.CFG_DATA_PATH
         json_root_path = paths_loader.DS_JSON_PATH
         gen_data_path.generate_json(name, json_root_path, cfg_path)
@@ -206,22 +230,22 @@ def main():
         #     root_path = paths.ROOT_PATH,
         #     project_name = paths.DATA_REL_PATH,
         #     dataset_name_list = seqs,
-        #     percentage = args.split_perc,
+        #     percentage = opt.split_perc,
         #     train_file = f"{name}.train",
         #     test_file = f"{name}.test",
-        #     random_seed = args.rseed,
+        #     random_seed = opt.rseed,
         #     test_dir_name = test_data_path,
-        #     random_split=args.rand_split,
+        #     random_split=opt.rand_split,
         # )
         test_dir_name = gen_data_path.train_test_split(
             root_path=paths_loader.DATA_PATH + '/..',
             project_name=project_name,
             dataset_name_list=seqs,
-            percentage=args.split_perc[0],
+            percentage=opt.split_perc[0],
             train_file=f"{name}.train",
             test_file=f"{name}.test",
-            random_seed=args.rseed,
-            random_split=args.rand_split
+            random_seed=opt.rseed,
+            random_split=opt.rand_split
         )
         paths_loader.TEST_DIR_NAME_PATH += test_dir_name
         # save project_name to file_name.data
@@ -232,6 +256,9 @@ def main():
         )
         with open(file_name_path, 'wb') as f:
             pickle.dump(paths_loader, f)
+    if opt.track:
+        run_demo(opt)
 
 if __name__ == "__main__":
-    main()
+    opt = opts().init()
+    main(opt)
