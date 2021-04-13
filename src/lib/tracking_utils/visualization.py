@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
-from lib.tracker.multitracker import id2cls
+# from lib.tracker.multitracker import id2cls
+from gen_labels_detrac_mcmot import get_cls_info
 
 # cls_color_dict = {
 #     'car': [180, 105, 255],  # hot pink
@@ -47,6 +48,7 @@ def plot_detects(image,
     :param fps:
     :return:
     """
+    id2cls = get_cls_info()[1]
     img = np.ascontiguousarray(np.copy(image))
     # im_h, im_w = img.shape[:2]
 
@@ -112,6 +114,7 @@ def plot_tracks(image,
     :param fps:
     :return:
     """
+    id2cls = get_cls_info()[1]
     img = np.ascontiguousarray(np.copy(image))
     im_h, im_w = img.shape[:2]
 
@@ -196,6 +199,7 @@ def plot_tracking(image,
     :param cls_id:
     :return:
     """
+    id2cls = get_cls_info()[1]
     im = np.ascontiguousarray(np.copy(image))
     im_h, im_w = im.shape[:2]
 

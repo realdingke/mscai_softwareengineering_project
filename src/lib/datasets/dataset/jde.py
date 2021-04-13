@@ -6,7 +6,7 @@ import random
 import copy
 import time
 import warnings
-
+import moviepy.editor as mpy
 import cv2
 # import json
 import numpy as np
@@ -19,7 +19,8 @@ from collections import OrderedDict, defaultdict
 # from lib.opts import opts
 from lib.utils.image import gaussian_radius, draw_umich_gaussian, draw_msra_gaussian
 from lib.utils.utils import xyxy2xywh, generate_anchors, xywh2xyxy, encode_delta
-from lib.tracker.multitracker import id2cls
+# from lib.tracker.multitracker import id2cls
+from gen_labels_detrac_mcmot import get_cls_info
 
 
 # for inference
@@ -108,10 +109,14 @@ class LoadVideo:  # for inference
         :param img_size:
         """
         self.cap = cv2.VideoCapture(path)
+        # myclip = mpy.VideoFileClip(path)
+        self.myclip = mpy.VideoFileClip(path)
+        self.times = np.linspace(0, self.myclip.duration, num=round(self.myclip.duration * self.myclip.fps))
         self.frame_rate = int(round(self.cap.get(cv2.CAP_PROP_FPS)))
         self.vw = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         self.vh = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.vn = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        # self.vn = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        self.vn = round(self.myclip.duration * self.myclip.fps)
 
         self.width = img_size[0]
         self.height = img_size[1]
@@ -135,7 +140,8 @@ class LoadVideo:  # for inference
             raise StopIteration
 
         # Read image
-        res, img_0 = self.cap.read()  # BGR
+        # res, img_0 = self.cap.read()  # BGR
+        img_0 = self.myclip.get_frame(self.times[self.count])
         assert img_0 is not None, 'Failed to load frame {:d}'.format(self.count)
         img_0 = cv2.resize(img_0, (self.w, self.h))
 
@@ -143,8 +149,12 @@ class LoadVideo:  # for inference
         img, _, _, _ = letterbox(img_0, height=self.height, width=self.width)
 
         # Normalize RGB
-        img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR->RGB and HWC->CHW
+        img = img.transpose(2, 0, 1)  # BGR->RGB and HWC->CHW
+        # img = img[:, :, ::-1]
+        # img = img[np.newaxis, :]
+        # print(img.shape)
         img = np.ascontiguousarray(img, dtype=np.float32)
+        # print(img.shape)
         img /= 255.0
 
         # save letterbox image
@@ -561,7 +571,7 @@ class MultiScaleJD(LoadImagesAndLabels):
 
         print('dataset summary')
         print(self.tid_num)
-
+        id2cls = get_cls_info()[1]
         if opt.id_weight > 0:  # If do ReID calculation
             # print('total # identities:', self.nID)
             for k, v in self.nID_dict.items():
@@ -912,7 +922,7 @@ class JointDataset(LoadImagesAndLabels):  # for training
 
         print('dataset summary')
         print(self.tid_num)
-
+        id2cls = get_cls_info()[1]
         if opt.id_weight > 0:  # If do ReID calculation
             # print('total # identities:', self.nID)
             for k, v in self.nID_dict.items():

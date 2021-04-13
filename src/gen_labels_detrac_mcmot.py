@@ -9,8 +9,10 @@ import numpy as np
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 from tqdm import tqdm
-
+import paths
+import pickle
 import json
+
 
 # class name and class id mapping
 # cls2id = {
@@ -21,18 +23,19 @@ import json
 #     'tricycle': 4
 # }
 
-def get_cls_info(root='/content/drive/MyDrive/car_data_MCMOT/images/train/'):
+def get_cls_info():
     """load the saved class dict info"""
-    with open(osp.join(root, 'cls2id.json'), 'r') as f:
+    with open(paths.PATHS_OBJ_PATH, 'rb') as f:
+        paths_loader = pickle.load(f)
+    with open(osp.join(paths_loader.TRAIN_DATA_PATH, 'cls2id.json'), 'r') as f:
         cls2id_dct = json.load(f)
-    with open(osp.join(root, 'id2cls.json'), 'r') as f:
+    with open(osp.join(paths_loader.TRAIN_DATA_PATH, 'id2cls.json'), 'r') as f:
         id2cls_dct = json.load(f)
         id2cls_dct_new = {}
         for i in id2cls_dct.keys():
             id2cls_dct_new[int(i)] = id2cls_dct[i]
-    
-    return cls2id_dct, id2cls_dct_new
 
+    return cls2id_dct, id2cls_dct_new
 
 
 # CLS2ID = {'cattle': 0 }   ##大写
@@ -51,11 +54,11 @@ def get_cls_info(root='/content/drive/MyDrive/car_data_MCMOT/images/train/'):
 #     4: 'bus',
 #     0: 'car'
 # }
-# ID2CLS = {                       
-#     0: 'cattle'     
+# ID2CLS = {
+#     0: 'cattle'
 # }       ##大写
 
-CLS2ID , ID2CLS = get_cls_info(root='/content/drive/MyDrive/car_data_MCMOT/images/train/')
+# CLS2ID , ID2CLS = get_cls_info()
 
 def preprocess(src_root, dst_root):
     """

@@ -264,15 +264,19 @@ def main(opt):
             empty_seqs = seqs_name_dict['empty_seqs']
             for seq in empty_seqs:
                 empty_seqs_path = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
-                opt.input_video = empty_seqs_path
-                demo.run_demo(opt)
+                if opt.output_root == '../results':
+                    opt.output_root = osp.join(opt.output_root, seq)
+                    opt.input_video = empty_seqs_path
+                    demo.run_demo(opt)
         else:
             for seq in opt.tracking_video_selection[0]:
-                opt.input_video = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
-                demo.run_demo(opt)
-                paths_loader.OUTPUT_ROOT = opt.output_root
-                with open(file_name_path, 'wb') as f:
-                    pickle.dump(file_name_path, f)
+                if opt.output_root == '../results':
+                    opt.output_root = osp.join(opt.output_root, seq)
+                    opt.input_video = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
+                    demo.run_demo(opt)
+                    paths_loader.OUTPUT_ROOT = opt.output_root
+                    with open(file_name_path, 'wb') as f:
+                        pickle.dump(paths_loader, f)
         if opt.visual:
             seqs = seqs_name_dict['empty_seqs'] + seqs_name_dict['labeled_seqs']
             for seq in seqs:
