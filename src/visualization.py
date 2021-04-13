@@ -165,7 +165,7 @@ def _upload_results(client,
         client.save_label_row(label_uid, updated)
 
 
-def visualization(opt):
+def visualization(opt, seq):
     with open(paths.PATHS_OBJ_PATH, 'rb') as f:
         paths_loader = pickle.load(f)
 
@@ -173,7 +173,7 @@ def visualization(opt):
         # project_id = opt.project
         # api_key = opt.api
         # creator_email = opt.email
-        # root_path = paths_loader.TRAIN_DATA_PATH
+        root_path = paths_loader.TRAIN_DATA_PATH
         # results_paths = paths_loader.RESULTS_PATHS
         # client = load_cord_data(project_id, api_key)
         # for results_path in results_paths:
@@ -182,9 +182,9 @@ def visualization(opt):
 
         project_id = '235aa1ec-8d5e-4253-b673-1386af826fae'  # Project ID of drone
         api_key = 'vV_rHH11febK3F2ivQYO_qzlLO9nNTCPxaGblNrfJzg'
-        result_path = '/content/drive/MyDrive/cattle_data/images/' + \
-                      'results/cattle_dla_20/Video_of_cattle_1.mp4.txt'
-        root_path = '/content/drive/MyDrive/cattle_data/images/train/'
+        # result_path = '/content/drive/MyDrive/cattle_data/images/' + \
+        #               'results/cattle_dla_20/Video_of_cattle_1.mp4.txt'
+        result_path = osp.join(paths_loader.OUTPUT_ROOT, seq + '.txt')
         creator_email = 'grouproject851@gmail.com'
         gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
         client = load_cord_data(project_id, api_key)
@@ -192,4 +192,4 @@ def visualization(opt):
         _upload_results(client, results, root_path, creator_email, gmt_format)
 
     if __name__ == '__main__':
-        visualization(opt)
+        visualization(opt, seq)

@@ -270,8 +270,18 @@ def main(opt):
             for seq in opt.tracking_video_selection[0]:
                 opt.input_video = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
                 demo.run_demo(opt)
-    if opt.visual:
-        visualization.visualization(opt)
+                paths_loader.OUTPUT_ROOT = opt.output_root
+                with open(file_name_path, 'wb') as f:
+                    pickle.dump(file_name_path, f)
+        if opt.visual:
+            seqs = seqs_name_dict['empty_seqs'] + seqs_name_dict['labeled_seqs']
+            for seq in seqs:
+                if seq in seqs_name_dict['labeled_seqs']:
+                    usr_input = bool(input(f"Warning: Are you sure you want to overwrite the gt of {seq} in Cord? True/False"))
+                    if usr_input:
+                        visualization.visualization(opt, seq)
+                else:
+                    visualization.visualization(opt, seq)
 
 
 if __name__ == "__main__":
