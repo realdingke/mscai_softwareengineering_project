@@ -7,8 +7,17 @@ import os.path as osp
 # ROOT_PATH = os.getcwd()
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 
+
 # summarises important relative paths
 DATA_REL_PATH = '/dataset'
+
+
+CLIENT_DATA_PATH = osp.join(ROOT_PATH + '/..' + DATA_REL_PATH, 'client_data')
+        
+PATHS_OBJ_PATH = osp.join(
+    CLIENT_DATA_PATH,
+    'path_names_obj.data',
+)   # stores the paths_loader object save path
 
 
 class paths_loader(object):
@@ -38,13 +47,6 @@ class paths_loader(object):
         self.SEQS_NAME_PATH = None
 
     def update(self):
-        
-        self.CLIENT_DATA_PATH = osp.join(self.DATA_PATH, '..', 'client_data')
-        
-        self.PATHS_OBJ_PATH = osp.join(
-            self.CLIENT_DATA_PATH,
-            'path_names_obj.data',
-        )   # stores the updated paths_loader object
 
         self.IMG_ROOT_PATH = self.DATA_PATH + '/images'
 
