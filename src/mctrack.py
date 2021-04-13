@@ -20,12 +20,13 @@ import pickle
 import paths
 
 from collections import defaultdict
-from lib.tracker.multitracker import JDETracker, MCJDETracker, id2cls
+from lib.tracker.multitracker import JDETracker, MCJDETracker
 from lib.tracking_utils import visualization as vis
 from lib.tracking_utils.log import logger
 from lib.tracking_utils.timer import Timer
 from lib.tracking_utils.evaluation import Evaluator, MCEvaluator
 import lib.datasets.dataset.jde as datasets
+# from gen_labels_detrac_mcmot import get_cls_info
 
 from lib.tracking_utils.utils import mkdir_if_missing
 from lib.opts import opts

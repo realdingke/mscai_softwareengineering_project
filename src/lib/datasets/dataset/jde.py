@@ -19,7 +19,8 @@ from collections import OrderedDict, defaultdict
 # from lib.opts import opts
 from lib.utils.image import gaussian_radius, draw_umich_gaussian, draw_msra_gaussian
 from lib.utils.utils import xyxy2xywh, generate_anchors, xywh2xyxy, encode_delta
-from lib.tracker.multitracker import id2cls
+# from lib.tracker.multitracker import id2cls
+from gen_labels_detrac_mcmot import get_cls_info
 
 
 # for inference
@@ -561,7 +562,7 @@ class MultiScaleJD(LoadImagesAndLabels):
 
         print('dataset summary')
         print(self.tid_num)
-
+        id2cls = get_cls_info()[1]
         if opt.id_weight > 0:  # If do ReID calculation
             # print('total # identities:', self.nID)
             for k, v in self.nID_dict.items():
@@ -912,7 +913,7 @@ class JointDataset(LoadImagesAndLabels):  # for training
 
         print('dataset summary')
         print(self.tid_num)
-
+        id2cls = get_cls_info()[1]
         if opt.id_weight > 0:  # If do ReID calculation
             # print('total # identities:', self.nID)
             for k, v in self.nID_dict.items():

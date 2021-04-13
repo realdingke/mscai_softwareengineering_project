@@ -16,8 +16,12 @@ from lib.tracking_utils.utils import *
 from lib.utils.post_process import ctdet_post_process
 from .basetrack import BaseTrack, MCBaseTrack, TrackState
 # from gen_dataset_visdrone import cls2id, id2cls  # visdrone
-from gen_labels_detrac_mcmot import CLS2ID as cls2id  # mcmot_c5
-from gen_labels_detrac_mcmot import  ID2CLS as  id2cls  # mcmot_c5
+# from gen_labels_detrac_mcmot import CLS2ID as cls2id  # mcmot_c5
+# from gen_labels_detrac_mcmot import  ID2CLS as  id2cls  # mcmot_c5
+from gen_labels_detrac_mcmot import get_cls_info
+
+
+# cls2id, id2cls = get_cls_info()
 
 
 # TODO: Multi-class Track class
@@ -582,7 +586,7 @@ class MCJDETracker(object):
         self.frame_id += 1
 
         # ----- reset the track ids for all object classes in the first frame
-        
+
         if self.frame_id == 1:
             MCTrack.init_count(self.opt.num_classes)
         # -----
@@ -688,7 +692,7 @@ class MCJDETracker(object):
             ''' Step 3: Second association, with IOU'''
             cls_detects = [cls_detects[i] for i in u_detection]
             r_tracked_tracks = [track_pool_dict[cls_id][i]
-                                 for i in u_track if track_pool_dict[cls_id][i].state == TrackState.Tracked]
+                                for i in u_track if track_pool_dict[cls_id][i].state == TrackState.Tracked]
             dists = matching.iou_distance(r_tracked_tracks, cls_detects)
             matches, u_track, u_detection = matching.linear_assignment(dists, thresh=0.5)  # thresh=0.5
 

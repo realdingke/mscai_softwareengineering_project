@@ -184,7 +184,7 @@ def visualization(opt, seq):
         api_key = 'vV_rHH11febK3F2ivQYO_qzlLO9nNTCPxaGblNrfJzg'
         # result_path = '/content/drive/MyDrive/cattle_data/images/' + \
         #               'results/cattle_dla_20/Video_of_cattle_1.mp4.txt'
-        result_path = osp.join(paths_loader.OUTPUT_ROOT, seq + '.txt')
+        result_path = osp.join(paths_loader.OUTPUT_ROOT, 'results.txt')
         creator_email = 'grouproject851@gmail.com'
         gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
         client = load_cord_data(project_id, api_key)
