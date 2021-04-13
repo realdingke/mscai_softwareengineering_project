@@ -4,6 +4,7 @@ from __future__ import print_function
 import sys
 import logging
 import os
+import _init_paths
 
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 import torch
