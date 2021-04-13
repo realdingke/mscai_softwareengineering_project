@@ -1,4 +1,4 @@
-from gen_labels import load_cord_data
+from cord_loader import load_cord_data
 import paths
 from lib.opts import opts
 

@@ -1,8 +1,10 @@
 from cord.client import CordClient  # pip install cord-client-python
+import cord
 import re
 import os
 import os.path as osp
 import json
+
 
 class ClientError(Exception):
     pass
@@ -37,18 +39,19 @@ def gen_seq_name_list(client):
     project = client.get_project()
     pattern = '(?<=\w)\s(?=\w)'
     seqs = []
-    try:
-        for label_uid in project.get_labels_list():
+    for label_uid in project.get_labels_list():
+        try:
             seq = client.get_label_row(label_uid)['data_title']
-            try:
-                seq = re.sub(pattern, '_', seq)
-                seqs.append(seq)
-            except:
-                seq = seq
-                seqs.append(seq)
-        return seqs
-    except:
-        return None
+        except cord.exceptions.AuthorisationError:
+            continue
+        try:
+            seq = re.sub(pattern, '_', seq)
+            seqs.append(seq)
+        except:
+            seq = seq
+            seqs.append(seq)
+
+    return seqs
 
 
 def get_cls_info(root='/content/drive/MyDrive/car_data_MCMOT/images/train/'):
@@ -69,7 +72,10 @@ def gen_obj_json(root='/content/drive/MyDrive/car_data_MCMOT/', client=load_cord
     pattern = '(?<=\w)\s(?=\w)'
     obj_jsons_list = []
     for label_uid in project.get_labels_list():
-        label = client.get_label_row(label_uid)
+        try:
+            label = client.get_label_row(label_uid)
+        except cord.exceptions.AuthorisationError:
+            continue
         seq_name = label['data_title']
         try:
             seq_name = re.sub(pattern, '_', seq_name)
@@ -89,7 +95,7 @@ def judge_video_info(obj_jsons_list):
     pattern = '(?<=\w)\s(?=\w)'
     for obj_json in obj_jsons_list:
         if len(list(obj_json["data_units"].values())[0]["labels"].keys()) <= 1 and \
-          len(list(obj_json["data_units"].values())[0]["labels"]["0"]["objects"]) == 0: 
+                len(list(obj_json["data_units"].values())[0]["labels"]["0"]["objects"]) == 0:
             seq_name = obj_json['data_title']
             try:
                 seq_name = re.sub(pattern, '_', seq_name)
@@ -97,4 +103,4 @@ def judge_video_info(obj_jsons_list):
                 seq_name = seq_name
             empty_seqs.append(seq_name)
     return empty_seqs
-        
+

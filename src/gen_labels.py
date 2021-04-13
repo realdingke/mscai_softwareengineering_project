@@ -15,14 +15,17 @@ def gen_gt_information(client, data_root):
     seq_path = data_root + '/train'
     cls_json_path = seq_path
     seq_w_nolabel = []
-#    count = 0
+    #    count = 0
     for label_uid in project.get_labels_list():
-#        if count == 4:
-#            break  # for car dataset only
-#        count += 1
+        #        if count == 4:
+        #            break  # for car dataset only
+        #        count += 1
         gt_list = []
         obj_hash_dict = {}
-        label = client.get_label_row(label_uid)
+        try:
+            label = client.get_label_row(label_uid)
+        except:
+            continue
         seqs_str = label['data_title']
         ##swap all space in between the seq_name to '_'
         pattern = '(?<=\w)\s(?=\w)'
@@ -101,13 +104,12 @@ def gen_gt_information(client, data_root):
         reverse_featureHash_dct[val] = key
     with open(osp.join(cls_json_path, 'featureHash.json'), 'w') as f:
         json.dump(reverse_featureHash_dct, f, indent=3)
-    
-    
+
     return seq_w_nolabel
 
 
 def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
-#    count = 0
+    #    count = 0
     num_of_class = len(cls2id_dct)
     tid_last = dict()
     tid_curr = dict()
@@ -115,9 +117,9 @@ def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
         tid_last[i] = 0
         tid_curr[i] = 0
     for seqs_str in seq_names:
-#        if count == 4:
-#            break  # for car dataset only
-#        count += 1
+        #        if count == 4:
+        #            break  # for car dataset only
+        #        count += 1
         ##swap all space in between the seq_name to '_'
         pattern = '(?<=\w)\s(?=\w)'
         try:
@@ -132,10 +134,10 @@ def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
         seq_width = int(seq_info[seq_info.find('imWidth=') + 8:seq_info.find('\nimHeight')])
         seq_height = int(seq_info[seq_info.find('imHeight=') + 9:seq_info.find('\nimExt')])
         gt_file = np.loadtxt(gt_file_path, dtype=np.float64, delimiter=',')
-        
+
         # 优先按照track id排序(对视频帧进行排序, 而后对轨迹ID进行排序)
-        idx = np.lexsort(gt_file.T[:2, :])  
-        
+        idx = np.lexsort(gt_file.T[:2, :])
+
         gt_file = gt_file[idx, :]
 
         for idx, (fid, tid, x, y, w, h, mark, cls, vis_ratio) in enumerate(gt_file):
@@ -167,18 +169,17 @@ def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
                 x / seq_width,  # center_x
                 y / seq_height,  # center_y
                 w / seq_width,  # bbox_w
-                h / seq_height, # bbox_h
-            )  
+                h / seq_height,  # bbox_h
+            )
             # print(label_str.strip())
             label_fpath = osp.join(
-                save_path, 
-                f"train/{seqs_str}/img1", 
+                save_path,
+                f"train/{seqs_str}/img1",
                 '{:06d}.txt'.format(int(fid)),
             )
 
             with open(label_fpath, 'a') as f:  # 以追加的方式添加每一帧的label
                 f.write(label_str)
-
 
 # if __name__ == '__main__':
 #     project_id = 'eec20d90-c014-4cd4-92ea-72341c3a1ab5'
