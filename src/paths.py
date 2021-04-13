@@ -38,6 +38,14 @@ class paths_loader(object):
         self.SEQS_NAME_PATH = None
 
     def update(self):
+        
+        self.CLIENT_DATA_PATH = osp.join(self.DATA_PATH, '..', 'client_data')
+        
+        self.PATHS_OBJ_PATH = osp.join(
+            self.CLIENT_DATA_PATH,
+            'path_names_obj.data',
+        )   # stores the updated paths_loader object
+
         self.IMG_ROOT_PATH = self.DATA_PATH + '/images'
 
         self.LABEL_PATH = self.DATA_PATH + '/labels_with_ids'
@@ -55,6 +63,6 @@ class paths_loader(object):
         self.LOSS_CURVES_PATH = self.DATA_PATH + '/Loss_Figure'
 
         self.TEST_DIR_NAME_PATH = self.IMG_ROOT_PATH + '/test/'
-
+        
     def __str__(self):
         return f"This is the project path loader class"
