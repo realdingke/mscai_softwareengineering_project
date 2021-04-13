@@ -28,124 +28,130 @@ from lib.trains.train_factory import train_factory
 # add paths
 import paths
 
+
 def mkdirs(d):
     if not os.path.exists(d):
         os.makedirs(d)
+
 
 def add_test_loader(opt, data_config, transforms):
     Test_Datast = get_dataset(opt.dataset, opt.task, opt.multi_scale)
     testset_paths = data_config['test']
     testset_root = data_config['root']
-    test_dataset = Test_Datast (opt=opt,
-                            root=testset_root,
-                            paths = testset_paths,
-                            img_size=opt.input_wh,
-                            augment=False,
-                            transforms=transforms)
+    test_dataset = Test_Datast(opt=opt,
+                               root=testset_root,
+                               paths=testset_paths,
+                               img_size=opt.input_wh,
+                               augment=False,
+                               transforms=transforms)
     opt_2 = opts().update_dataset_info_and_set_heads(opt, test_dataset)
     return test_dataset, opt_2
 
-def plot_loss_curves(opt, data_config, train_losses = None, test_losses = None):
-        path_object = os.path.join(
-            paths.ROOT_PATH,
-            '..' + paths.DATA_REL_PATH,
-            'path_names_obj.data',
-        )
-        with open(path_object, 'rb') as f:
-            path_object = pickle.load(f)
-        path = os.path.join(path_object.LOSS_CURVES_PATH, opt.exp_id)
-        mkdirs(path)
-        if len(test_losses) == 0:
-            fig, ax = plt.subplots(2,2)
-            fig.subplots_adjust(hspace=0.3, wspace=0.3)
-            ax[0,0].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(train_losses['hm']), 
-                         label='train')
-            ax[0,0].set_ylabel('hm loss')
-            ax[0,1].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(train_losses['wh']), 
-                         label='train')
-            ax[0,1].set_ylabel('wh loss')
-            ax[1,0].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(train_losses['off']), 
-                         label='train')
-            ax[1,0].set_ylabel('off loss')
-            ax[1,1].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(train_losses['id']), 
-                         label='train')
-            ax[1,1].set_ylabel('id loss')
-            for i in range(2):
-                for j in range(2):
-                    ax[i,j].set_xlabel('epochs')
-                    ax[i,j].legend()
-            plot_path = os.path.join(path, 'sub_loss.png')
-            plt.savefig(plot_path)  
-            plt.figure()
-            plt.plot(np.arange(1, opt.num_epochs+1), 
-                     np.array(train_losses['loss']), 
-                     label='train') 
-            plt.xlabel('epochs')
-            plt.ylabel('loss')
-            plt.legend()           
-            plot_path = os.path.join(path, 'total_loss.png')
-            plt.savefig(plot_path)    
-        else: 
-            fig, ax = plt.subplots(2,2)
-            fig.subplots_adjust(hspace=0.3, wspace=0.3)
-            ax[0,0].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(train_losses['hm']), 
-                         label='train')
-            ax[0,0].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(test_losses['hm']), 
-                         label='test')
-            ax[0,0].set_ylabel('hm loss')
-            ax[0,1].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(train_losses['wh']), 
-                         label='train')
-            ax[0,1].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(test_losses['wh']), 
-                         label='test')
-            ax[0,1].set_ylabel('wh loss')
-            ax[1,0].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(train_losses['off']), 
-                         label='train')
-            ax[1,0].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(test_losses['off']), 
-                         label='test')
-            ax[1,0].set_ylabel('off loss')
-            ax[1,1].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(train_losses['id']), 
-                         label='train')
-            ax[1,1].plot(np.arange(1, opt.num_epochs+1), 
-                         np.array(test_losses['id']), 
-                         label='test')
-            ax[1,1].set_ylabel('id loss')
-            for i in range(2):
-                for j in range(2):
-                    ax[i,j].set_xlabel('epochs')
-                    ax[i,j].legend()
-            
-            plot_path = os.path.join(path, 'sub_loss.png')
-            plt.savefig(plot_path)       
-            plt.figure()
-            plt.plot(np.arange(1, opt.num_epochs+1), 
-                     np.array(train_losses['loss']), 
-                     label='train')  
-            plt.plot(np.arange(1, opt.num_epochs+1), 
-                     np.array(test_losses['loss']), 
-                     label='test') 
-            plt.xlabel('epochs')
-            plt.ylabel('loss')
-            plt.legend()
-            plot_path = os.path.join(path, 'total_loss.png')
-            plt.savefig(plot_path)
+
+def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
+    # path_object = os.path.join(
+    #     paths.ROOT_PATH,
+    #     '..' + paths.DATA_REL_PATH,
+    #     'path_names_obj.data',
+    # )
+    path_object = paths.PATHS_OBJ_PATH
+    with open(path_object, 'rb') as f:
+        path_object = pickle.load(f)
+    path = os.path.join(path_object.LOSS_CURVES_PATH, opt.exp_id)
+    mkdirs(path)
+    if len(test_losses) == 0:
+        fig, ax = plt.subplots(2, 2)
+        fig.subplots_adjust(hspace=0.3, wspace=0.3)
+        ax[0, 0].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(train_losses['hm']),
+                      label='train')
+        ax[0, 0].set_ylabel('hm loss')
+        ax[0, 1].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(train_losses['wh']),
+                      label='train')
+        ax[0, 1].set_ylabel('wh loss')
+        ax[1, 0].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(train_losses['off']),
+                      label='train')
+        ax[1, 0].set_ylabel('off loss')
+        ax[1, 1].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(train_losses['id']),
+                      label='train')
+        ax[1, 1].set_ylabel('id loss')
+        for i in range(2):
+            for j in range(2):
+                ax[i, j].set_xlabel('epochs')
+                ax[i, j].legend()
+        plot_path = os.path.join(path, 'sub_loss.png')
+        plt.savefig(plot_path)
+        plt.figure()
+        plt.plot(np.arange(1, opt.num_epochs + 1),
+                 np.array(train_losses['loss']),
+                 label='train')
+        plt.xlabel('epochs')
+        plt.ylabel('loss')
+        plt.legend()
+        plot_path = os.path.join(path, 'total_loss.png')
+        plt.savefig(plot_path)
+    else:
+        fig, ax = plt.subplots(2, 2)
+        fig.subplots_adjust(hspace=0.3, wspace=0.3)
+        ax[0, 0].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(train_losses['hm']),
+                      label='train')
+        ax[0, 0].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(test_losses['hm']),
+                      label='test')
+        ax[0, 0].set_ylabel('hm loss')
+        ax[0, 1].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(train_losses['wh']),
+                      label='train')
+        ax[0, 1].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(test_losses['wh']),
+                      label='test')
+        ax[0, 1].set_ylabel('wh loss')
+        ax[1, 0].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(train_losses['off']),
+                      label='train')
+        ax[1, 0].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(test_losses['off']),
+                      label='test')
+        ax[1, 0].set_ylabel('off loss')
+        ax[1, 1].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(train_losses['id']),
+                      label='train')
+        ax[1, 1].plot(np.arange(1, opt.num_epochs + 1),
+                      np.array(test_losses['id']),
+                      label='test')
+        ax[1, 1].set_ylabel('id loss')
+        for i in range(2):
+            for j in range(2):
+                ax[i, j].set_xlabel('epochs')
+                ax[i, j].legend()
+
+        plot_path = os.path.join(path, 'sub_loss.png')
+        plt.savefig(plot_path)
+        plt.figure()
+        plt.plot(np.arange(1, opt.num_epochs + 1),
+                 np.array(train_losses['loss']),
+                 label='train')
+        plt.plot(np.arange(1, opt.num_epochs + 1),
+                 np.array(test_losses['loss']),
+                 label='test')
+        plt.xlabel('epochs')
+        plt.ylabel('loss')
+        plt.legend()
+        plot_path = os.path.join(path, 'total_loss.png')
+        plt.savefig(plot_path)
+
 
 def save_training_time(opt, data_config, epoch_time=None, total_time=None):
-    path_object = os.path.join(
-        paths.ROOT_PATH,
-        '..' + paths.DATA_REL_PATH,
-        'path_names_obj.data',
-    )
+    # path_object = os.path.join(
+    #     paths.ROOT_PATH,
+    #     '..' + paths.DATA_REL_PATH,
+    #     'path_names_obj.data',
+    # )
+    path_object = paths.PATHS_OBJ_PATH
     with open(path_object, 'rb') as f:
         path_object = pickle.load(f)
     path = path_object.DATA_PATH
@@ -184,7 +190,6 @@ def run(opt):
                       transforms=transforms)
     opt = opts().update_dataset_info_and_set_heads(opt, dataset)
     print("opt:\n", opt)
-
 
     # need to modify
     if opt.add_test_dataset:
@@ -254,30 +259,30 @@ def run(opt):
         if opt.is_debug:
             if opt.multi_scale:
                 test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
-                                                        batch_size=opt.batch_size,
-                                                        shuffle=False,
-                                                        pin_memory=True,
-                                                        drop_last=True)  # debug时不设置线程数(即默认为0)
+                                                          batch_size=opt.batch_size,
+                                                          shuffle=False,
+                                                          pin_memory=True,
+                                                          drop_last=True)  # debug时不设置线程数(即默认为0)
             else:
                 test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
-                                                        batch_size=opt.batch_size,
-                                                        shuffle=False,
-                                                        pin_memory=True,
-                                                        drop_last=True)  # debug时不设置线程数(即默认为0)
+                                                          batch_size=opt.batch_size,
+                                                          shuffle=False,
+                                                          pin_memory=True,
+                                                          drop_last=True)  # debug时不设置线程数(即默认为0)
         else:
             if opt.multi_scale:
                 test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
-                                                        batch_size=opt.batch_size,
-                                                        shuffle=False,
-                                                        num_workers=opt.num_workers,
-                                                        pin_memory=True,
-                                                        drop_last=True)
+                                                          batch_size=opt.batch_size,
+                                                          shuffle=False,
+                                                          num_workers=opt.num_workers,
+                                                          pin_memory=True,
+                                                          drop_last=True)
             else:
                 test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
-                                                        batch_size=opt.batch_size,
-                                                        shuffle=False,
-                                                        pin_memory=True,
-                                                        drop_last=True)
+                                                          batch_size=opt.batch_size,
+                                                          shuffle=False,
+                                                          pin_memory=True,
+                                                          drop_last=True)
 
     print('Starting training...')
     Trainer = train_factory[opt.task]
@@ -292,26 +297,26 @@ def run(opt):
         epoch_time = []
 
     if opt.plot_loss:
-        train_losses = {'loss':[], 'hm':[], 'wh':[], 'off':[], 'id':[]}
-        test_losses = {'loss':[], 'hm':[], 'wh':[], 'off':[], 'id':[]}
+        train_losses = {'loss': [], 'hm': [], 'wh': [], 'off': [], 'id': []}
+        test_losses = {'loss': [], 'hm': [], 'wh': [], 'off': [], 'id': []}
     for epoch in range(start_epoch + 1, opt.num_epochs + 1):
         mark = epoch if opt.save_all else 'last'
 
         # Train an epoch
         # TODO: add test loader
         if opt.add_test_dataset:
-            log_dict_train, log_dict_test, log_results = trainer.train(epoch, 
-                                                                       train_loader, 
-                                                                       test_loader, 
+            log_dict_train, log_dict_test, log_results = trainer.train(epoch,
+                                                                       train_loader,
+                                                                       test_loader,
                                                                        opt_2)
         else:
-            test_loader = None 
+            test_loader = None
             opt_2 = None
-            log_dict_train,  log_results = trainer.train(epoch, 
+            log_dict_train, log_results = trainer.train(epoch,
                                                         train_loader,
                                                         test_loader,
                                                         opt_2)
-        
+
         # append losses to list
         if opt.plot_loss:
             if opt.add_test_dataset:
@@ -335,11 +340,9 @@ def run(opt):
 
         # time
         if opt.save_time:
-            epoch_time.append(str(round(log_dict_train['time'],2)))
+            epoch_time.append(str(round(log_dict_train['time'], 2)))
             total_time += log_dict_train['time']
 
-
-        
         logger.write('epoch: {} |'.format(epoch))
         for k, v in log_dict_train.items():
             logger.scalar_summary('train_{}'.format(k), v, epoch)
@@ -378,15 +381,15 @@ def run(opt):
     # plot function
     if opt.plot_loss:
         if opt.add_test_dataset:
-            plot_loss_curves(opt,data_config, train_losses=train_losses, test_losses=test_losses)
+            plot_loss_curves(opt, data_config, train_losses=train_losses, test_losses=test_losses)
         else:
-            plot_loss_curves(opt,data_config, train_losses=train_losses)
+            plot_loss_curves(opt, data_config, train_losses=train_losses)
 
     # time function
     if opt.save_time:
         save_training_time(opt, data_config, epoch_time=epoch_time, total_time=total_time)
 
-  
+
 if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # '0, 1'
     opt = opts().parse()

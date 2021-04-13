@@ -53,21 +53,24 @@ def write_results(filename, results, data_type):
                 f.write(line)
     logger.info('save results to {}'.format(filename))
 
+
 # write time function
-def write_time(opt, 
-                data_root, 
-                exp_name, 
-                total_time, 
-                seqs,
-                time_sequences):
+def write_time(opt,
+               data_root,
+               exp_name,
+               total_time,
+               seqs,
+               time_sequences):
     time_path = os.path.join(data_root, 'tracking_time.txt')
-    
+
     with open(time_path, 'a') as f:
         f.write(f"exp: {exp_name}, arch: {opt.arch}\n")
         f.write(f"total time(seconds): {total_time:.2f}\n")
         for seq in seqs:
             f.write(f"{seq} time(seconds): {time_sequences[seq]:.2f}\n")
     f.close()
+
+
 def write_results_dict(file_name, results_dict, data_type, num_classes=5):
     """
     :param file_name:
@@ -282,7 +285,7 @@ def eval_seq(opt,
 
             # collect result
             for cls_id in range(opt.num_classes):
-                results_dict[cls_id].append((frame_id ,
+                results_dict[cls_id].append((frame_id,
                                              online_tlwhs_dict[cls_id],
                                              online_ids_dict[cls_id],
                                              online_scores_dict[cls_id]))
@@ -314,7 +317,7 @@ def eval_seq(opt,
                                              fps=1.0 / max(1e-5, timer.average_time))
         else:
             print('[Err]: un-recognized mode.')
-        
+
         if frame_id >= 0:
             if show_image:
                 cv2.imshow('online_im', online_im)
@@ -363,7 +366,7 @@ def main(opt,
         frame_rate = int(float(meta_info[meta_info.find(
             'frameRate') + 10:meta_info.find('\nseqLength')]))
         # modified
-        nf, ta, tc= eval_seq(opt, dataloader, data_type, result_filename,
+        nf, ta, tc = eval_seq(opt, dataloader, data_type, result_filename,
                               save_dir=output_dir, show_image=show_image, frame_rate=frame_rate)
         # total time
         # tt = time.strftime("%M", time.localtime(tt))
@@ -374,7 +377,7 @@ def main(opt,
 
         # timer for one sequence
         time_sequences[seq] = np.asarray(ta) * np.asarray(tc)
-    
+
         # eval
         logger.info('Evaluate seq: {}'.format(seq))
         evaluator = MCEvaluator(data_root, seq, data_type)
@@ -392,7 +395,6 @@ def main(opt,
     # calculate time for all seqs
     total_time += all_time
 
-
     avg_time = all_time / np.sum(timer_calls)
     logger.info('Time elapsed: {:.2f} seconds, FPS: {:.2f}'.format(
         all_time, 1.0 / avg_time))
@@ -401,7 +403,7 @@ def main(opt,
     if opt.save_track_time:
         write_time(opt,
                    data_root,
-                   exp_name, 
+                   exp_name,
                    total_time,
                    seqs,
                    time_sequences)
@@ -420,15 +422,16 @@ def main(opt,
 
 
 if __name__ == '__main__':
-    os.environ['CUDA_VISIBLE_DEVICES'] = '1' #0
+    os.environ['CUDA_VISIBLE_DEVICES'] = '1'  # 0
     opt = opts().init()
 
     if not opt.val_mot16:
-        path_object = os.path.join(
-            paths.ROOT_PATH,
-            '..' + paths.DATA_REL_PATH,
-            'path_names_obj.data',
-        )
+        # path_object = os.path.join(
+        #     paths.ROOT_PATH,
+        #     '..' + paths.DATA_REL_PATH,
+        #     'path_names_obj.data',
+        # )
+        path_object = paths.PATHS_OBJ_PATH
         with open(path_object, 'rb') as f:
             path_object = pickle.load(f)
         data_root = path_object.TEST_DIR_NAME_PATH
@@ -508,7 +511,7 @@ if __name__ == '__main__':
                       MOT20-08
                       '''
         data_root = os.path.join(opt.data_dir, 'MOT20/images/test')
-    
+
     # add car dataset
     if opt.car_heavy_test:
         seqs_str = '''Heavy_traffic.mp4'''
@@ -541,7 +544,6 @@ if __name__ == '__main__':
     #                   test_1_Light_traffic.mp4
     #                   test_2_Light_traffic.mp4'''
     #     data_root = os.path.join(opt.data_dir, 'car_data_MCMOT/images/test/test_1')
-
 
     if opt.test_1_9:
         seqs_str = '''test_1_Heavy_traffic.mp4
@@ -636,15 +638,14 @@ if __name__ == '__main__':
                       test_2_Light_traffic.mp4'''
         data_root = os.path.join(opt.data_dir, 'car_data_MCMOT/images/test/test_9_1')
 
-
     # seqs = [seq.strip() for seq in seqs_str.split()]
-    #convert whitespace in between filename into '_'
+    # convert whitespace in between filename into '_'
     pattern = '(?<=\w)\s(?=\w)'
-    
+
     try:
-      seqs_str = re.sub(pattern, '_', seqs_str)
+        seqs_str = re.sub(pattern, '_', seqs_str)
     except:
-      seqs_str = seqs_str
+        seqs_str = seqs_str
 
     seqs = [seq.strip() for seq in seqs_str.split()]
     # seqs = [string.replace('_', ' ') for string in seqs]
