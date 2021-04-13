@@ -14,32 +14,26 @@ DATA_REL_PATH = '/dataset'
 class paths_loader(object):
     """The project paths loader
     """
-    ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
-    DATA_REL_PATH = '/dataset'
+    ROOT_PATH = ROOT_PATH
+    DATA_REL_PATH = DATA_REL_PATH
 
     def __init__(self):
-        #        with open(file_name_path, 'rb') as f:
-        #            path_info_dct = pickle.load(f)
 
         self.DATA_PATH = osp.join(paths_loader.ROOT_PATH, '..', 'dataset')
 
-        self.IMG_ROOT_PATH = self.DATA_PATH + '/images'
+        self.IMG_ROOT_PATH = None
 
-        self.LABEL_PATH = self.DATA_PATH + '/labels_with_ids'
+        self.LABEL_PATH = None
 
-        self.TRAIN_DATA_PATH = self.IMG_ROOT_PATH + '/train'
+        self.TRAIN_DATA_PATH = None
 
         self.CFG_DATA_PATH = osp.join(paths_loader.ROOT_PATH, 'lib', 'cfg')
 
         self.DS_JSON_PATH = osp.join(paths_loader.ROOT_PATH, '..', 'dataset')
 
-        # self.OUTPUTS_PATH = self.IMG_ROOT_PATH + '/test/outputs'
-        #
-        # self.RESULTS_PATH = self.IMG_ROOT_PATH + '/test/results'
+        self.LOSS_CURVES_PATH = None
 
-        self.LOSS_CURVES_PATH = self.DATA_PATH + '/Loss_Figure'
-
-        self.TEST_DIR_NAME_PATH = self.IMG_ROOT_PATH + '/test/'
+        self.TEST_DIR_NAME_PATH = None
 
         self.SEQS_NAME_PATH = None
 
