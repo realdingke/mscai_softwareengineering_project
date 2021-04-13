@@ -167,7 +167,7 @@ def _upload_results(client,
 
 def visualization(opt):
     with open(paths.PATHS_OBJ_PATH, 'rb') as f:
-        paths_loader = pickle.load(f):
+        paths_loader = pickle.load(f)
 
         # gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
         # project_id = opt.project
