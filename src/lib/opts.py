@@ -429,6 +429,12 @@ class opts(object):
             help="Random split the dataset by specific split_perc"
         )
 
+        self.parser.add_argument(
+            "--clean",
+            action="store_true",
+            help="Clean the generated files which are in mode 'append'"
+        )
+
     def parse(self, args=''):
         if args == '':
             opt = self.parser.parse_args()
