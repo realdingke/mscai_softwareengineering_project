@@ -167,7 +167,7 @@ def main(opt):
         empty_seqs = cord_loader.judge_video_info(obj_jsons_list)
         seqs_dict = {'labeled_seqs': [seq for seq in seqs if seq not in empty_seqs],
                      'empty_seqs': empty_seqs}
-        client_data_path = osp.join(paths_loader.DATA_PATH, '..', 'client_data')
+        client_data_path = paths.CLIENT_DATA_PATH
         cord_loader.mkdirs(client_data_path)
         # file_name_path = osp.join(
         #     paths.ROOT_PATH,
@@ -177,10 +177,7 @@ def main(opt):
         seqs_name_path = osp.join(client_data_path, 'seqs_name_path.data')
         paths_loader.SEQS_NAME_PATH = seqs_name_path
 
-        file_name_path = osp.join(
-            client_data_path,
-            'path_names_obj.data',
-        )
+        file_name_path = paths.PATHS_OBJ_PATH
         with open(file_name_path, 'wb') as f:
             pickle.dump(paths_loader, f)
 
@@ -265,12 +262,7 @@ def main(opt):
         with open(file_name_path, 'wb') as f:
             pickle.dump(paths_loader, f)
     if opt.track:
-        file_name_path = osp.join(
-            paths.ROOT_PATH,
-            '..' + paths.DATA_REL_PATH,
-            'client_data',
-            'path_names_obj.data',
-        )
+        file_name_path = paths.PATHS_OBJ_PATH
         with open(file_name_path, 'rb') as f:
             paths_loader = pickle.load(f)
         if len(opt.tracking_video_selection) == 0:
