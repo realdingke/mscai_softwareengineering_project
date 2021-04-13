@@ -333,7 +333,7 @@ class opts(object):
         self.parser.add_argument(
             "--train_track",
             action="store_true",
-            help="test the whole parser function",
+            help="generate gt and label files for later training",
         )
 
         self.parser.add_argument(
@@ -343,9 +343,9 @@ class opts(object):
         )
 
         self.parser.add_argument(
-            "--load_api",
+            "--visual",
             action="store_true",
-            help="test the whole parser function",
+            help="upload the tracking results to cord",
         )
 
         self.parser.add_argument(
@@ -368,6 +368,14 @@ class opts(object):
             nargs='?',
             default='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ',
             help="User input the API key",
+        )
+
+        self.parser.add_argument(
+            "--email",
+            type=str,
+            nargs='?',
+            default='grouproject851@gmail.com',
+            help="User input their own email adress",
         )
 
         self.parser.add_argument(

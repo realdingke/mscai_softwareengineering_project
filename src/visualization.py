@@ -1,4 +1,6 @@
 from gen_labels import load_cord_data
+import paths
+from lib.opts import opts
 
 import os.path as osp
 import os
@@ -7,12 +9,12 @@ import json
 import re
 import uuid
 import random
+import pickle
 from datetime import datetime
 from cord.utils import label_utils
 from cord.client import CordClient  # ! pip install cord-client-python
 
-
-#COLORS = [
+# COLORS = [
 #    '#D33115',
 #    '#1979a9',
 #    '#e07b39',
@@ -24,16 +26,12 @@ from cord.client import CordClient  # ! pip install cord-client-python
 #    '#042f66',
 #    '#b97455',
 #    '#44bcd8',
-#]
+# ]
 
-gen_random_hexcolor = lambda: '#%02X%02X%02X' % (random.randint(0,255),random.randint(0,255),random.randint(0,255))
-
-def mkdirs(d):
-    if not osp.exists(d):
-        os.makedirs(d)
+gen_random_hexcolor = lambda: '#%02X%02X%02X' % (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 
-def read_det_results(result_path):
+def _read_det_results(result_path):
     results = []
     with open(result_path, 'r') as f:
         for line in f.readlines():
@@ -41,21 +39,21 @@ def read_det_results(result_path):
     return results
 
 
-def gen_new_obj(tid, 
-                x, 
-                y, 
-                w, 
-                h, 
-                conf, 
-                clsid, 
-                seq_width, 
-                seq_height,
-                id2color_dict,
-                tid2objhash_dct, 
-                id2cls_dict, 
-                featureHash_dct,
-                creator_email='grouproject851@gmail.com', 
-                gmt_format='%a, %d %b %Y %H:%M:%S UTC'):
+def _gen_new_obj(tid,
+                 x,
+                 y,
+                 w,
+                 h,
+                 conf,
+                 clsid,
+                 seq_width,
+                 seq_height,
+                 id2color_dict,
+                 tid2objhash_dct,
+                 id2cls_dict,
+                 featureHash_dct,
+                 creator_email='grouproject851@gmail.com',
+                 gmt_format='%a, %d %b %Y %H:%M:%S UTC'):
     data_dct = {}
 
     data_dct['name'] = id2cls_dict[clsid][0].capitalize() + \
@@ -79,11 +77,11 @@ def gen_new_obj(tid,
     return data_dct
 
 
-def upload_results(client, 
-                   results, 
-                   root_path='/content/drive/MyDrive/cattle_data/images/train/',
-                   creator_email='grouproject851@gmail.com', 
-                   gmt_format='%a, %d %b %Y %H:%M:%S UTC'):
+def _upload_results(client,
+                    results,
+                    root_path='/content/drive/MyDrive/cattle_data/images/train/',
+                    creator_email='grouproject851@gmail.com',
+                    gmt_format='%a, %d %b %Y %H:%M:%S UTC'):
     """"""
 
     id2cls_dct_path = osp.join(root_path, 'id2cls.json')
@@ -109,7 +107,7 @@ def upload_results(client,
         except:
             seqs_str = seqs_str
         tid2objhash_dct_path = osp.join(
-            root_path, seqs_str, 
+            root_path, seqs_str,
             f"{seqs_str}_tid2objhash.json",
         )
         with open(tid2objhash_dct_path, 'r') as f:
@@ -117,12 +115,12 @@ def upload_results(client,
         seq_ini_file = osp.join(root_path, f"{seqs_str}", 'seqinfo.ini')
         seq_info = open(seq_ini_file).read()
         seq_width = int(
-            seq_info[seq_info.find('imWidth=') + 
-            8:seq_info.find('\nimHeight')]
+            seq_info[seq_info.find('imWidth=') +
+                     8:seq_info.find('\nimHeight')]
         )
         seq_height = int(
-            seq_info[seq_info.find('imHeight=') + 
-            9:seq_info.find('\nimExt')]
+            seq_info[seq_info.find('imHeight=') +
+                     9:seq_info.find('\nimExt')]
         )
         deleted_frames = set()
         for frame, tid, x, y, w, h, conf, clsid, _ in results:
@@ -139,21 +137,21 @@ def upload_results(client,
             if str(int(frame) - 1) not in deleted_frames:
                 deleted_frames.add(str(int(frame) - 1))
                 list(label['data_units'].values())[0]['labels'][str(int(frame) - 1)]['objects'] = []
-            data_dct = gen_new_obj(
-                tid, 
-                x, 
-                y, 
-                w, 
-                h, 
-                conf, 
-                clsid, 
-                seq_width, 
+            data_dct = _gen_new_obj(
+                tid,
+                x,
+                y,
+                w,
+                h,
+                conf,
+                clsid,
+                seq_width,
                 seq_height,
                 id2color_dict,
-                tid2objhash_dct, 
+                tid2objhash_dct,
                 id2cls_dict,
-                featureHash_dct, 
-                creator_email=creator_email, 
+                featureHash_dct,
+                creator_email=creator_email,
                 gmt_format=gmt_format,
             )
             list(label['data_units'].values())[0]['labels'][str(int(frame) - 1)]['objects'].append(data_dct)
@@ -161,20 +159,37 @@ def upload_results(client,
         for obj_hash in tid2objhash_dct.values():
             if obj_hash not in updated['object_answers'].keys():
                 updated['object_answers'][obj_hash] = {
-                    'objectHash': obj_hash, 
+                    'objectHash': obj_hash,
                     'classifications': [],
                 }
         client.save_label_row(label_uid, updated)
 
 
-if __name__ == '__main__':
-    project_id = '235aa1ec-8d5e-4253-b673-1386af826fae' # Project ID of drone
-    api_key = 'vV_rHH11febK3F2ivQYO_qzlLO9nNTCPxaGblNrfJzg'
-    result_path = '/content/drive/MyDrive/cattle_data/images/' + \
-                  'results/cattle_dla_20/Video_of_cattle_1.mp4.txt'
-    root_path = '/content/drive/MyDrive/cattle_data/images/train/'
-    creator_email = 'grouproject851@gmail.com'
-    gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
-    client = load_cord_data(project_id, api_key)
-    results = read_det_results(result_path)
-    upload_results(client, results, root_path, creator_email, gmt_format)
+def visualization(opt):
+    with open(paths.PATHS_OBJ_PATH, 'rb') as f:
+        paths_loader = pickle.load(f):
+
+        # gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
+        # project_id = opt.project
+        # api_key = opt.api
+        # creator_email = opt.email
+        # root_path = paths_loader.TRAIN_DATA_PATH
+        # results_paths = paths_loader.RESULTS_PATHS
+        # client = load_cord_data(project_id, api_key)
+        # for results_path in results_paths:
+        #     results = _read_det_results(results_path)
+        #     _upload_results(client, results, root_path, creator_email, gmt_format)
+
+        project_id = '235aa1ec-8d5e-4253-b673-1386af826fae'  # Project ID of drone
+        api_key = 'vV_rHH11febK3F2ivQYO_qzlLO9nNTCPxaGblNrfJzg'
+        result_path = '/content/drive/MyDrive/cattle_data/images/' + \
+                      'results/cattle_dla_20/Video_of_cattle_1.mp4.txt'
+        root_path = '/content/drive/MyDrive/cattle_data/images/train/'
+        creator_email = 'grouproject851@gmail.com'
+        gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
+        client = load_cord_data(project_id, api_key)
+        results = _read_det_results(result_path)
+        _upload_results(client, results, root_path, creator_email, gmt_format)
+
+    if __name__ == '__main__':
+        visualization(opt)

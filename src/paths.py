@@ -46,6 +46,8 @@ class paths_loader(object):
 
         self.SEQS_NAME_PATH = None
 
+        self.RESULTS_PATHS = None
+
     def update(self):
 
         self.IMG_ROOT_PATH = self.DATA_PATH + '/images'
