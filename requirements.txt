@@ -15,3 +15,6 @@ tensorboardX==2.1
 ipykernel
 cord-client-python
 moviepy
+requests
+tqdm
+sklearn
