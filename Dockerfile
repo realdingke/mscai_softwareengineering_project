@@ -50,10 +50,17 @@ RUN chmod 777 /home/user
 
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh -O ~/miniconda.sh \
  && chmod +x ~/miniconda.sh \
- && ~/miniconda.sh -b -p ~/miniconda 
-#  && rm ~/miniconda.sh
+ && ~/miniconda.sh -b -p ~/miniconda \
+ && rm ~/miniconda.sh
+# MINICONDA_INSTALLER_SCRIPT=Miniconda3-4.5.11-Linux-x86_64.sh
+# MINICONDA_PREFIX=/usr/local
+
+# RUN wget https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh \
+#  && chmod +x Miniconda3-4.5.11-Linux-x86_64.sh \
+#  && Miniconda3-4.5.11-Linux-x86_64.sh -b -f -p $MINICONDA_PREFIX
+ 
 ENV PATH=/home/user/miniconda/bin:$PATH
-ENV CONDA_AUTO_UPDATE_CONDA=false
+ENV CONDA_AUTO_UPDATE_CONDA=true
 
 # Create a Python 3.6 environment
 RUN /home/user/miniconda/bin/conda create -y --name py36 python=3.6.9 \
