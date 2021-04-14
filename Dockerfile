@@ -54,7 +54,7 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh -
  && rm ~/miniconda.sh
 # MINICONDA_INSTALLER_SCRIPT=Miniconda3-4.5.11-Linux-x86_64.sh
 # MINICONDA_PREFIX=/usr/local
-RUN conda --version
+# RUN conda --version
 # RUN wget https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh \
 #  && chmod +x Miniconda3-4.5.11-Linux-x86_64.sh \
 #  && Miniconda3-4.5.11-Linux-x86_64.sh -b -f -p $MINICONDA_PREFIX
