@@ -5,6 +5,7 @@ import random
 import re
 # pickle
 import pickle
+import clean
 
 import preprocess, gen_labels, gen_data_path, paths, cord_loader, demo, visualization
 from lib.opts import opts
@@ -286,6 +287,9 @@ def main(opt):
                         visualization.visualization(opt, seq)
                 else:
                     visualization.visualization(opt, seq)
+    if opt.clean:
+        clean.clean_files_a()
+
 
 
 if __name__ == "__main__":

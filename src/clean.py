@@ -2,7 +2,7 @@ import os
 import os.path as osp
 import paths
 import pickle
-
+import shutil
 
 def clean_files_a():
     """
@@ -25,13 +25,13 @@ def clean_files_a():
     for seq in seqs:
         gt_path = osp.join(train_root, f'{seq}', 'gt')
         if osp.exists(gt_path):
-            os.removedirs(gt_path)
+            shutil.rmtree(gt_path)
         label_path = osp.join(label_root, f'train/{seq}/img1')
         if osp.exists(label_path):
-            os.removedirs(label_path)
+            shutil.rmtree(label_path)
 
     # Clear image path directories
-    image_path_dir = osp.join(paths.ROOT_PATH, 'src/data')
+    image_path_dir = osp.join(paths.ROOT_PATH, 'data')
     for file in os.listdir(image_path_dir):
-        file_path = osp.join(paths.ROOT_PATH, 'src/data', file)
+        file_path = osp.join(paths.ROOT_PATH, 'data', file)
         os.remove(file_path)
