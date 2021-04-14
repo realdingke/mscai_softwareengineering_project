@@ -65,8 +65,8 @@ RUN /home/user/miniconda/bin/conda install conda-build=3.18.9=py36_3 \
  && /home/user/miniconda/bin/conda clean -ya
 
 # CUDA 10.0-specific steps
-RUN conda install conda=4.9.2 \
- && conda clean -ya
+# RUN conda install conda=4.9.2 \
+#  && conda clean -ya
  
 RUN conda install -y -c pytorch \
     cudatoolkit=10.0 \
