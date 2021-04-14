@@ -411,7 +411,8 @@ def main(opt,
     # get summary
     metrics = mm.metrics.motchallenge_metrics
     mh = mm.metrics.create()
-    summary = MCEvaluator.get_summary(accs, seqs, metrics)
+
+    summary =evaluator.get_summary(accs, seqs, metrics)
     strsummary = mm.io.render_summary(
         summary,
         formatters=mh.formatters,
