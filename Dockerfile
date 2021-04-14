@@ -60,7 +60,7 @@ RUN wget https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh -
 #  && Miniconda3-4.5.11-Linux-x86_64.sh -b -f -p $MINICONDA_PREFIX
  
 ENV PATH=/home/user/miniconda/bin:$PATH
-ENV CONDA_AUTO_UPDATE_CONDA=true
+# ENV CONDA_AUTO_UPDATE_CONDA=true
 
 # Create a Python 3.6 environment
 RUN /home/user/miniconda/bin/conda create -y --name py36 python=3.6.9 \
