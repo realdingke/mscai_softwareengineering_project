@@ -1,7 +1,7 @@
 ARG IMAGE_NAME
 FROM nvidia/cuda:10.2-runtime-ubuntu18.04
 LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
-CMD nvidia-smi
+# CMD nvidia-smi # not in fairmot
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-nvml-dev-$CUDA_PKG_VERSION \
@@ -51,24 +51,17 @@ RUN chmod 777 /home/user
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh -O ~/miniconda.sh \
  && chmod +x ~/miniconda.sh \
  && ~/miniconda.sh -b -p ~/miniconda
-#  && rm ~/miniconda.sh
-# MINICONDA_INSTALLER_SCRIPT=Miniconda3-4.5.11-Linux-x86_64.sh
-# MINICONDA_PREFIX=/usr/local
-# RUN conda --version
-# RUN wget https://repo.continuum.io/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh \
-#  && chmod +x Miniconda3-4.5.11-Linux-x86_64.sh \
-#  && Miniconda3-4.5.11-Linux-x86_64.sh -b -f -p $MINICONDA_PREFIX
- 
+ && rm ~/miniconda.sh
 ENV PATH=/home/user/miniconda/bin:$PATH
 ENV CONDA_AUTO_UPDATE_CONDA=false
-RUN conda --version
+
 
 # Create a Python 3.6 environment
 RUN /home/user/miniconda/bin/conda create -y --name py36 python=3.6.9
-#  && /home/user/miniconda/bin/conda clean -ya
+ && /home/user/miniconda/bin/conda clean -ya
  
-RUN sudo ln -s /home/user/miniconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
-RUN source activate py36
+# RUN sudo ln -s /home/user/miniconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+# RUN source activate py36
 #  && /home/user/miniconda/bin/conda clean -ya
 ENV CONDA_DEFAULT_ENV=py36
 ENV CONDA_PREFIX=/home/user/miniconda/envs/$CONDA_DEFAULT_ENV
@@ -79,7 +72,7 @@ RUN /home/user/miniconda/bin/conda install conda-build=3.18.9=py36_3 \
 # CUDA 10.0-specific steps
 # RUN conda install conda=4.9.2 \
 #  && conda clean -ya
-RUN conda list --revision
+# RUN conda list --revision
 
 RUN conda install -y -c pytorch \
     cudatoolkit=10.0 \
