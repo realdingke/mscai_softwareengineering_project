@@ -56,13 +56,13 @@ ENV PATH=/home/user/miniconda/bin:$PATH
 ENV CONDA_AUTO_UPDATE_CONDA=false
 
 # Create a Python 3.6 environment
-RUN /home/user/miniconda/bin/conda create -y --name py36 python=3.6.9 \
- && /home/user/miniconda/bin/conda clean -ya
+RUN /home/user/miniconda/bin/conda create -y --name py36 python=3.6.9 
+#  && /home/user/miniconda/bin/conda clean -ya
 ENV CONDA_DEFAULT_ENV=py36
 ENV CONDA_PREFIX=/home/user/miniconda/envs/$CONDA_DEFAULT_ENV
 ENV PATH=$CONDA_PREFIX/bin:$PATH
-RUN /home/user/miniconda/bin/conda install conda-build=3.18.9=py36_3 \
- && /home/user/miniconda/bin/conda clean -ya
+RUN /home/user/miniconda/bin/conda install conda-build=3.18.9=py36_3 
+#  && /home/user/miniconda/bin/conda clean -ya
 
 # CUDA 10.0-specific steps
 # RUN conda install conda=4.9.2 \
