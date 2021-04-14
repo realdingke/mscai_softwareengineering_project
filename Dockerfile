@@ -68,7 +68,7 @@ RUN /home/user/miniconda/bin/conda create -y --name py36 python=3.6.9
 #  && /home/user/miniconda/bin/conda clean -ya
  
 RUN sudo ln -s /home/user/miniconda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
-RUN /home/user/miniconda/bin/source activate py36
+RUN source activate py36
 #  && /home/user/miniconda/bin/conda clean -ya
 ENV CONDA_DEFAULT_ENV=py36
 ENV CONDA_PREFIX=/home/user/miniconda/envs/$CONDA_DEFAULT_ENV
