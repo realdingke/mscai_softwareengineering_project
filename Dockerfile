@@ -110,9 +110,12 @@ RUN pip install cython==0.29.21
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY . .
-WORKDIR /app/DCNv2
-RUN ./make.sh
+# COPY . .
+# WORKDIR /app/DCNv2
+# RUN ./make.sh
+
+RUN git clone --recursive https://github.com/CharlesShang/DCNv2
+RUN cd DCNv2 && bash ./make.sh
 
 RUN mkdir -p /home/user/.cache/torch/checkpoints/ \
  && wget http://dl.yf.io/dla/models/imagenet/dla34-ba72cf86.pth -O /home/user/.cache/torch/checkpoints/dla34-ba72cf86.pth
