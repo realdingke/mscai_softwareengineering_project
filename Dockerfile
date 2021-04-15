@@ -1,5 +1,6 @@
 ARG IMAGE_NAME
-FROM nvidia/cuda:10.2-runtime-ubuntu18.04
+# FROM nvidia/cuda:10.2-runtime-ubuntu18.04
+FROM nvidia/cuda:11.0-runtime-ubuntu18.04
 LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 # CMD nvidia-smi # not in fairmot
 
@@ -8,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-command-line-tools-$CUDA_PKG_VERSION \
 cuda-libraries-dev-$CUDA_PKG_VERSION \
         cuda-minimal-build-$CUDA_PKG_VERSION \
-        libnccl-dev=$NCCL_VERSION-1+cuda10.2 \
+        libnccl-dev=$NCCL_VERSION-1+cuda11.0 \
 libcublas-dev=10.2.2.89-1 \
 && \
     rm -rf /var/lib/apt/lists/*
