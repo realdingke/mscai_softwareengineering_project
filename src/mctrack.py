@@ -18,7 +18,7 @@ import re
 # pickle
 import pickle
 import paths
-
+import json
 from collections import defaultdict
 from lib.tracker.multitracker import JDETracker, MCJDETracker
 from lib.tracking_utils import visualization as vis
@@ -343,6 +343,10 @@ def main(opt,
          show_image=True):
     """
     """
+    if opt.output_format == 'video':
+        save_videos = True
+    else:
+        save_videos = False
 
     logger.setLevel(logging.INFO)
     result_root = os.path.join(data_root, '..', 'results', exp_name)
@@ -426,25 +430,33 @@ def main(opt,
 if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = '1'  # 0
     opt = opts().init()
-
-    if not opt.val_mot16:
-        # path_object = os.path.join(
-        #     paths.ROOT_PATH,
-        #     '..' + paths.DATA_REL_PATH,
-        #     'path_names_obj.data',
-        # )
-        path_object = paths.PATHS_OBJ_PATH
+    path_object = paths.PATHS_OBJ_PATH
+    if os.path.isfile(path_object):
         with open(path_object, 'rb') as f:
             path_object = pickle.load(f)
-        data_root = path_object.TEST_DIR_NAME_PATH
-        # file_name_path = os.path.join(opt.data_dir, 'file_name.data')
-        # if os.path.exists(file_name_path):
-        #     with open(file_name_path, 'rb') as f:
-        #         file_name_dict = pickle.load(f)
-        # proj_name = file_name_dict['pn']
-        # dir_name = file_name_dict['dn']
-        seqs_str = os.listdir(data_root)
-        seqs_str = '  \n'.join(seqs_str)
+        id2cls_path = osp.join(path_object.TRAIN_DATA_PATH, 'id2cls.json')
+        if os.path.isfile(id2cls_path):
+            with open(id2cls_path, 'r') as f:
+                data = json.load(f)
+            cls_ids_ls = list(data.keys())
+            id_str = ", ".join(cls_ids_ls)
+            opt.reid_cls_ids = id_str
+
+        if not opt.val_mot16:
+            # path_object = os.path.join(
+            #     paths.ROOT_PATH,
+            #     '..' + paths.DATA_REL_PATH,
+            #     'path_names_obj.data',
+            # )
+            data_root = path_object.TEST_DIR_NAME_PATH
+            # file_name_path = os.path.join(opt.data_dir, 'file_name.data')
+            # if os.path.exists(file_name_path):
+            #     with open(file_name_path, 'rb') as f:
+            #         file_name_dict = pickle.load(f)
+            # proj_name = file_name_dict['pn']
+            # dir_name = file_name_dict['dn']
+            seqs_str = os.listdir(data_root)
+            seqs_str = '  \n'.join(seqs_str)
 
     if opt.test_mot16:
         seqs_str = '''MOT16-01
@@ -658,4 +670,4 @@ if __name__ == '__main__':
          exp_name=opt.exp_name,
          show_image=False,
          save_images=False,
-         save_videos=True)
+         save_videos=False)

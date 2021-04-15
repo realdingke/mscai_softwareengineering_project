@@ -6,7 +6,7 @@ import re
 # pickle
 import pickle
 import clean
-
+import json
 import preprocess, gen_labels, gen_data_path, paths, cord_loader, demo, visualization
 from lib.opts import opts
 
@@ -259,6 +259,15 @@ def main(opt):
         file_name_path = paths.PATHS_OBJ_PATH
         with open(file_name_path, 'rb') as f:
             paths_loader = pickle.load(f)
+        # automatically identify reid_cls_ids
+        id2cls_path = osp.join(paths_loader.TRAIN_DATA_PATH, 'id2cls.json')
+        if os.path.isfile(id2cls_path):
+            with open(id2cls_path, 'r') as f:
+                data = json.load(f)
+            cls_ids_ls = list(data.keys())
+            id_str = ", ".join(cls_ids_ls)
+            opt.reid_cls_ids = id_str
+
         if len(opt.tracking_video_selection) == 0:
             seqs_name_path = paths_loader.SEQS_NAME_PATH
             with open(seqs_name_path, 'rb') as f:

@@ -232,7 +232,7 @@ class opts(object):
 
         self.parser.add_argument('--output_format',
                                  type=str,
-                                 default='video',
+                                 default='text',
                                  help='video or text')
         self.parser.add_argument('--output_root',
                                  type=str,
