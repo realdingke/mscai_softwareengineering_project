@@ -110,8 +110,7 @@ RUN pip install cython==0.29.21
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY /DCNv2 .
-RUN pwd
+COPY . .
 WORKDIR /app/DCNv2
 RUN ./make.sh
 
