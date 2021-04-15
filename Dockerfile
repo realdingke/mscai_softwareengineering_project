@@ -1,5 +1,6 @@
 ARG IMAGE_NAME
-FROM nvidia/cuda:10.2-runtime-ubuntu18.04
+# FROM nvidia/cuda:10.2-runtime-ubuntu18.04
+FROM ${IMAGE_NAME}:10.2-runtime-ubuntu18.0
 LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
 CMD nvidia-smi # not in fairmot
 
