@@ -176,7 +176,7 @@ def main(opt):
 
         with open(seqs_name_path, 'wb') as f:
             pickle.dump(seqs_dict, f)
-        _ = gen_labels.gen_gt_information(client, data_root)
+        preprocess.gen_seqini(seqs, data_path)
         print(f"The root path is:\n{root_path}")
         print('The project contains the below datasets:')
         for seq in seqs:
@@ -215,7 +215,7 @@ def main(opt):
         else:
             seqs = seqs
 
-        preprocess.save_mp4_frame_gen_seqini(seqs, data_path)
+        preprocess.save_mp4_frame(seqs, data_path)
         # modified the data root and label path
         data_root = paths_loader.IMG_ROOT_PATH
         print(data_root)

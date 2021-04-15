@@ -151,8 +151,8 @@ def _extract_images(path, save_dir):
     print(f"{frame_count} images in total")
 
 
-def save_mp4_frame_gen_seqini(seqs=None,
-                              path='/content/drive/MyDrive/car_data_MCMOT/'):
+def save_mp4_frame(seqs=None,
+                   path='/content/drive/MyDrive/car_data_MCMOT/'):
     if seqs is None:
         seqs = [
             'Heavy_traffic.mp4',
@@ -165,7 +165,22 @@ def save_mp4_frame_gen_seqini(seqs=None,
         v1 = LoadVideo(save_root=save_root, seq_name=seq)
         # v1.save_imgs()    #save imgs func now being superceded by the moviepy method
         _extract_images(v1.path, v1.save_path)
-        _generate_seqinfo(v1, seq, path)
+
+
+    def gen_seqini(seqs=None,
+                   path='/content/drive/MyDrive/car_data_MCMOT/'):
+        if seqs is None:
+            seqs = [
+                'Heavy_traffic.mp4',
+                'Highway_traffic_2.mp4',
+                'Highway_traffic.mp4',
+                'Light_traffic.mp4',
+            ]
+        save_root = path + '/images/train'
+        for seq in seqs:
+            v1 = LoadVideo(save_root=save_root, seq_name=seq)
+            # v1.save_imgs()    #save imgs func now being superceded by the moviepy method
+            _generate_seqinfo(v1, seq, path)
 
 # if __name__ == '__main__':
 #    seqs = [
