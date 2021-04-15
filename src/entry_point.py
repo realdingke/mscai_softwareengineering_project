@@ -176,6 +176,7 @@ def main(opt):
 
         with open(seqs_name_path, 'wb') as f:
             pickle.dump(seqs_dict, f)
+        _ = gen_labels.gen_gt_information(client, data_root)
         print(f"The root path is:\n{root_path}")
         print('The project contains the below datasets:')
         for seq in seqs:
