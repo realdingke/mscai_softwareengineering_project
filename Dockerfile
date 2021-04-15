@@ -111,8 +111,8 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY /DCNv2 /DCNv2
-WORKDIR /home/user/DCNv2
 RUN pwd
+WORKDIR /home/user/DCNv2
 RUN ./make.sh
 
 RUN mkdir -p /home/user/.cache/torch/checkpoints/ \
