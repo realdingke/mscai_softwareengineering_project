@@ -46,7 +46,7 @@ def download_mp4(path='/content/drive/MyDrive/car_data_MCMOT/', seqs=None):
                     line = 'downloading %d KB/s - %.2f MB， in total %.2f MB'
                     line = line % (
                         downsize / 1024 / (time.time() - startTime), downsize / 1024 / 1024, downsize / 1024 / 1024)
-                    print(line)
+                    # print(line)
 
 
 def download_pics(path='/content/drive/MyDrive/food_data/'):
