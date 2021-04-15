@@ -140,7 +140,7 @@ def _generate_seqinfo(video, seq, path):
 def _extract_images(path, save_dir):
     myclip = mpy.VideoFileClip(path)
     times = np.linspace(0, myclip.duration, num=round(myclip.duration * myclip.fps))
-    frame_count = 1
+    frame_count = 0
     mkdirs(save_dir)
     for time in times:
         imgpath = osp.join(save_dir, "{:0>6d}.jpg".format(frame_count))
