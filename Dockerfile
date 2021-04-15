@@ -1,7 +1,7 @@
 ARG IMAGE_NAME
 FROM nvidia/cuda:10.2-runtime-ubuntu18.04
 LABEL maintainer "NVIDIA CORPORATION <cudatools@nvidia.com>"
-# CMD nvidia-smi # not in fairmot
+CMD nvidia-smi # not in fairmot
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         cuda-nvml-dev-$CUDA_PKG_VERSION \
