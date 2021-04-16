@@ -9,7 +9,8 @@ ARG CUDA=11.0
 FROM nvidia/cuda${ARCH:+-$ARCH}:${CUDA}-base-ubuntu${UBUNTU_VERSION} as base
 ARG ARCH
 ARG CUDA
-ARG CUDNN=8.0.4.30-1
+# ARG CUDNN=8.0.4.30-1
+ARG CUDNN
 ARG CUDNN_MAJOR_VERSION=8
 SHELL ["/bin/bash", "-c"]
 
