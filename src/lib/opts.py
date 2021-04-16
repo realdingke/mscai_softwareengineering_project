@@ -6,7 +6,8 @@ import argparse
 import os
 # add import paths
 import paths
-
+import json
+import pickle
 
 class opts(object):
     def __init__(self):
@@ -534,7 +535,17 @@ class opts(object):
 
     def init(self, args=''):
         opt = self.parse(args)
-
+        path_object = paths.PATHS_OBJ_PATH
+        if os.path.isfile(path_object):
+            with open(path_object, 'rb') as f:
+                path_object = pickle.load(f)
+            id2cls_path = os.path.join(path_object.TRAIN_DATA_PATH, 'id2cls.json')
+            if os.path.isfile(id2cls_path):
+                with open(id2cls_path, 'r') as f:
+                    data = json.load(f)
+                cls_ids_ls = list(data.keys())
+                id_str = ", ".join(cls_ids_ls)
+                opt.reid_cls_ids = id_str
         default_dataset_info = {
             'mot': {'default_input_wh': [opt.input_wh[1], opt.input_wh[0]],  # [608, 1088], [320, 640]
                     'num_classes': len(opt.reid_cls_ids.split(',')),  # 1
