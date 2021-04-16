@@ -5,11 +5,12 @@ ARG IMAGE_NAME
 # CMD nvidia-smi # not in fairmot
 ARG UBUNTU_VERSION=18.04
 ARG ARCH=
-ARG CUDA=11.1
+ARG CUDA=11.0
 FROM nvidia/cuda${ARCH:+-$ARCH}:${CUDA}-base-ubuntu${UBUNTU_VERSION} as base
 ARG ARCH
 ARG CUDA
-ARG CUDNN=8.0.4.30-1
+# ARG CUDNN=8.0.4.30-1
+ARG CUDNN=8.0.5.39
 ARG CUDNN_MAJOR_VERSION=8
 SHELL ["/bin/bash", "-c"]
 
@@ -22,18 +23,36 @@ SHELL ["/bin/bash", "-c"]
 # libcublas-dev=10.2.2.89-1 \
 # && \
 #     rm -rf /var/lib/apt/lists/*
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        cuda-command-line-tools-${CUDA/./-} \
-        libcublas-${CUDA/./-} \
-        cuda-nvrtc-${CUDA/./-} \
-        libcufft-${CUDA/./-} \
-        libcurand-${CUDA/./-} \
-        libcusolver-${CUDA/./-} \
-        libcusparse-${CUDA/./-} \
-        libcudnn8=${CUDNN}+cuda${CUDA} \
-        vim \
-&& \
-    rm -rf /var/lib/apt/lists/*
+
+
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#         cuda-command-line-tools-${CUDA/./-} \
+#         libcublas-${CUDA/./-} \
+#         cuda-nvrtc-${CUDA/./-} \
+#         libcufft-${CUDA/./-} \
+#         libcurand-${CUDA/./-} \
+#         libcusolver-${CUDA/./-} \
+#         libcusparse-${CUDA/./-} \
+#         libcudnn8=${CUDNN}+cuda${CUDA} \
+#         vim \
+# && \
+#     rm -rf /var/lib/apt/lists/*
+
+RUN apt update && apt install -y --no-install-recommends \
+    cuda-cudart-11-0 \
+    cuda-nvrtc-11-0 \
+    libcublas-11-0 \
+    libcufft-11-0 \
+    libcurand-11-0 \
+    libcusolver-11-0 \
+    libcusparse-11-0 \
+    cuda-compat-11-0 \
+    cuda-nvtx-11-0 \
+    libgomp1 \
+    && ln -s cuda-11.0 /usr/local/cuda && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* .cache/ && \
+    rm /usr/local/cuda/targets/x86_64-linux/lib/libcusolverMg.so*
+
 
 ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
 
