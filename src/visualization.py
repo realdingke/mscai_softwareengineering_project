@@ -81,7 +81,8 @@ def _upload_results(client,
                     results,
                     root_path='/content/drive/MyDrive/cattle_data/images/train/',
                     creator_email='grouproject851@gmail.com',
-                    gmt_format='%a, %d %b %Y %H:%M:%S UTC'):
+                    gmt_format='%a, %d %b %Y %H:%M:%S UTC',
+                    restore=False):
     """"""
 
     id2cls_dct_path = osp.join(root_path, 'id2cls.json')
@@ -98,7 +99,10 @@ def _upload_results(client,
         id2color_dict[clsid] = hexcolor_code
     project = client.get_project()
     for label_uid in project.get_labels_list():
-        label = client.get_label_row(label_uid)
+        try:
+            label = client.get_label_row(label_uid)
+        except:
+            continue
         seqs_str = label['data_title']
         ##swap all space in between the seq_name to '_'
         pattern = '(?<=\w)\s(?=\w)'
@@ -123,6 +127,11 @@ def _upload_results(client,
                      9:seq_info.find('\nimExt')]
         )
         deleted_frames = set()
+        ####### for restore gt
+        if restore:
+            for key in list(label['data_units'].values())[0]['labels'].keys():
+                list(label['data_units'].values())[0]['labels'][key] = {'objects': [], 'classifications': []}
+        ####### for restore gt
         for frame, tid, x, y, w, h, conf, clsid, _ in results:
             if tid not in tid2objhash_dct.keys():
                 random_objhash = str(uuid.uuid4())[:8]
@@ -189,7 +198,33 @@ def visualization(opt, seq, output_root=None):
         gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
         client = load_cord_data(project_id, api_key)
         results = _read_det_results(result_path)
-        _upload_results(client, results, root_path, creator_email, gmt_format)
+        _upload_results(client, results, root_path, creator_email, gmt_format, restore=False)
+        
+  def restore_gt(opt, seq, output_root=None):
+    with open(paths.PATHS_OBJ_PATH, 'rb') as f:
+        paths_loader = pickle.load(f)
+        
+        gt_path = osp.join(paths_loader.TRAIN_DATA_PATH, seq, 'gt', 'gt.txt')
+        # gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
+        # project_id = opt.project
+        # api_key = opt.api
+        # creator_email = opt.email
+        root_path = paths_loader.TRAIN_DATA_PATH
+        # results_paths = paths_loader.RESULTS_PATHS
+        # client = load_cord_data(project_id, api_key)
+        # for results_path in results_paths:
+        #     results = _read_det_results(results_path)
+        #     _upload_results(client, results, root_path, creator_email, gmt_format)
+
+        project_id = '235aa1ec-8d5e-4253-b673-1386af826fae'  # Project ID of drone
+        api_key = 'vV_rHH11febK3F2ivQYO_qzlLO9nNTCPxaGblNrfJzg'
+        # result_path = '/content/drive/MyDrive/cattle_data/images/' + \
+        #               'results/cattle_dla_20/Video_of_cattle_1.mp4.txt'
+        creator_email = 'grouproject851@gmail.com'
+        gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
+        client = load_cord_data(project_id, api_key)
+        gts = _read_det_results(gt_path)
+        _upload_results(client, results, root_path, creator_email, gmt_format, restroe=True)
 
     if __name__ == '__main__':
         visualization(opt, seq)
