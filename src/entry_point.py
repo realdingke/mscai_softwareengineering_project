@@ -259,6 +259,7 @@ def main(opt):
         file_name_path = paths.PATHS_OBJ_PATH
         with open(file_name_path, 'rb') as f:
             paths_loader = pickle.load(f)
+        output_root = None
         # automatically identify reid_cls_ids
         id2cls_path = osp.join(paths_loader.TRAIN_DATA_PATH, 'id2cls.json')
         if os.path.isfile(id2cls_path):
@@ -285,18 +286,24 @@ def main(opt):
                     opt.output_root = osp.join(opt.output_root, seq)
                     opt.input_video = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
                     demo.run_demo(opt)
-                    paths_loader.OUTPUT_ROOT = opt.output_root
-                    with open(file_name_path, 'wb') as f:
-                        pickle.dump(paths_loader, f)
+                    output_root = opt.output_root
+
         if opt.visual:
-            seqs = seqs_name_dict['empty_seqs'] + seqs_name_dict['labeled_seqs']
+            seqs_name_path = paths_loader.SEQS_NAME_PATH
+            print(paths_loader.SEQS_NAME_PATH)
+            with open(seqs_name_path, 'rb') as f:
+                seqs_name_dict = pickle.load(f)
+            if seqs_name_dict['empty_seqs'] is None:
+                seqs =  seqs_name_dict['labeled_seqs']
+            else:
+                seqs = seqs_name_dict['empty_seqs'] + seqs_name_dict['labeled_seqs']
             for seq in seqs:
                 if seq in seqs_name_dict['labeled_seqs']:
                     usr_input = bool(input(f"Warning: Are you sure you want to overwrite the gt of {seq} in Cord? True/False"))
                     if usr_input:
-                        visualization.visualization(opt, seq)
+                        visualization.visualization(opt, seq, output_root=output_root)
                 else:
-                    visualization.visualization(opt, seq)
+                    visualization.visualization(opt, seq, output_root=output_root)
     if opt.clean:
         clean.clean_files_a()
 
