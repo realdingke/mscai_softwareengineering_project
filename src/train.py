@@ -29,6 +29,8 @@ from lib.trains.train_factory import train_factory
 import paths
 
 
+os.environ['LD_LIBRARY_PATH'] = '/usr/local/nvidia/lib64'
+
 def mkdirs(d):
     if not os.path.exists(d):
         os.makedirs(d)
