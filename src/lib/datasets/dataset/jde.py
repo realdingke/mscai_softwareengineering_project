@@ -143,7 +143,7 @@ class LoadVideo:  # for inference
         # res, img_0 = self.cap.read()  # BGR
         img_0 = self.myclip.get_frame(self.times[self.count])
         assert img_0 is not None, 'Failed to load frame {:d}'.format(self.count)
-        img_0 = cv2.resize(img_0, (self.w, self.h))
+#         img_0 = cv2.resize(img_0, (self.w, self.h))
 
         # Padded resize
         img, _, _, _ = letterbox(img_0, height=self.height, width=self.width)
