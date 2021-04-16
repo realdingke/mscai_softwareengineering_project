@@ -5,7 +5,7 @@ ARG IMAGE_NAME
 # CMD nvidia-smi # not in fairmot
 ARG UBUNTU_VERSION=18.04
 ARG ARCH=
-ARG CUDA=11.1
+ARG CUDA=11.0
 FROM nvidia/cuda${ARCH:+-$ARCH}:${CUDA}-base-ubuntu${UBUNTU_VERSION} as base
 ARG ARCH
 ARG CUDA
