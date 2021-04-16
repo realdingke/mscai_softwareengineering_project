@@ -224,7 +224,7 @@ def visualization(opt, seq, output_root=None):
         gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
         client = load_cord_data(project_id, api_key)
         gts = _read_det_results(gt_path)
-        _upload_results(client, results, root_path, creator_email, gmt_format, restroe=True)
+        _upload_results(client, results, root_path, creator_email, gmt_format, restore=True)
 
     if __name__ == '__main__':
         visualization(opt, seq)
