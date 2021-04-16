@@ -393,6 +393,18 @@ def run(opt):
 if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # '0, 1'
     opt = opts().parse()
-    # print("opt.gpus: ", opt.gpus)
     # automatically identify reid_cls_ids
+    file_name_path = paths.PATHS_OBJ_PATH
+    if os.path.isfile(file_name_path):
+        with open(file_name_path, 'rb') as f:
+            paths_loader = pickle.load(f)
+        # automatically identify reid_cls_ids
+        id2cls_path = os.path.join(paths_loader.TRAIN_DATA_PATH, 'id2cls.json')
+        if os.path.isfile(id2cls_path):
+            with open(id2cls_path, 'r') as f:
+                data = json.load(f)
+            cls_ids_ls = list(data.keys())
+            id_str = ", ".join(cls_ids_ls)
+            opt.reid_cls_ids = id_str
+
     run(opt)
