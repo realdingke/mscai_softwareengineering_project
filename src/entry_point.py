@@ -205,6 +205,9 @@ def main(opt):
         paths_loader.update()
         root_path = paths.ROOT_PATH
 
+        client_data_path = paths.CLIENT_DATA_PATH
+        seqs_name_path = osp.join(client_data_path, 'seqs_name_path.data')
+        paths_loader.SEQS_NAME_PATH = seqs_name_path
         # change the data_path to include project_name
         data_path = paths_loader.DATA_PATH
 
