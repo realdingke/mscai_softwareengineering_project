@@ -18,3 +18,4 @@ moviepy
 requests
 tqdm
 sklearn
+flask
