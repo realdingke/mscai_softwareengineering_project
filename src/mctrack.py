@@ -62,7 +62,7 @@ def write_time(opt,
                total_time,
                seqs,
                time_sequences):
-    time_path = os.path.join(data_root, 'tracking_time.txt')
+    time_path = os.path.join(data_root, '..', 'tracking_time.txt')
 
     with open(time_path, 'a') as f:
         f.write(f"exp: {exp_name}, arch: {opt.arch}\n")

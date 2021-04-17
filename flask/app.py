@@ -23,6 +23,8 @@ import time
 from logging.config import dictConfig
 from flask import Flask, request, make_response
 
+from src import paths
+
 
 PORT = 8080
 
@@ -68,6 +70,8 @@ def predict():
     image_binary = request.files['image_binary'].read()
     nparr = np.frombuffer(image_binary, np.uint8)
     image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    if request.form['print_test'] == 'test':
+        return paths.PATHS_OBJ_PATH
 
     if image_binary is not None:
 
