@@ -435,6 +435,12 @@ class opts(object):
             action="store_true",
             help="Clean the generated files which are in mode 'append'"
         )
+        
+        self.parser.add_argument(
+            "--restore",
+            action="store_true",
+            help="restore the cord data to original gts",
+        )
 
     def parse(self, args=''):
         if args == '':
