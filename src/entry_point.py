@@ -307,6 +307,16 @@ def main(opt):
                         visualization.visualization(opt, seq, output_root=output_root)
                 else:
                     visualization.visualization(opt, seq, output_root=output_root)
+    if opt.restore:
+        file_name_path = paths.PATHS_OBJ_PATH
+        with open(file_name_path, 'rb') as f:
+            paths_loader = pickle.load(f)
+        seqs_name_path = paths_loader.SEQS_NAME_PATH
+        with open(seqs_name_path, 'rb') as f:
+            seqs_name_dict = pickle.load(f)
+        seqs =  seqs_name_dict['labeled_seqs']
+        for seq in seqs:
+            visualization.restore_gt(opt, seq)
     if opt.clean:
         clean.clean_files_a()
 
