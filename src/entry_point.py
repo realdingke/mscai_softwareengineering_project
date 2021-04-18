@@ -5,9 +5,8 @@ import random
 import re
 # pickle
 import pickle
-import clean
 import json
-import preprocess, gen_labels, gen_data_path, paths, cord_loader, demo, visualization
+import preprocess, gen_labels, gen_data_path, paths, cord_loader, demo, visualization, clean
 from lib.opts import opts
 
 
@@ -134,6 +133,7 @@ def main(opt):
 
     # parse command line arguments
 
+    result_dict = {}  # for flask return
     if opt.gen_info:
         project_id = opt.project
         api_key = opt.api
@@ -178,16 +178,23 @@ def main(opt):
             pickle.dump(seqs_dict, f)
         preprocess.gen_seqini(seqs, data_path)
         print(f"The root path is:\n{root_path}")
+        result_dict.update({'root_path': f"The root path is:\n{root_path}"})
         print('The project contains the below datasets:')
+        result_dict.update({'seq_info': 'The project contains the below datasets:\n'})
         for seq in seqs:
             print(' ' * 6 + seq)
+            result_dict['seq_info'] += (' ' * 6 + seq + '\n')
         print("The videos that have gt labels and can used to train:")
+        result_dict.update({'seq_with_label': "The videos that have gt labels and can used to train:\n"})
         for seq in seqs:
             if seq not in empty_seqs:
                 print(' ' * 6 + seq)
+                result_dict['seq_with_label'] += (' ' * 6 + seq + '\n')
         print("The videos that have no gt labels:")
+        result_dict.update({'seq_without_label': "The videos that have no gt labels:\n"})
         for seq in empty_seqs:
             print(' ' * 6 + seq)
+            result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
     if opt.train_track:
         project_id = opt.project
         api_key = opt.api
@@ -319,9 +326,9 @@ def main(opt):
             visualization.restore_gt(opt, seq)
     if opt.clean:
         clean.clean_files_a()
-
+    return result_dict
 
 
 if __name__ == "__main__":
     opt = opts().init()
-    main(opt)
+    _ = main(opt)
