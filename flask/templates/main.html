@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main page</title>
+</head>
+<body>
+    <form action = "http://localhost:5000/login" method = "post">
+         <p>Enter Project ID & API key:</p>
+         <label for="pid">Project ID:</label><br>
+		 <input type="text" id="pid" name="pid"><br>
+         <label for="api">API key:</label><br>
+         <input type="text" id="api" name="api">
+         <p><input type = "submit" value = "generate project information" /></p>
+    </form>
+    <h4>Type in the information needed for training</h4>
+    <h4>Type the videos that you want to use for training or leave blank for training all the trainable seqs</h4>
+    <form action = "http://localhost:5000/train" method = "post">
+         <label for="train_seq">Training videos:</label><br>
+		 <input type="text" id="train_seq" name="train_seq"><br>
+         <label for="exp_id">Model saving directory:</label><br>
+         <input type="text" id="exp_id" name="exp_id">
+         <label for="model_type">The type of model:</label>
+         <select id="model_type">
+             <option value="0">-- Choose --</option>
+             <option value="dla_34">dla_34</option>
+             <option value="hrnet_18">hrnet_18</option>
+             <option value="resdcn_34">resdcn_34</option>
+         </select>
+         <label for="batch">Batch size:</label><br>
+         <input type="text" id="batch" name="batch">
+         <label for="lr">Learning rate:</label><br>
+         <input type="text" id="lr" name="lr">
+         <label for="epoch">Number of training epoch:</label><br>
+         <input type="text" id="epoch" name="epoch">
+         <label for="drop">Learning rate drop epoch:</label><br>
+         <input type="text" id="drop" name="drop">
+         <label for="name">Data paths saving name:</label><br>
+         <input type="text" id="name" name="name">
+         <p> Do you want to upload the tracking results to cord platform?</p>
+         <input type="radio" name="visual" id="visual_yes" />
+         <label for="visual_yes" class="inline">Yes</label>
+         <input type="radio" name="visual" id="visual_no" />
+         <label for="visual_no" class="inline">No</label>
+         <p><input type = "submit" value = "Start training model" /></p>
+    </form>
+    <h4>Type in the information needed for tracking</h4>
+    <h4>Type in the videos on the cord platform that you want to directly track or upload your own video</h4>
+    <form action = "http://localhost:5000/track" method = "post"
+        enctype = "multipart/form-data">
+         <label for="videos">Tracking videos:</label><br>
+		 <input type="text" id="videos" name="videos"><br>
+         <label for="model_type">The type of pre-trained model:</label>
+         <select id="model_type">
+             <option value="0">-- Choose --</option>
+             <option value="dla_34">dla_34</option>
+             <option value="hrnet_18">hrnet_18</option>
+         </select>
+         <p> Please upload the video that you want to track</p>
+         <input type = "file" name = "file" />
+         <p> Do you want to upload the tracking results to cord platform?</p>
+         <input type="radio" name="visual" id="visual_yes" />
+         <label for="visual_yes" class="inline">Yes</label>
+         <input type="radio" name="visual" id="visual_no" />
+         <label for="visual_no" class="inline">No</label>
+         <p><input type = "submit" value = "Tracking" /></p>
+    </form>
+    <b><a href = '/restore'>click here to restore the gt data on cord platform</a></b>
+    <b><a href = '/clean'>click here to clean the downloaded files</a></b>
+</body>
+</html>
