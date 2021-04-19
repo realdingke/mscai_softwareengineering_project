@@ -135,6 +135,14 @@ def main(opt):
 
     result_dict = {}  # for flask return
     if opt.gen_info:
+        try:
+            import dcn_v2
+        except ImportError:
+            import pip
+            pip.main(['install', '-e','git+https://github.com/CharlesShang/DCNv2@c7f778f28b84c66d3af2bf16f19148a07051dac1#egg=DCNv2', '--user'])
+            sys.path.insert(0, "./src/dcnv2")
+            import dcn_v2
+            
         project_id = opt.project
         api_key = opt.api
         client = cord_loader.load_cord_data(project_id, api_key)
