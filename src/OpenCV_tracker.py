@@ -7,7 +7,7 @@ import sys
 import argparse
 
 # USAGE
-# python3 OpenCV_tracker.py --video /Users/apple/2seconds.mp4 --tracker MOSSE -gt /Users/apple/gt.txt
+# python3 OpenCV_tracker.py --video /Users/apple/video.mp4 --tracker MOSSE --ground_truth_file /Users/apple/gt.txt
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -17,7 +17,7 @@ ap.add_argument("-t", "--tracker", type=str, default="CSRT",
                 help="OpenCV object tracker type: BOOSTING, MIL,\
                 KCF,TLD, MEDIANFLOW, GOTURN, MOSSE, CSRT")
 ap.add_argument("-gt","--ground_truth_file", type=str,
-                help="OpenCV object tracker type")
+                help="path to bounding boxes info file")
 args = ap.parse_args()
 
 
@@ -31,6 +31,7 @@ for line in lines:
 
 object_id = []
 first_appearance = []
+# bounding boxes info of each object when they first appear in the video
 for result in tracking_info:
     if int(float(result[1])) not in object_id:
         object_id.append(int(float(result[1])))
@@ -89,6 +90,7 @@ if not video.isOpened():
 
 def tracker(i):
     return cv2.MultiTracker_create() 
+# allocate a tracker to each object
 tracker_list = []
 for i in range(len(first_appearance)):
     tracker_list.append(tracker(1))
@@ -145,7 +147,7 @@ while True:
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
                 tracking_result.append([frame_nb+1, obj+1, Box[obj][0][0], Box[obj][0][1],
                                         Box[obj][0][2], Box[obj][0][3]])
-            else:      
+            else:    # Tracking fail, initiate the tracker (stop tracking)  
                 fail_obj.append(obj)
                 tracker_list[obj]=cv2.MultiTracker_create() 
                 
