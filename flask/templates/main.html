@@ -1,10 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+      
+    /*.collapse {
+        background-color: #a2de96;
+        border: none;
+        outline: none;
+        font-size: 25px;
+    }*/
+   
+    .active,
+    .collapse:hover {
+        background-color: #438a5e;
+    }
+   
+    /*.text {
+        background-color: #e1ffc2;
+        display: none;
+        font-size: 20px;
+    }*/
+    .text-center {
+    text-align: center;}
+
+    form {
+    text-align: center;}
+
+    h1 {text-align: center;}
+    h4 {text-align: center;}
+    p {text-align: center;}
+</style>
 <head>
     <meta charset="UTF-8">
     <title>Main page</title>
 </head>
 <body>
+    <h1>The Main Page</h1>
+
     <form action = "http://localhost:5000/login" method = "post">
          <p>Enter Project ID & API key:</p>
          <label for="pid">Project ID:</label><br>
@@ -18,32 +49,43 @@
     <form action = "http://localhost:5000/train" method = "post">
          <label for="train_seq">Training videos:</label><br>
 		 <input type="text" id="train_seq" name="train_seq"><br>
-         <label for="exp_id">Model saving directory:</label><br>
-         <input type="text" id="exp_id" name="exp_id">
-         <label for="model_type">The type of model:</label>
+         <p><label for="model_type">The type of model:</label>
          <select id="model_type">
              <option value="0">-- Choose --</option>
              <option value="dla_34">dla_34</option>
              <option value="hrnet_18">hrnet_18</option>
              <option value="resdcn_34">resdcn_34</option>
-         </select>
+         </select><br></p>
          <label for="batch">Batch size:</label><br>
-         <input type="text" id="batch" name="batch">
+         <input type="text" id="batch" name="batch"><br>
          <label for="lr">Learning rate:</label><br>
-         <input type="text" id="lr" name="lr">
+         <input type="text" id="lr" name="lr"><br>
          <label for="epoch">Number of training epoch:</label><br>
-         <input type="text" id="epoch" name="epoch">
+         <input type="text" id="epoch" name="epoch"><br>
+         <p><input type = "submit" value = "Start training model" /></p>
+    </form>
+    
+    <button type="button" class="collapse">
+    Open the advanced settings (collapsible)
+    </button>
+
+    <div class="foldedform">
+        <form action = "http://localhost:5000/train" method = "post">
+         <label for="exp_id">Model saving directory:</label><br>
+         <input type="text" id="exp_id" name="exp_id"><br>
          <label for="drop">Learning rate drop epoch:</label><br>
-         <input type="text" id="drop" name="drop">
+         <input type="text" id="drop" name="drop"><br>
          <label for="name">Data paths saving name:</label><br>
-         <input type="text" id="name" name="name">
+         <input type="text" id="name" name="name"><br>
          <p> Do you want to upload the tracking results to cord platform?</p>
          <input type="radio" name="visual" id="visual_yes" />
          <label for="visual_yes" class="inline">Yes</label>
          <input type="radio" name="visual" id="visual_no" />
          <label for="visual_no" class="inline">No</label>
          <p><input type = "submit" value = "Start training model" /></p>
-    </form>
+        </form>
+    </div>
+
     <h4>Type in the information needed for tracking</h4>
     <h4>Type in the videos on the cord platform that you want to directly track or upload your own video</h4>
     <form action = "http://localhost:5000/track" method = "post"
@@ -67,5 +109,20 @@
     </form>
     <b><a href = '/restore'>click here to restore the gt data on cord platform</a></b>
     <b><a href = '/clean'>click here to clean the downloaded files</a></b>
+
+    <script>
+        var btn = document.getElementsByClassName("collapse");
+   
+        btn[0].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+  
+    </script>
 </body>
 </html>
