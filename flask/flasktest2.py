@@ -9,6 +9,21 @@ def gen_info():
 def train(name):
    return f"the project id and api key is: \n {name}"
 
+@app.route('/img', methods = ['POST', 'GET'])
+def show_img():
+   import base64
+   if request.method == 'POST':
+      filename = request.form['filename']
+      e = filename.split(".")[-1]
+
+      img = open(filename, 'rb').read()
+
+      data = base64.b64encode(img).decode()
+
+      src = "data:image/{e};base64,{data}".format(e=e, data=data)
+
+      return render_template('example.html', url=src)
+
 @app.route('/login',methods = ['POST', 'GET'])
 def login():
    if request.method == 'POST':
