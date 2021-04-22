@@ -35,6 +35,16 @@ def mkdirs(d):
     if not os.path.exists(d):
         os.makedirs(d)
 
+def encode_image(filename):
+    import base64
+    e = filename.split(".")[-1]
+
+    img = open(filename,'rb').read()
+
+    data = base64.b64encode(img).decode()
+
+    src = "data:image/{e};base64,{data}".format(e=e, data=data)
+    return src
 
 def add_test_loader(opt, data_config, transforms):
     Test_Datast = get_dataset(opt.dataset, opt.task, opt.multi_scale)

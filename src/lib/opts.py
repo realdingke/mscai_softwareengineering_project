@@ -64,7 +64,7 @@ class opts(object):
 
         # model: backbone and so on...
         self.parser.add_argument('--arch',
-                                 default='resdcn_18',
+                                 default='hrnet_18',
                                  help='model architecture. Currently tested'
                                       'resdcn_18 |resdcn_34 | resdcn_50 | resfpndcn_34 |'
                                       'dla_34 | hrnet_32 | hrnet_18 | cspdarknet_53')
@@ -243,7 +243,7 @@ class opts(object):
         # modify
         self.parser.add_argument('--exp_name',
                                  type=str,
-                                 default='tracking_results',
+                                 default='default',
                                  help='expected output root path')
         # modify
         self.parser.add_argument('--save_track_time',
