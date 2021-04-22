@@ -53,6 +53,7 @@ def run_demo(opt):
     :param opt:
     :return:
     """
+    # result_dict =
     result_root = opt.output_root if opt.output_root != '' else '.'
     mkdir_if_missing(result_root)
 

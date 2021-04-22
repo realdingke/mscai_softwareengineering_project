@@ -8,6 +8,7 @@ import pickle
 import json
 import preprocess, gen_labels, gen_data_path, paths, cord_loader, demo, visualization, clean
 from lib.opts import opts
+import sys
 
 
 
