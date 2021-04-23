@@ -71,7 +71,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
         path_object = pickle.load(f)
     path = os.path.join(path_object.LOSS_CURVES_PATH, opt.exp_id)
     mkdirs(path)
-    if len(test_losses) == 0:
+    if test_losses is None:
         fig, ax = plt.subplots(2, 2)
         fig.subplots_adjust(hspace=0.3, wspace=0.3)
         ax[0, 0].plot(np.arange(1, opt.num_epochs + 1),
@@ -177,7 +177,6 @@ def save_training_time(opt, data_config, epoch_time=None, total_time=None):
         f.write(f"total time(min): {total_time}\n")
         f.write(f"epoch time(min): {epoch_time_str}\n")
 
-    time_str = f"total time(min): {total_time}\nepoch time(min): {epoch_time_str}\n"
 
 
 
