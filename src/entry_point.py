@@ -6,8 +6,9 @@ import re
 # pickle
 import pickle
 import json
-import preprocess, gen_labels, gen_data_path, paths, cord_loader, demo, visualization, clean
+import preprocess, gen_labels, gen_data_path, paths, cord_loader, demo, visualization, clean, download_model
 from lib.opts import opts
+import sys
 
 
 
@@ -203,6 +204,15 @@ def main(opt):
         for seq in empty_seqs:
             print(' ' * 6 + seq)
             result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
+            
+        # download pretrained model
+        model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/car_hrnet_pretrained')
+        if not os.path.exists(model_path):
+            os.makedirs(model_path)
+        if not osp.exists(model_path + '/model_last.pth'):
+            download_model.download_file_from_google_drive(
+                '1-e6mY2G9PMh3Gvhyis_t6RyNB_JZ03X0',
+                model_path + '/model_last.pth')
     if opt.train_track:
         project_id = opt.project
         api_key = opt.api
@@ -278,6 +288,7 @@ def main(opt):
         with open(file_name_path, 'rb') as f:
             paths_loader = pickle.load(f)
         output_root = None
+
         # automatically identify reid_cls_ids
         id2cls_path = osp.join(paths_loader.TRAIN_DATA_PATH, 'id2cls.json')
         if os.path.isfile(id2cls_path):

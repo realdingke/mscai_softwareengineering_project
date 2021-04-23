@@ -242,9 +242,10 @@ def eval_seq(opt,
     :param mode: track or detect
     :return:
     """
+
     if save_dir:
         mkdir_if_missing(save_dir)
-    print("opt:", opt)
+
     # tracker = JDETracker(opt, frame_rate)
     tracker = MCJDETracker(opt, frame_rate)
 
@@ -347,9 +348,10 @@ def main(opt,
         save_videos = True
     else:
         save_videos = False
-
+    result_dict = {}
     logger.setLevel(logging.INFO)
     result_root = os.path.join(data_root, '..', 'results', exp_name)
+    # result_dict['result_root'] = result_root
     mkdir_if_missing(result_root)
     data_type = 'mot'
 
@@ -360,6 +362,7 @@ def main(opt,
     # add total time for all seqs
     time_sequences = {}
     total_time = 0
+    result_dict['det_path'] = []
     for seq in seqs:
         output_dir = os.path.join(
             data_root, '..', 'outputs', exp_name, seq) if save_images or save_videos else None
@@ -367,6 +370,7 @@ def main(opt,
         dataloader = datasets.LoadImages(
             osp.join(data_root, seq, 'img1'), opt.img_size)
         result_filename = os.path.join(result_root, '{}.txt'.format(seq))
+        result_dict['det_path'].append(result_filename)
         meta_info = open(os.path.join(data_root, seq, 'seqinfo.ini')).read()
         frame_rate = int(float(meta_info[meta_info.find(
             'frameRate') + 10:meta_info.find('\nseqLength')]))
@@ -425,6 +429,9 @@ def main(opt,
     print(strsummary)
     MCEvaluator.save_summary(summary, os.path.join(
         result_root, 'summary_{}.xlsx'.format(exp_name)))
+    result_dict['summary_path'] = os.path.join(
+        result_root, 'summary_{}.xlsx'.format(exp_name))
+    return result_dict
 
 
 if __name__ == '__main__':

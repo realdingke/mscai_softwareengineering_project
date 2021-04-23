@@ -35,6 +35,16 @@ def mkdirs(d):
     if not os.path.exists(d):
         os.makedirs(d)
 
+def encode_image(filename):
+    import base64
+    e = filename.split(".")[-1]
+
+    img = open(filename,'rb').read()
+
+    data = base64.b64encode(img).decode()
+
+    src = "data:image/{e};base64,{data}".format(e=e, data=data)
+    return src
 
 def add_test_loader(opt, data_config, transforms):
     Test_Datast = get_dataset(opt.dataset, opt.task, opt.multi_scale)
@@ -84,8 +94,9 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
             for j in range(2):
                 ax[i, j].set_xlabel('epochs')
                 ax[i, j].legend()
-        plot_path = os.path.join(path, 'sub_loss.png')
-        plt.savefig(plot_path)
+        sub_loss_plot_path = encode_image(os.path.join(path, 'sub_loss.png'))
+        plt.savefig(sub_loss_plot_path)
+
         plt.figure()
         plt.plot(np.arange(1, opt.num_epochs + 1),
                  np.array(train_losses['loss']),
@@ -93,8 +104,8 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
         plt.xlabel('epochs')
         plt.ylabel('loss')
         plt.legend()
-        plot_path = os.path.join(path, 'total_loss.png')
-        plt.savefig(plot_path)
+        total_loss_plot_path = encode_image(os.path.join(path, 'total_loss.png'))
+        plt.savefig(total_loss_plot_path)
     else:
         fig, ax = plt.subplots(2, 2)
         fig.subplots_adjust(hspace=0.3, wspace=0.3)
@@ -131,8 +142,8 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
                 ax[i, j].set_xlabel('epochs')
                 ax[i, j].legend()
 
-        plot_path = os.path.join(path, 'sub_loss.png')
-        plt.savefig(plot_path)
+        sub_loss_plot_path = encode_image(os.path.join(path, 'sub_loss.png'))
+        plt.savefig(sub_loss_plot_path)
         plt.figure()
         plt.plot(np.arange(1, opt.num_epochs + 1),
                  np.array(train_losses['loss']),
@@ -143,8 +154,9 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
         plt.xlabel('epochs')
         plt.ylabel('loss')
         plt.legend()
-        plot_path = os.path.join(path, 'total_loss.png')
-        plt.savefig(plot_path)
+        total_loss_plot_path = encode_image(os.path.join(path, 'total_loss.png'))
+        plt.savefig(total_loss_plot_path)
+    return sub_loss_plot_path, total_loss_plot_path
 
 
 def save_training_time(opt, data_config, epoch_time=None, total_time=None):
@@ -164,10 +176,13 @@ def save_training_time(opt, data_config, epoch_time=None, total_time=None):
                 f", lr: {opt.lr}, batch size:{opt.batch_size}\n")
         f.write(f"total time(min): {total_time}\n")
         f.write(f"epoch time(min): {epoch_time_str}\n")
-    f.close()
+
+    time_str = f"total time(min): {total_time}\nepoch time(min): {epoch_time_str}\n"
+    return time_str
 
 
 def run(opt):
+    result_dict = {}
     torch.manual_seed(opt.seed)
     torch.backends.cudnn.benchmark = not opt.not_cuda_benchmark and not opt.test
 
@@ -301,6 +316,8 @@ def run(opt):
     if opt.plot_loss:
         train_losses = {'loss': [], 'hm': [], 'wh': [], 'off': [], 'id': []}
         test_losses = {'loss': [], 'hm': [], 'wh': [], 'off': [], 'id': []}
+        result_dict['train_losses'] = train_losses
+        result_dict['test_losses'] = test_losses
     for epoch in range(start_epoch + 1, opt.num_epochs + 1):
         mark = epoch if opt.save_all else 'last'
 
@@ -362,6 +379,7 @@ def run(opt):
                 #        epoch, model, optimizer)
                 save_model(os.path.join(opt.save_dir, 'mcmot_last_det_' + opt.arch + '.pth'),
                            epoch, model, optimizer)
+                result_dict['last_model_path'] = os.path.join(opt.save_dir, 'mcmot_last_det_' + opt.arch + '.pth')
         logger.write('\n')
 
         if epoch in opt.lr_step:
@@ -383,13 +401,19 @@ def run(opt):
     # plot function
     if opt.plot_loss:
         if opt.add_test_dataset:
-            plot_loss_curves(opt, data_config, train_losses=train_losses, test_losses=test_losses)
-        else:
-            plot_loss_curves(opt, data_config, train_losses=train_losses)
+            sub_loss, total_loss = plot_loss_curves(opt, data_config, train_losses=train_losses, test_losses=test_losses)
 
+        else:
+            sub_loss, total_loss = plot_loss_curves(opt, data_config, train_losses=train_losses)
+        result_dict['sub_loss_plot'] = sub_loss
+        result_dict['total_loss_plot'] = total_loss
     # time function
     if opt.save_time:
-        save_training_time(opt, data_config, epoch_time=epoch_time, total_time=total_time)
+        time_str = save_training_time(opt, data_config, epoch_time=epoch_time, total_time=total_time)
+        result_dict['training_time'] = time_str
+
+    return result_dict
+
 
 
 if __name__ == '__main__':

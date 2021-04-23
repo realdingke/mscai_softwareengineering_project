@@ -7,6 +7,12 @@
          <label for="api">API key:</label><br>
          <input type="text" id="api" name="api">
          <p><input type = "submit" value = "submit" /></p>
-      </form>   
+      </form>
+      <form action = "http://localhost:5000/img" method = "post">
+         <p>Enter Project ID & API key:</p>
+         <label for="filename">image path:</label><br>
+		 <input type="text" id="filename" name="filename"><br>
+         <p><input type = "submit" value = "show image" /></p>
+      </form>
    </body>
 </html>
