@@ -6,8 +6,24 @@
 </head>
 <body>
     <h4>Results</h4>
-    <p>{{ opt.project }}</p>
-    <p>{{ opt.api }}</p>
+    <p>usable models</p>
+    {% for model in results["models_name"] %}
+        <p>{{ model }}</p>
+    {% endfor %}
+    <p>root path</p>
+    <p>{{ results["root_path"] }}</p>
+    <p>videos in cord</p>
+    {% for seq_all in results["seq_info"] %}
+        <p>{{ seq_all }}</p>
+    {% endfor %}
+    <p>videos have gt labels</p>
+    {% for seq_with in results["seq_with_label"] %}
+        <p>{{ seq_with }}</p>
+    {% endfor %}
+    <p>videos without gt labels</p>
+    {% for seq_without in results["seq_without_label"] %}
+        <p>{{ seq_without }}</p>
+    {% endfor %}
     <p>successful gen_info</p>
     <b><a href = '/'>click here to return to main page</a></b>
 </body>

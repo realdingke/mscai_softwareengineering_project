@@ -42,10 +42,11 @@ def login():
         opt.api = request.form['api']
     # opt.email = request.form['email']
     results_dict = entry_point.main(opt)
-    return render_template("gen_info.html", opt=opt)
+    opt.gen_info = False
+    return render_template("gen_info.html", opt=opt, results=results_dict)
 
 @app.route('/train', methods=['POST', 'PUT'])
-def train():
+def train_track():
     # Entry_point
     opt.train_track = True
     if request.form['train_seq'] != '':
@@ -53,6 +54,8 @@ def train():
         opt.dataset_selection = [ts.strip() for ts in train_sel.split()]
     if request.values.get('rand_split') == 'True':
         opt.rand_split = True
+    else:
+        opt.rand_split = False
     if request.form['rseed'] != '':
         opt.rseed = int(request.form['rseed'])
     if request.form['split_perc'] != '':
@@ -77,10 +80,16 @@ def train():
         opt.arch = model_type
     if request.values.get('add_test') == 'True':
         opt.add_test_dataset = True
+    else:
+        opt.add_test_dataset = False
     if request.values.get('plot_loss') == 'True':
         opt.plot_loss = True
+    else:
+        opt.plot_loss = False
     if request.values.get('save_time') == 'True':
         opt.save_time = True
+    else:
+        opt.save_time = False
     # if request.form[] != '':
     #     opt.num_iters = request.form[]
 
@@ -89,6 +98,7 @@ def train():
     # opt = opts().parse()
     # automatically identify reid_cls_ids
     file_name_path = paths.PATHS_OBJ_PATH
+    opt.load_model = ''
     if os.path.isfile(file_name_path):
         with open(file_name_path, 'rb') as f:
             paths_loader = pickle.load(f)
@@ -111,6 +121,8 @@ def train():
         opt.exp_name = request.form['exp_name']
     if request.values.get('track_time') == 'True':
         opt.save_track_time = True
+    else:
+        opt.save_track_time = False
     # if request.form[] != '':
     #     opt.conf_thres = request.form[]
 
@@ -142,7 +154,9 @@ def train():
          show_image=False,
          save_images=False,
          save_videos=False)
+    opt.train_track = False
     return render_template("train_result.html", opt=opt)
+
 
 @app.route('/track', methods=['POST', 'PUT'])
 def track():
@@ -158,24 +172,31 @@ def track():
         opt.arch = model_type
     if request.values.get('visual') == 'True':
         opt.visual = True
+    else:
+        opt.visual = False
     _ = entry_point.main(opt)
+    opt.track = False
     return render_template("track_result.html", opt=opt)
+
 
 @app.route('/clean', methods=['POST', 'PUT'])
 def clean():
     clean_files_a()
     return "<b><a href = '/'>click here to return to main page</a></b>"
 
+
 @app.route('/restore', methods=['POST', 'PUT'])
 def restore():
     opt.restore = True
     _ = entry_point.main(opt)
+    opt.restore = False
     return "<b><a href = '/'>click here to return to main page</a></b>"
 
 # @app.route('/display_pic', methods=['POST', 'PUT'])
 # def display_pics():
 #     pics =
 #     return pics # String to display pics
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
