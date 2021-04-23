@@ -229,10 +229,10 @@ def main(opt):
             print(' ' * 6 + seq)
             result_dict['seq_without_label'].append(seq)
             # result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
-        return result_dict
+
 
     if opt.train_track:
-        result_dict = {}
+
         project_id = opt.project
         api_key = opt.api
         client = cord_loader.load_cord_data(project_id, api_key)
@@ -303,7 +303,7 @@ def main(opt):
         )
         with open(file_name_path, 'wb') as f:
             pickle.dump(paths_loader, f)
-        return result_dict
+
     if opt.track:
         # justify if the model has been chosen by the user
         if len(opt.specified_model) != 0:
@@ -353,7 +353,7 @@ def main(opt):
                 opt.output_root = osp.join(opt.output_root, video_name)
                 track_result = demo.run_demo(opt)
                 result[video_name] = track_result
-                return result
+
         elif len(opt.tracking_video_selection) == 0:
             seqs_name_path = paths_loader.SEQS_NAME_PATH
             with open(seqs_name_path, 'rb') as f:
@@ -367,7 +367,7 @@ def main(opt):
                     opt.input_video = empty_seqs_path
                     track_result = demo.run_demo(opt)
                     result[seq] = track_result
-            return result
+
         else:
             result = {}
             for seq in opt.tracking_video_selection[0]:
@@ -377,7 +377,7 @@ def main(opt):
                     track_result = demo.run_demo(opt)
                     result[seq] = track_result
                     output_root = opt.output_root
-            return result
+
 
         if opt.visual:
             seqs_name_path = paths_loader.SEQS_NAME_PATH
