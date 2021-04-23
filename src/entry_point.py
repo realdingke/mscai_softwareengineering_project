@@ -153,6 +153,10 @@ def main(opt):
             download_model.download_file_from_google_drive(
                 '1-e6mY2G9PMh3Gvhyis_t6RyNB_JZ03X0',
                 model_path + '/model_last.pth')
+        if not osp.exists(model_path + '/opt.txt'):
+            download_model.download_file_from_google_drive(
+                '1KAn5u6nKRJGhDJBZA_O8hWaaIEh63yXN',
+                model_path + '/opt.txt')
 
         # check pretrained model
         models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
