@@ -125,6 +125,7 @@ def train_track():
     #     opt.num_iters = request.form[]
 
     # coped from train main function
+    
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # '0, 1'
     # opt = opts().parse()
     # automatically identify reid_cls_ids
@@ -144,7 +145,7 @@ def train_track():
     results_dict_train = train.train(opt)
 
     # MCTrack
-    opt.load_model = '/home/user/exp/mot/' + opt.exp_id + f"/model_{opt.num_epochs}.pth"
+    opt.load_model = '/home/user/exp/mot/' + opt.exp_id + "/model_last.pth"
     output_format = request.values.get('output_format')
     if output_format != '-- Choose --':
         opt.output_format = output_format
@@ -158,11 +159,20 @@ def train_track():
     #     opt.conf_thres = request.form[]
 
     # Coped from mctrack main function
+    
     # os.environ['CUDA_VISIBLE_DEVICES'] = '1'  # 0
     # opt = opts().init()
     if os.path.isfile(file_name_path):
         with open(file_name_path, 'rb') as f:
             path_object = pickle.load(f)
+        load_model_ls = opt.load_model.split("/")
+        model_name_path = "/".join(load_model_ls[:-1])
+        opt_path = osp.join(model_name_path, 'opt.txt')
+        with open(opt_path, "r") as f:
+            content = f.read()
+        pattern = re.compile('arch: [a-z]+_[0-9]+')
+        arch = re.findall(pattern, content)
+        opt.arch = arch[0][6:]            
         if not opt.val_mot16:
             data_root = path_object.TEST_DIR_NAME_PATH
             seqs_str = os.listdir(data_root)

@@ -452,6 +452,15 @@ if __name__ == '__main__':
         with open(paths.TRAIN_MODEL_PATH, "rb") as f:
             train_model_path = pickle.load(f)
         opt.load_model = train_model_path
+
+        load_model_ls = opt.load_model.split("/")
+        model_name_path = "/".join(load_model_ls[:-1])
+        opt_path = osp.join(model_name_path, 'opt.txt')
+        with open(opt_path, "r") as f:
+            content = f.read()
+        pattern = re.compile('arch: [a-z]+_[0-9]+')
+        arch = re.findall(pattern, content)
+        opt.arch = arch[0][6:]
         if not opt.val_mot16:
             data_root = path_object.TEST_DIR_NAME_PATH
             seqs_str = os.listdir(data_root)
