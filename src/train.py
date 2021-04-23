@@ -411,7 +411,12 @@ def run(opt):
     if opt.save_time:
         time_str = save_training_time(opt, data_config, epoch_time=epoch_time, total_time=total_time)
         result_dict['training_time'] = time_str
-
+    # check pretrained model
+    models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
+    result_dict["models_name"] = models_name
+    train_model_path = os.path.join(paths.MODEL_DIR_PATH, opt.exp_id, "model_last.pth")
+    with open(paths.TRAIN_MODEL_PATH, 'wb') as f:
+        pickle.dump(train_model_path, f)
     return result_dict
 
 

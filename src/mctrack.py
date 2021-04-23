@@ -349,6 +349,10 @@ def main(opt,
     else:
         save_videos = False
     result_dict = {}
+    # check pretrained model
+    models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
+    result_dict["models_name"] = models_name
+
     logger.setLevel(logging.INFO)
     result_root = os.path.join(data_root, '..', 'results', exp_name)
     # result_dict['result_root'] = result_root
@@ -441,7 +445,9 @@ if __name__ == '__main__':
     if os.path.isfile(path_object):
         with open(path_object, 'rb') as f:
             path_object = pickle.load(f)
-
+        with open(paths.TRAIN_MODEL_PATH, "rb") as f:
+            train_model_path = pickle.load(f)
+        opt.load_model = train_model_path
         if not opt.val_mot16:
             data_root = path_object.TEST_DIR_NAME_PATH
             seqs_str = os.listdir(data_root)
