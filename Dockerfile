@@ -184,14 +184,6 @@ libcublas-dev=10.2.2.89-1 \
 
 ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs
 
-FROM python:3.7
-
-RUN apt-get update -y && \
-    apt-get install -y python3-pip python3-dev
-RUN apt-get install -y python3.7
-RUN apt-get install -y libglib2.0-0
-RUN apt-get install -y libgl1-mesa-glx
-
 # Install some basic utilities
 RUN apt-get update && apt-get install -y \
     curl \
@@ -262,6 +254,8 @@ RUN conda install -y h5py=2.8.0 \
  && conda clean -ya
 RUN pip install h5py-cache==1.0
 
+RUN pip install --user waitress
+
 # Install Torchnet, a high-level framework for PyTorch
 RUN pip install torchnet==0.0.4
 
@@ -282,8 +276,6 @@ RUN conda install -y -c menpo opencv3=3.1.0 \
  && conda clean -ya
 
 RUN conda init
-
-RUN pip3 install --user waitress
 
 RUN pip install cython==0.29.21
 COPY requirements.txt requirements.txt
