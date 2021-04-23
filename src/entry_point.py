@@ -146,17 +146,31 @@ def main(opt):
             import dcn_v2
 
         # download pretrained model
-        model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/car_hrnet_pretrained')
-        if not os.path.exists(model_path):
-            os.makedirs(model_path)
-        if not osp.exists(model_path + '/model_last.pth'):
+        car_model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/car_hrnet_pretrained')
+        if not os.path.exists(car_model_path):
+            os.makedirs(car_model_path)
+        if not osp.exists(car_model_path + '/model_last.pth'):
             download_model.download_file_from_google_drive(
                 '1-e6mY2G9PMh3Gvhyis_t6RyNB_JZ03X0',
-                model_path + '/model_last.pth')
-        if not osp.exists(model_path + '/opt.txt'):
+                car_model_path + '/model_last.pth')
+
+        if not osp.exists(car_model_path + '/opt.txt'):
             download_model.download_file_from_google_drive(
                 '1KAn5u6nKRJGhDJBZA_O8hWaaIEh63yXN',
-                model_path + '/opt.txt')
+                car_model_path + '/opt.txt')
+
+        cattle_model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/cattle_dla_pretrained')
+        if not os.path.exists(cattle_model_path):
+            os.makedirs(cattle_model_path)
+        if not osp.exists(cattle_model_path + '/model_last.pth'):
+            download_model.download_file_from_google_drive(
+                '10ekRqMiqY2HYqRsca9TD06LyzF7ik4f8',
+                cattle_model_path + '/model_last.pth')
+
+        if not osp.exists(cattle_model_path + '/opt.txt'):
+            download_model.download_file_from_google_drive(
+                '1-LsPdainXT6au7Nm0LEAJ3_KZyaV9nvH',
+                cattle_model_path + '/opt.txt')
 
         # check pretrained model
         models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
@@ -229,10 +243,10 @@ def main(opt):
             print(' ' * 6 + seq)
             result_dict['seq_without_label'].append(seq)
             # result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
-        return result_dict
+
 
     if opt.train_track:
-        result_dict = {}
+
         project_id = opt.project
         api_key = opt.api
         client = cord_loader.load_cord_data(project_id, api_key)
@@ -303,7 +317,7 @@ def main(opt):
         )
         with open(file_name_path, 'wb') as f:
             pickle.dump(paths_loader, f)
-        return result_dict
+
     if opt.track:
         # justify if the model has been chosen by the user
         if len(opt.specified_model) != 0:
@@ -353,7 +367,7 @@ def main(opt):
                 opt.output_root = osp.join(opt.output_root, video_name)
                 track_result = demo.run_demo(opt)
                 result[video_name] = track_result
-                return result
+
         elif len(opt.tracking_video_selection) == 0:
             seqs_name_path = paths_loader.SEQS_NAME_PATH
             with open(seqs_name_path, 'rb') as f:
@@ -367,7 +381,7 @@ def main(opt):
                     opt.input_video = empty_seqs_path
                     track_result = demo.run_demo(opt)
                     result[seq] = track_result
-            return result
+
         else:
             result = {}
             for seq in opt.tracking_video_selection[0]:
@@ -377,7 +391,7 @@ def main(opt):
                     track_result = demo.run_demo(opt)
                     result[seq] = track_result
                     output_root = opt.output_root
-            return result
+
 
         if opt.visual:
             seqs_name_path = paths_loader.SEQS_NAME_PATH
