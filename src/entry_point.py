@@ -223,8 +223,10 @@ def main(opt):
             print(' ' * 6 + seq)
             result_dict['seq_without_label'].appen(seq)
             # result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
+        return result_dict
             
     if opt.train_track:
+        result_dict = {}
         project_id = opt.project
         api_key = opt.api
         client = cord_loader.load_cord_data(project_id, api_key)
@@ -295,6 +297,7 @@ def main(opt):
         )
         with open(file_name_path, 'wb') as f:
             pickle.dump(paths_loader, f)
+        return result_dict
     if opt.track:
         # justify if the model has been chosen by the user
         if len(opt.specified_model) != 0:
