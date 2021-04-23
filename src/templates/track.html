@@ -39,13 +39,9 @@
     <form action = "http://localhost:5000/track" method = "post"
         enctype = "multipart/form-data">
          <label for="videos">Tracking videos:</label><br>
-         <select class="form-control" id="videos" name="videos">
-             <option selected="selected">-- Choose --</option>
-             {% for seq in seqs %}
-                <option>{{ seq }}</option>
-             {% endfor %}
-         </select><br>
-		 <input type="text" id="videos" name="videos"><br>
+         <p>{% for seq in seqs %}
+             <input type="checkbox" id="videos" />{{ seq }}
+         {% endfor %}</p>
          <label for="model_type">The name of usable models:</label>
          <select class="form-control" id="model_type" name="model_type">
              <option selected="selected">-- Choose --</option>

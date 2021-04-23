@@ -38,12 +38,9 @@
     <h4>Type the videos that you want to use for training or leave blank for training all the trainable seqs</h4>
     <form action = "http://localhost:5000/train" method = "post">
          <label for="train_seq">Training videos:</label>
-		 <select class="form-control" id="train_seq" name="train_seq">
-             <option selected="selected">-- Choose --</option>
-             {% for seq in seqs %}
-                <option>{{ seq }}</option>
-            {% endfor %}
-         </select><br>
+         <p>{% for seq in seqs %}
+             <input type="checkbox" id="train_seq" />{{ seq }}
+         {% endfor %}</p>
          <label for="model_type">The type of model:</label>
          <select class="form-control" id="model_type" name="model_type">
              <option selected="selected">-- Choose --</option>
