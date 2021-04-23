@@ -153,6 +153,10 @@ def main(opt):
             download_model.download_file_from_google_drive(
                 '1-e6mY2G9PMh3Gvhyis_t6RyNB_JZ03X0',
                 model_path + '/model_last.pth')
+        if not osp.exists(model_path + '/opt.txt'):
+            download_model.download_file_from_google_drive(
+                '1KAn5u6nKRJGhDJBZA_O8hWaaIEh63yXN',
+                model_path + '/opt.txt')
 
         # check pretrained model
         models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
@@ -307,6 +311,26 @@ def main(opt):
                 paths.MODEL_DIR_PATH,
                 opt.specified_model,
                 "model_last.pth")
+            opt_path = osp.join(
+                paths.MODEL_DIR_PATH,
+                opt.specified_model,
+                'opt.txt'
+            )
+            with open(opt_path, "r") as f:
+                content = f.read()
+
+            pattern = re.compile('arch: [a-z]+_[0-9]+')
+            arch = re.findall(pattern, content)
+            opt.arch = arch[0][6:]
+        else:
+            load_model_ls = opt.load_model.split("/")
+            model_name_path = "/".join(load_model_ls[:-1])
+            opt_path = osp.join(model_name_path, 'opt.txt')
+            with open(opt_path, "r") as f:
+                content = f.read()
+            pattern = re.compile('arch: [a-z]+_[0-9]+')
+            arch = re.findall(pattern, content)
+            opt.arch = arch[0][6:]
 
         file_name_path = paths.PATHS_OBJ_PATH
         with open(file_name_path, 'rb') as f:
@@ -322,7 +346,7 @@ def main(opt):
             id_str = ", ".join(cls_ids_ls)
             opt.reid_cls_ids = id_str
 
-        if len(opt.input_video) == 0:
+        if len(opt.input_video) != 0:
             video_name = opt.input_video.split("/")[-1][:-4]
             result = {}
             if opt.output_root == '../results':
