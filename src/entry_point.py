@@ -306,6 +306,26 @@ def main(opt):
                 paths.MODEL_DIR_PATH,
                 opt.specified_model,
                 "model_last.pth")
+            opt_path = osp.join(
+                paths.MODEL_DIR_PATH,
+                opt.specified_model,
+                'opt.txt'
+            )
+            with open(opt_path, "r") as f:
+                content = f.read()
+
+            pattern = re.compile('arch: [a-z]+_[0-9]+')
+            arch = re.findall(pattern, content)
+            opt.arch = arch[0][6:]
+        else:
+            load_model_ls = opt.load_model.split("/")
+            model_name_path = "/".join(load_model_ls[:-1])
+            opt_path = osp.join(model_name_path, 'opt.txt')
+            with open(opt_path, "r") as f:
+                content = f.read()
+            pattern = re.compile('arch: [a-z]+_[0-9]+')
+            arch = re.findall(pattern, content)
+            opt.arch = arch[0][6:]
 
         file_name_path = paths.PATHS_OBJ_PATH
         with open(file_name_path, 'rb') as f:

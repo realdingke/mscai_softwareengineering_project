@@ -115,14 +115,18 @@ def run_demo(opt):
     try:
         if opt.input_mode == 'video':
             if opt.id_weight > 0:
-                eval_seq(opt=opt,
-                         data_loader=data_loader,
-                         data_type='mot',
-                         result_f_name=result_file_name,
-                         save_dir=frame_dir,
-                         show_image=False,
-                         frame_rate=frame_rate,
-                         mode='track')
+                nf, ta, tc = eval_seq(opt=opt,
+                             data_loader=data_loader,
+                             data_type='mot',
+                             result_f_name=result_file_name,
+                             save_dir=frame_dir,
+                             show_image=False,
+                             frame_rate=frame_rate,
+                             mode='track')
+                time_sequence = np.asarray(ta) * np.asarray(tc)
+                result_dict['time_sequence'] = time_sequence
+                total_time = np.dot(ta, tc)
+                result_dict['total_time'] = total_time
             else:  # input video, do detection
                 eval_seq(opt=opt,
                          data_loader=data_loader,
