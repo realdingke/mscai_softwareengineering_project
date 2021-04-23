@@ -143,7 +143,11 @@ def main(opt):
             pip.main(['install', '-e','git+https://github.com/CharlesShang/DCNv2@c7f778f28b84c66d3af2bf16f19148a07051dac1#egg=DCNv2', '--user'])
             sys.path.insert(0, "./src/dcnv2")
             import dcn_v2
-            
+
+        # check pretrained model
+        models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
+        result_dict["models_name"] = models_name
+
         project_id = opt.project
         api_key = opt.api
         client = cord_loader.load_cord_data(project_id, api_key)
@@ -284,6 +288,13 @@ def main(opt):
         with open(file_name_path, 'wb') as f:
             pickle.dump(paths_loader, f)
     if opt.track:
+        # justify if the model has been chosen by the user
+        if len(opt.specified_model) != 0:
+            opt.load_model = osp.join(
+                paths.MODEL_DIR_PATH,
+                opt.specified_model,
+                "model_last.pth")
+
         file_name_path = paths.PATHS_OBJ_PATH
         with open(file_name_path, 'rb') as f:
             paths_loader = pickle.load(f)
@@ -298,7 +309,12 @@ def main(opt):
             id_str = ", ".join(cls_ids_ls)
             opt.reid_cls_ids = id_str
 
-        if len(opt.tracking_video_selection) == 0:
+        if len(opt.input_video) == 0:
+            video_name = opt.input_video.split("/")[-1][:-4]
+            if opt.output_root == '../results':
+                opt.output_root = osp.join(opt.output_root, video_name)
+                demo.run_demo(opt)
+        elif len(opt.tracking_video_selection) == 0:
             seqs_name_path = paths_loader.SEQS_NAME_PATH
             with open(seqs_name_path, 'rb') as f:
                 seqs_name_dict = pickle.load(f)

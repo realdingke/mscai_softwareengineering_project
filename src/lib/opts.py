@@ -441,6 +441,10 @@ class opts(object):
             action="store_true",
             help="restore the cord data to original gts",
         )
+        self.parser.add_argument('--specified_model',
+                                 type=str,
+                                 default='',  # video or image_dir or img_path_list_txt
+                                 help='the model that the user chooses')
 
     def parse(self, args=''):
         if args == '':

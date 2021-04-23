@@ -4,6 +4,7 @@ from __future__ import print_function
 import sys
 import logging
 import os
+import paths
 import _init_paths
 
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
@@ -53,9 +54,12 @@ def run_demo(opt):
     :param opt:
     :return:
     """
-    # result_dict =
+    result_dict = {}
     result_root = opt.output_root if opt.output_root != '' else '.'
     mkdir_if_missing(result_root)
+    # check pretrained model
+    models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
+    result_dict["models_name"] = models_name
 
     # clear existing frame results
     frame_res_dir = result_root + '/frame'
@@ -95,6 +99,7 @@ def run_demo(opt):
             data_loader = datasets.LoadImages(path=paths, img_size=opt.img_size)
 
     result_file_name = os.path.join(result_root, 'results.txt')
+    result_dict['det_path'] = result_file_name
     frame_rate = data_loader.frame_rate
     frame_dir = None if opt.output_format == 'text' else osp.join(result_root, 'frame')
 
@@ -145,14 +150,17 @@ def run_demo(opt):
         if opt.input_mode == 'video':
             if opt.id_weight > 0:
                 output_video_path = osp.join(result_root, f_name + '_track.mp4')
+                result_dict['output_video_path'] = output_video_path
             else:
                 output_video_path = osp.join(result_root, f_name + '_det.mp4')
+                result_dict['output_video_path'] = output_video_path
         elif opt.input_mode == 'image_dir':
             output_video_path = osp.join(result_root, f_name + '_det.mp4')
         cmd_str = 'ffmpeg -f image2 -i {}/%05d.jpg -b 5000k -c:v mpeg4 {}' \
             .format(osp.join(result_root, 'frame'), output_video_path)
         print(cmd_str)
         os.system(cmd_str)
+    return result_dict
 
 
 def test_single(img_path, dev):
