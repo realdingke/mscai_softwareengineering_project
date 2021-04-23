@@ -115,7 +115,8 @@ def train_track():
             opt_train.reid_cls_ids = id_str
 
     # Train
-
+    opt_train.root_dir = os.path.join(paths.ROOT_PATH, '..')
+    opt_train.exp_dir = os.path.join(opt_train.root_dir, 'exp', opt_train.task)
     if request.form['lr'] != '':
         opt_train.lr = float(request.form['lr'])
     if request.form['batch'] != '':
@@ -124,8 +125,10 @@ def train_track():
         opt_train.num_epochs = int(request.form['epoch'])
     if request.form['drop'] != '':
         opt_train.lr_step = request.form['drop']
+    opt_train.lr_step = [int(i) for i in opt.lr_step.split(',')]
     if request.form['exp_id'] != '':
         opt_train.exp_id = request.form['exp_id']
+    opt_train.save_dir = os.path.join(opt_train.exp_dir, opt_train.exp_id)
     model_type = request.values.get('model_type')
     if model_type != '-- Choose --':
         opt_train.arch = model_type
@@ -141,6 +144,10 @@ def train_track():
         opt_train.save_time = True
     else:
         opt_train.save_time = False
+    if opt_train.resume and opt_train.load_model == '':
+        model_path = opt_train.save_dir[:-4] if opt_train.save_dir.endswith('TEST') \
+            else opt_train.save_dir
+        opt_train.load_model = os.path.join(model_path, 'model_last.pth')
     # if request.form[] != '':
     #     opt_train.num_iters = request.form[]
 
