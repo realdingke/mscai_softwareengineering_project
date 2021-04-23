@@ -104,6 +104,7 @@ def train_track():
         opt.lr_step = request.form['drop']
     if request.form['exp_id'] != '':
         opt.exp_id = request.form['exp_id']
+        opt.exp_name = opt.exp_id
     model_type = request.values.get('model_type')
     if model_type != '-- Choose --':
         opt.arch = model_type
@@ -146,8 +147,8 @@ def train_track():
     output_format = request.values.get('output_format')
     if output_format != '-- Choose --':
         opt.output_format = output_format
-    if request.form['exp_name'] != '':
-        opt.exp_name = request.form['exp_name']
+    # if request.form['exp_name'] != '':
+    #     opt.exp_name = request.form['exp_name']
     if request.values.get('track_time') == 'True':
         opt.save_track_time = True
     else:
@@ -197,7 +198,7 @@ def track():
     opt.track = True
     videos = request.form.getlist('videos')
     if len(videos) > 0:
-        opt.tracking_video_selection = videos
+        opt.tracking_video_selection = [videos]
     output_format = request.values.get('output_format')
     if output_format != '-- Choose --':
         opt.output_format = output_format
