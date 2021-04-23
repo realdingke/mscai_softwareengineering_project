@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify, send_from_directory, redirect, url_for, request, render_template
-from paths import CLIENT_DATA_PATH
 import os
-import entry_point, paths, train
+import pickle
+import re
+import json
+import entry_point, paths, train, mctrack
+from paths import CLIENT_DATA_PATH
 from clean import clean_files_a
 from lib.opts import opts
 
@@ -54,7 +57,7 @@ def train():
         opt.rseed = int(request.form['rseed'])
     if request.form['split_perc'] != '':
         split_perc = request.form['split_perc']
-        opt.split_perc = list([float(sp.strip()) for sp in split_perc.split()])
+        opt.split_perc = [[float(sp.strip()) for sp in split_perc.split()]]
     if request.form['name'] != '':
         opt.json_name = request.form['name']
     _ = entry_point.main(opt)
@@ -97,7 +100,7 @@ def train():
             cls_ids_ls = list(data.keys())
             id_str = ", ".join(cls_ids_ls)
             opt.reid_cls_ids = id_str
-    train.run(opt)
+    train.train(opt)
 
     # MCTrack
     opt.load_model = '/home/user/exp/mot/' + opt.exp_id + f"/model_{opt.num_epochs}.pth"
@@ -132,7 +135,7 @@ def train():
     seqs = [seq.strip() for seq in seqs_str.split()]
     # seqs = [string.replace('_', ' ') for string in seqs]
 
-    main(opt,
+    mctrack.track(opt,
          data_root=data_root,
          seqs=seqs,
          exp_name=opt.exp_name,
@@ -175,4 +178,4 @@ def restore():
 #     return pics # String to display pics
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)

@@ -335,7 +335,7 @@ def eval_seq(opt,
     return frame_id, timer.average_time, timer.calls
 
 
-def main(opt,
+def track(opt,
          data_root='/data/MOT16/train',
          det_root=None, seqs=('MOT16-05',),
          exp_name='demo',
@@ -661,7 +661,7 @@ if __name__ == '__main__':
     seqs = [seq.strip() for seq in seqs_str.split()]
     # seqs = [string.replace('_', ' ') for string in seqs]
 
-    main(opt,
+    track(opt,
          data_root=data_root,
          seqs=seqs,
          exp_name=opt.exp_name,
