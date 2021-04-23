@@ -367,6 +367,7 @@ def track(opt,
     time_sequences = {}
     total_time = 0
     result_dict['det_path'] = {}
+    result_dict['video_path'] = {}
     for seq in seqs:
         output_dir = os.path.join(
             data_root, '..', 'outputs', exp_name, seq) if save_images or save_videos else None
@@ -398,6 +399,7 @@ def track(opt,
         accs += evaluator.eval_file(result_filename)
         if save_videos:
             output_video_path = osp.join(output_dir, '{}.mp4'.format(seq))
+            result_dict['video_path'][seq] = output_video_path
             cmd_str = 'ffmpeg -f image2 -i {}/%05d.jpg -c:v copy {} -r {}'.format(
                 output_dir, output_video_path, 30)
             # cmd_str = 'ffmpeg -f image2 -i {}/%05d.jpg -vcodec libx264 -r {} {}'.format(

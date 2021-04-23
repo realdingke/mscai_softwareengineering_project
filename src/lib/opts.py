@@ -129,11 +129,11 @@ class opts(object):
                                       'test on test set')
         # plot loss curves
         self.parser.add_argument('--plot_loss',
-                                 action='store_true',
+                                 action='store_false',
                                  help='plot and save loss curves')
         # save training time
         self.parser.add_argument('--save_time',
-                                 action='store_true',
+                                 action='store_false',
                                  help='save training time')
 
         # test
@@ -247,7 +247,7 @@ class opts(object):
                                  help='expected output root path')
         # modify
         self.parser.add_argument('--save_track_time',
-                                 action='store_true',
+                                 action='store_false',
                                  help='save track time')
 
         # mot: 选择数据集的配置文件
