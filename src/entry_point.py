@@ -191,23 +191,29 @@ def main(opt):
             pickle.dump(seqs_dict, f)
         preprocess.gen_seqini(seqs, data_path)
         print(f"The root path is:\n{root_path}")
-        result_dict.update({'root_path': f"The root path is:\n{root_path}"})
+        # result_dict.update({'root_path': f"The root path is:\n{root_path}"})
+        result_dict['root_path'] = root_path
         print('The project contains the below datasets:')
-        result_dict.update({'seq_info': 'The project contains the below datasets:\n'})
+        # result_dict.update({'seq_info': 'The project contains the below datasets:\n'})
+        result_dict['seq_info'] = []
         for seq in seqs:
             print(' ' * 6 + seq)
-            result_dict['seq_info'] += (' ' * 6 + seq + '\n')
+            # result_dict['seq_info'] += (' ' * 6 + seq + '\n')
+            result_dict['seq_info'].append(seq)
         print("The videos that have gt labels and can used to train:")
-        result_dict.update({'seq_with_label': "The videos that have gt labels and can used to train:\n"})
+        # result_dict.update({'seq_with_label': "The videos that have gt labels and can used to train:\n"})
+        result_dict['seq_with_label'] = []
         for seq in seqs:
             if seq not in empty_seqs:
                 print(' ' * 6 + seq)
-                result_dict['seq_with_label'] += (' ' * 6 + seq + '\n')
+                result_dict['seq_with_label'].append(seq)
         print("The videos that have no gt labels:")
-        result_dict.update({'seq_without_label': "The videos that have no gt labels:\n"})
+        # result_dict.update({'seq_without_label': "The videos that have no gt labels:\n"})
+        result_dict['seq_without_label'] = []
         for seq in empty_seqs:
             print(' ' * 6 + seq)
-            result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
+            result_dict['seq_without_label'].appen(seq)
+            # result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
             
         # download pretrained model
         model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/car_hrnet_pretrained')
@@ -247,7 +253,8 @@ def main(opt):
         else:
             seqs = seqs
 
-        preprocess.save_mp4_frame(seqs, data_path)
+        frame_count_dict = preprocess.save_mp4_frame(seqs, data_path)
+        result_dict['frame_count'] = frame_count_dict
         # modified the data root and label path
         data_root = paths_loader.IMG_ROOT_PATH
         print(data_root)
