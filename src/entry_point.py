@@ -200,6 +200,7 @@ def main(opt):
         with open(seqs_name_path, 'wb') as f:
             pickle.dump(seqs_dict, f)
         preprocess.gen_seqini(seqs, data_path)
+        gen_labels.gen_clsid_info(client, paths_loader.IMG_ROOT_PATH)
         print(f"The root path is:\n{root_path}")
         # result_dict.update({'root_path': f"The root path is:\n{root_path}"})
         result_dict['root_path'] = root_path
