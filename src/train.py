@@ -94,7 +94,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
             for j in range(2):
                 ax[i, j].set_xlabel('epochs')
                 ax[i, j].legend()
-        sub_loss_plot_path = encode_image(os.path.join(path, 'sub_loss.png'))
+        sub_loss_plot_path = os.path.join(path, 'sub_loss.png')
         plt.savefig(sub_loss_plot_path)
 
         plt.figure()
@@ -104,7 +104,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
         plt.xlabel('epochs')
         plt.ylabel('loss')
         plt.legend()
-        total_loss_plot_path = encode_image(os.path.join(path, 'total_loss.png'))
+        total_loss_plot_path = os.path.join(path, 'total_loss.png')
         plt.savefig(total_loss_plot_path)
     else:
         fig, ax = plt.subplots(2, 2)
@@ -142,7 +142,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
                 ax[i, j].set_xlabel('epochs')
                 ax[i, j].legend()
 
-        sub_loss_plot_path = encode_image(os.path.join(path, 'sub_loss.png'))
+        sub_loss_plot_path = os.path.join(path, 'sub_loss.png')
         plt.savefig(sub_loss_plot_path)
         plt.figure()
         plt.plot(np.arange(1, opt.num_epochs + 1),
@@ -154,7 +154,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
         plt.xlabel('epochs')
         plt.ylabel('loss')
         plt.legend()
-        total_loss_plot_path = encode_image(os.path.join(path, 'total_loss.png'))
+        total_loss_plot_path = os.path.join(path, 'total_loss.png')
         plt.savefig(total_loss_plot_path)
     return sub_loss_plot_path, total_loss_plot_path
 
@@ -403,9 +403,12 @@ def train(opt):
     if opt.plot_loss:
         if opt.add_test_dataset:
             sub_loss, total_loss = plot_loss_curves(opt, data_config, train_losses=train_losses, test_losses=test_losses)
-
+            sub_loss = encode_image(sub_loss)
+            total_loss = encode_image(total_loss)
         else:
             sub_loss, total_loss = plot_loss_curves(opt, data_config, train_losses=train_losses)
+            sub_loss = encode_image(sub_loss)
+            total_loss = encode_image(total_loss)
         result_dict['sub_loss_plot'] = sub_loss
         result_dict['total_loss_plot'] = total_loss
     # time function
