@@ -197,7 +197,7 @@ def track():
     opt.track = True
     videos = request.form.getlist('videos')
     if len(videos) > 0:
-        opt.tracking_video_selection = videos
+        opt.tracking_video_selection = [videos]
     output_format = request.values.get('output_format')
     if output_format != '-- Choose --':
         opt.output_format = output_format
