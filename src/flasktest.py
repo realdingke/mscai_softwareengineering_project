@@ -220,7 +220,7 @@ def clean():
     return "<b><a href = '/'>click here to return to main page</a></b>"
 
 
-@app.route('/restore', methods=['POST', 'PUT'])
+@app.route('/restore', methods=['GET'])
 def restore():
     opt.restore = True
     _ = entry_point.main(opt)
