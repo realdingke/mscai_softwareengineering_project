@@ -453,6 +453,12 @@ class opts(object):
                                  default='',  # video or image_dir or img_path_list_txt
                                  help='the model that the user chooses')
 
+        self.parser.add_argument(
+            "--overwrite",
+            action="store_true",
+            help="Whether to overwrite the gt label on cord"
+        )
+
     def parse(self, args=''):
         if args == '':
             opt = self.parser.parse_args()

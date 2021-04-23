@@ -390,9 +390,9 @@ def main(opt):
                 seqs = seqs_name_dict['empty_seqs'] + seqs_name_dict['labeled_seqs']
             for seq in seqs:
                 if seq in seqs_name_dict['labeled_seqs']:
-                    usr_input = bool(
-                        input(f"Warning: Are you sure you want to overwrite the gt of {seq} in Cord? True/False"))
-                    if usr_input:
+                    # usr_input = bool(
+                    #     input(f"Warning: Are you sure you want to overwrite the gt of {seq} in Cord? True/False"))
+                    if opt.overwrite:
                         visualization.visualization(opt, seq, output_root=output_root)
                 else:
                     visualization.visualization(opt, seq, output_root=output_root)
