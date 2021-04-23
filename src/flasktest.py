@@ -63,15 +63,15 @@ def exception_handler(func):
 
 @app.route('/login', methods=['POST', 'PUT'])
 def login():
-    # opt.gen_info = True
-    # if request.form['pid'] != '':
-    #     opt.project = request.form['pid']
-    # if request.form['api'] != '':
-    #     opt.api = request.form['api']
-    # # opt.email = request.form['email']
-    # results_dict = entry_point.main(opt)
-    # opt.gen_info = False
-    return render_template("gen_info.html")
+    opt.gen_info = True
+    if request.form['pid'] != '':
+        opt.project = request.form['pid']
+    if request.form['api'] != '':
+        opt.api = request.form['api']
+    # opt.email = request.form['email']
+    results_dict = entry_point.main(opt)
+    opt.gen_info = False
+    return render_template("gen_info.html", results=results_dict)
 
 
 @app.route('/train', methods=['POST', 'PUT'])
