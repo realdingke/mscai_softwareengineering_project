@@ -11,7 +11,6 @@ from lib.opts import opts
 import sys
 
 
-
 # def _init_parser():
 #     """
 #     Parser for command line arguments for the program
@@ -140,10 +139,12 @@ def main(opt):
             import dcn_v2
         except ImportError:
             import pip
-            pip.main(['install', '-e','git+https://github.com/CharlesShang/DCNv2@c7f778f28b84c66d3af2bf16f19148a07051dac1#egg=DCNv2', '--user'])
+            pip.main(['install', '-e',
+                      'git+https://github.com/CharlesShang/DCNv2@c7f778f28b84c66d3af2bf16f19148a07051dac1#egg=DCNv2',
+                      '--user'])
             sys.path.insert(0, "./src/dcnv2")
             import dcn_v2
-            
+
         # download pretrained model
         model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/car_hrnet_pretrained')
         if not os.path.exists(model_path):
@@ -152,7 +153,11 @@ def main(opt):
             download_model.download_file_from_google_drive(
                 '1-e6mY2G9PMh3Gvhyis_t6RyNB_JZ03X0',
                 model_path + '/model_last.pth')
-            
+        if not osp.exists(model_path + '/opt.txt'):
+            download_model.download_file_from_google_drive(
+                '1KAn5u6nKRJGhDJBZA_O8hWaaIEh63yXN',
+                model_path + '/opt.txt')
+
         # check pretrained model
         models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
         result_dict["models_name"] = models_name
@@ -225,7 +230,7 @@ def main(opt):
             result_dict['seq_without_label'].append(seq)
             # result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
         return result_dict
-            
+
     if opt.train_track:
         result_dict = {}
         project_id = opt.project
@@ -341,7 +346,7 @@ def main(opt):
             id_str = ", ".join(cls_ids_ls)
             opt.reid_cls_ids = id_str
 
-        if len(opt.input_video) != 0:
+        if len(opt.input_video) == 0:
             video_name = opt.input_video.split("/")[-1][:-4]
             result = {}
             if opt.output_root == '../results':
@@ -380,12 +385,13 @@ def main(opt):
             with open(seqs_name_path, 'rb') as f:
                 seqs_name_dict = pickle.load(f)
             if seqs_name_dict['empty_seqs'] is None:
-                seqs =  seqs_name_dict['labeled_seqs']
+                seqs = seqs_name_dict['labeled_seqs']
             else:
                 seqs = seqs_name_dict['empty_seqs'] + seqs_name_dict['labeled_seqs']
             for seq in seqs:
                 if seq in seqs_name_dict['labeled_seqs']:
-                    usr_input = bool(input(f"Warning: Are you sure you want to overwrite the gt of {seq} in Cord? True/False"))
+                    usr_input = bool(
+                        input(f"Warning: Are you sure you want to overwrite the gt of {seq} in Cord? True/False"))
                     if usr_input:
                         visualization.visualization(opt, seq, output_root=output_root)
                 else:
@@ -397,11 +403,13 @@ def main(opt):
         seqs_name_path = paths_loader.SEQS_NAME_PATH
         with open(seqs_name_path, 'rb') as f:
             seqs_name_dict = pickle.load(f)
-        seqs =  seqs_name_dict['labeled_seqs']
+        seqs = seqs_name_dict['labeled_seqs']
         for seq in seqs:
             visualization.restore_gt(opt, seq)
     if opt.clean:
         clean.clean_files_a()
+    if opt.clean_model:
+        clean.clean_model()
     return result_dict
 
 

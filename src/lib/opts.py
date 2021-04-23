@@ -9,6 +9,7 @@ import paths
 import json
 import pickle
 
+
 class opts(object):
     def __init__(self):
         self.parser = argparse.ArgumentParser()
@@ -435,7 +436,13 @@ class opts(object):
             action="store_true",
             help="Clean the generated files which are in mode 'append'"
         )
-        
+
+        self.parser.add_argument(
+            "--clean_model",
+            action="store_true",
+            help="Clean all models which have been generated"
+        )
+
         self.parser.add_argument(
             "--restore",
             action="store_true",

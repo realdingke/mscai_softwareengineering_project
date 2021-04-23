@@ -227,6 +227,12 @@ def restore():
     return "<b><a href = '/'>click here to return to main page</a></b>"
 
 
+@app.route('/clean_all', methods=['GET'])
+def clean_all():
+    opt.clean_model = True
+    _ = entry_point.main(opt)
+    opt.clean_model = False
+    return "<b><a href = '/'>click here to return to main page</a></b>"
 # @app.route('/display_pic', methods=['POST', 'PUT'])
 # def display_pics():
 #     pics =
