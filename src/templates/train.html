@@ -39,7 +39,7 @@
     <form action = "http://localhost:5000/train" method = "post">
          <label for="train_seq">Training videos:</label>
          <p>{% for seq in seqs %}
-             <input type="checkbox" id="train_seq" />{{ seq }}
+             <input type="checkbox" id="train_seq" name="train_seq" value={{ seq }} />{{ seq }}
          {% endfor %}</p>
          <label for="model_type">The type of model:</label>
          <select class="form-control" id="model_type" name="model_type">
@@ -112,8 +112,6 @@
                 <input name="save_time" value="False" type="radio" checked="checked"> No
             </div>
          </div>
-         <label for="exp_name">Tracking results folder name:</label><br>
-         <input type="text" id="exp_name" name="exp_name"><br>
          <p> Do you want to save the total tracking time?</p>
          <div class="row">
             <div class="col-sm-2 col-sm-offset-2">

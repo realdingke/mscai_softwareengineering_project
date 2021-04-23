@@ -78,9 +78,9 @@ def login():
 def train_track():
     # Entry_point
     opt.train_track = True
-    if request.form['train_seq'] != '':
-        train_sel = request.form['train_seq']
-        opt.dataset_selection = [ts.strip() for ts in train_sel.split()]
+    train_seq = request.form.getlist('train_seq')
+    if len(train_seq) > 0:
+        opt.dataset_selection = train_seq
     if request.values.get('rand_split') == 'True':
         opt.rand_split = True
     else:
@@ -104,6 +104,7 @@ def train_track():
         opt.lr_step = request.form['drop']
     if request.form['exp_id'] != '':
         opt.exp_id = request.form['exp_id']
+        opt.exp_name = opt.exp_id
     model_type = request.values.get('model_type')
     if model_type != '-- Choose --':
         opt.arch = model_type
@@ -146,8 +147,8 @@ def train_track():
     output_format = request.values.get('output_format')
     if output_format != '-- Choose --':
         opt.output_format = output_format
-    if request.form['exp_name'] != '':
-        opt.exp_name = request.form['exp_name']
+    # if request.form['exp_name'] != '':
+    #     opt.exp_name = request.form['exp_name']
     if request.values.get('track_time') == 'True':
         opt.save_track_time = True
     else:
@@ -195,15 +196,15 @@ def train_track():
 @app.route('/track', methods=['POST', 'PUT'])
 def track():
     opt.track = True
-    if request.form['videos'] != '':
-        track_video = request.form['videos']
-        opt.tracking_video_selection = [tv.strip() for tv in track_video.split()]
+    videos = request.form.getlist('videos')
+    if len(videos) > 0:
+        opt.tracking_video_selection = [videos]
     output_format = request.values.get('output_format')
     if output_format != '-- Choose --':
         opt.output_format = output_format
     model_type = request.values.get('model_type')
     if model_type != '-- Choose --':
-        opt.arch = model_type
+        opt.specified_model = model_type
     if request.values.get('visual') == 'True':
         opt.visual = True
     else:
