@@ -31,7 +31,7 @@ def exception_handler(func):
 
 
 @app.route('/login', methods=['POST', 'PUT'])
-def gen_info():
+def login():
     opt.gen_info = True
     if request.form['pid'] != '':
         opt.project = request.form['pid']
@@ -42,27 +42,29 @@ def gen_info():
     return render_template("gen_info.html", opt=opt)
 
 @app.route('/train', methods=['POST', 'PUT'])
-def train_track():
+def train():
     # Entry_point
     opt.train_track = True
     if request.form['train_seq'] != '':
-        opt.dataset_selection = request.form['train_seq']
+        train_sel = request.form['train_seq']
+        opt.dataset_selection = [ts.strip() for ts in train_sel.split()]
     if request.values.get('rand_split') == 'True':
         opt.rand_split = True
     if request.form['rseed'] != '':
-        opt.rseed = request.form['rseed']
+        opt.rseed = int(request.form['rseed'])
     if request.form['split_perc'] != '':
-        opt.split_perc = request.form['split_perc']
+        split_perc = request.form['split_perc']
+        opt.split_perc = list([float(sp.strip()) for sp in split_perc.split()])
     if request.form['name'] != '':
         opt.json_name = request.form['name']
     _ = entry_point.main(opt)
     # Train
     if request.form['lr'] != '':
-        opt.lr = request.form['lr']
+        opt.lr = float(request.form['lr'])
     if request.form['batch'] != '':
-        opt.batch_size = request.form['batch']
+        opt.batch_size = int(request.form['batch'])
     if request.form['epoch'] != '':
-        opt.num_epochs = request.form['epoch']
+        opt.num_epochs = int(request.form['epoch'])
     if request.form['drop'] != '':
         opt.lr_step = request.form['drop']
     if request.form['exp_id'] != '':
@@ -98,6 +100,7 @@ def train_track():
     train.run(opt)
 
     # MCTrack
+    opt.load_model = '/home/user/exp/mot/' + opt.exp_id + f"/model_{opt.num_epochs}.pth"
     output_format = request.values.get('output_format')
     if output_format != '-- Choose --':
         opt.output_format = output_format
@@ -136,13 +139,14 @@ def train_track():
          show_image=False,
          save_images=False,
          save_videos=False)
-    # return evaluation
+    return render_template("train_result.html", opt=opt)
 
 @app.route('/track', methods=['POST', 'PUT'])
 def track():
     opt.track = True
     if request.form['videos'] != '':
-        opt.tracking_video_selection = request.form['videos']
+        track_video = request.form['videos']
+        opt.tracking_video_selection = [tv.strip() for tv in track_video.split()]
     output_format = request.values.get('output_format')
     if output_format != '-- Choose --':
         opt.output_format = output_format
@@ -152,7 +156,7 @@ def track():
     if request.values.get('visual') == 'True':
         opt.visual = True
     _ = entry_point.main(opt)
-    return  #link to cord
+    return render_template("track_result.html", opt=opt)
 
 @app.route('/clean', methods=['POST', 'PUT'])
 def clean():
