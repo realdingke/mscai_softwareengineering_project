@@ -21,7 +21,7 @@ The pipeline is designed to be run via two approaches: traditional CLI approach 
 The below are instructions for running the pipeline via a CLI.
 
 ### Entry Point
-The entry point is located inside the /src folder which also corresponds to the default root directory of the program.
+The entry point is located inside the `/src` folder which also corresponds to the default root directory of the program.
 
 The first step always is to run the entry point file with `--gen_info` flag to see the important dataset information, facilitating user's decision to run desired pipeline branch with appropriate data and model:
 
@@ -29,7 +29,7 @@ The first step always is to run the entry point file with `--gen_info` flag to s
 
 
 ### Training
-Under /src (root dir) run:
+Under `/src` (root dir) run:
 
     python3 entry_point.py --train_track
 
@@ -37,7 +37,7 @@ Using the `--train_track` flag will train a new model from sratch with architect
 
 
 ### Tracking
-Under /src (root dir) first run:
+Under `/src` (root dir) first run:
 
     python3 entry_point.py --track
 
