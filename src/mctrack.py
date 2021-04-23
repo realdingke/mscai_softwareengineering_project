@@ -69,7 +69,7 @@ def write_time(opt,
         f.write(f"total time(seconds): {total_time:.2f}\n")
         for seq in seqs:
             f.write(f"{seq} time(seconds): {time_sequences[seq]:.2f}\n")
-    f.close()
+
 
 
 def write_results_dict(file_name, results_dict, data_type, num_classes=5):
@@ -366,7 +366,7 @@ def main(opt,
     # add total time for all seqs
     time_sequences = {}
     total_time = 0
-    result_dict['det_path'] = []
+    result_dict['det_path'] = {}
     for seq in seqs:
         output_dir = os.path.join(
             data_root, '..', 'outputs', exp_name, seq) if save_images or save_videos else None
@@ -374,7 +374,8 @@ def main(opt,
         dataloader = datasets.LoadImages(
             osp.join(data_root, seq, 'img1'), opt.img_size)
         result_filename = os.path.join(result_root, '{}.txt'.format(seq))
-        result_dict['det_path'].append(result_filename)
+        # result_dict['det_path'].append(result_filename)
+        result_dict['det_path'][seq] = result_filename
         meta_info = open(os.path.join(data_root, seq, 'seqinfo.ini')).read()
         frame_rate = int(float(meta_info[meta_info.find(
             'frameRate') + 10:meta_info.find('\nseqLength')]))
@@ -420,6 +421,7 @@ def main(opt,
                    total_time,
                    seqs,
                    time_sequences)
+    result_dict['tracking_time'] = {"total_time": total_time, "time_sequences": time_sequences}
     # get summary
     metrics = mm.metrics.motchallenge_metrics
     mh = mm.metrics.create()

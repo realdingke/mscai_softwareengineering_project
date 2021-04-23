@@ -178,7 +178,7 @@ def save_training_time(opt, data_config, epoch_time=None, total_time=None):
         f.write(f"epoch time(min): {epoch_time_str}\n")
 
     time_str = f"total time(min): {total_time}\nepoch time(min): {epoch_time_str}\n"
-    return time_str
+
 
 
 def run(opt):
@@ -409,8 +409,8 @@ def run(opt):
         result_dict['total_loss_plot'] = total_loss
     # time function
     if opt.save_time:
-        time_str = save_training_time(opt, data_config, epoch_time=epoch_time, total_time=total_time)
-        result_dict['training_time'] = time_str
+        save_training_time(opt, data_config, epoch_time=epoch_time, total_time=total_time)
+        result_dict['training_time'] = {"total_time": total_time, "epoch_time": epoch_time}
     # check pretrained model
     models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
     result_dict["models_name"] = models_name

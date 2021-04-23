@@ -160,7 +160,7 @@ def run_demo(opt):
             .format(osp.join(result_root, 'frame'), output_video_path)
         print(cmd_str)
         os.system(cmd_str)
-
+    return result_dict
 
 
 def test_single(img_path, dev):
