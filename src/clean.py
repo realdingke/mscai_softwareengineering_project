@@ -4,6 +4,7 @@ import paths
 import pickle
 import shutil
 
+
 def clean_files_a():
     """
     Clean up all files that will be added to the original file in the second run
@@ -35,3 +36,16 @@ def clean_files_a():
     for file in os.listdir(image_path_dir):
         file_path = osp.join(paths.ROOT_PATH, 'data', file)
         os.remove(file_path)
+
+
+def clean_model():
+    model_root = osp.join(paths.ROOT_PATH, '../exp/mot')
+    # print(model_root)
+    if osp.exists(model_root):
+        for directories in os.listdir(model_root):
+            dir_path = osp.join(model_root, directories)
+            if directories != 'car_hrnet_pretrained':
+                shutil.rmtree(dir_path)
+
+
+
