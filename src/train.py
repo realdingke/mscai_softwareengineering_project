@@ -181,7 +181,7 @@ def save_training_time(opt, data_config, epoch_time=None, total_time=None):
     return time_str
 
 
-def run(opt):
+def train(opt):
     result_dict = {}
     torch.manual_seed(opt.seed)
     torch.backends.cudnn.benchmark = not opt.not_cuda_benchmark and not opt.test
@@ -433,4 +433,4 @@ if __name__ == '__main__':
             id_str = ", ".join(cls_ids_ls)
             opt.reid_cls_ids = id_str
 
-    run(opt)
+    train(opt)
