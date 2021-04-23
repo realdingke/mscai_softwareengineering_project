@@ -221,7 +221,7 @@ def main(opt):
         result_dict['seq_without_label'] = []
         for seq in empty_seqs:
             print(' ' * 6 + seq)
-            result_dict['seq_without_label'].appen(seq)
+            result_dict['seq_without_label'].append(seq)
             # result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
         return result_dict
             
