@@ -39,7 +39,7 @@
     <form action = "http://localhost:5000/train" method = "post">
          <label for="train_seq">Training videos:</label>
          <p>{% for seq in seqs %}
-             <input type="checkbox" id="train_seq" />{{ seq }}
+             <input type="checkbox" id="train_seq" name="train_seq" value={{ seq }} />{{ seq }}
          {% endfor %}</p>
          <label for="model_type">The type of model:</label>
          <select class="form-control" id="model_type" name="model_type">
