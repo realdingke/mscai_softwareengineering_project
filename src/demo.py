@@ -94,9 +94,9 @@ def run_demo(opt):
         opt.id_weight = 0  # only do detection in this mode
         with open(opt.input_img, 'r', encoding='utf-8') as r_h:
             logger.info('Starting detection...')
-            paths = [x.strip() for x in r_h.readlines()]
-            print('Total {:d} image files.'.format(len(paths)))
-            data_loader = datasets.LoadImages(path=paths, img_size=opt.img_size)
+            paths_ = [x.strip() for x in r_h.readlines()]
+            print('Total {:d} image files.'.format(len(paths_)))
+            data_loader = datasets.LoadImages(path=paths_, img_size=opt.img_size)
 
     result_file_name = os.path.join(result_root, 'results.txt')
     result_dict['det_path'] = result_file_name

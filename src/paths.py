@@ -17,7 +17,7 @@ PATHS_OBJ_PATH = osp.join(
     'path_names_obj.data',
 )  # stores the paths_loader object save path
 TRAIN_MODEL_PATH = osp.join(
-    PATHS_OBJ_PATH,
+    CLIENT_DATA_PATH,
     'train_model_path.data'
 )
 MODEL_DIR_PATH = osp.join(ROOT_PATH, "..", "exp", "mot")

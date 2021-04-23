@@ -221,7 +221,7 @@ def main(opt):
         result_dict['seq_without_label'] = []
         for seq in empty_seqs:
             print(' ' * 6 + seq)
-            result_dict['seq_without_label'].appen(seq)
+            result_dict['seq_without_label'].append(seq)
             # result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
         return result_dict
             
@@ -322,27 +322,36 @@ def main(opt):
 
         if len(opt.input_video) == 0:
             video_name = opt.input_video.split("/")[-1][:-4]
+            result = {}
             if opt.output_root == '../results':
                 opt.output_root = osp.join(opt.output_root, video_name)
-                demo.run_demo(opt)
+                track_result = demo.run_demo(opt)
+                result[video_name] = track_result
+                return result
         elif len(opt.tracking_video_selection) == 0:
             seqs_name_path = paths_loader.SEQS_NAME_PATH
             with open(seqs_name_path, 'rb') as f:
                 seqs_name_dict = pickle.load(f)
             empty_seqs = seqs_name_dict['empty_seqs']
+            result = {}
             for seq in empty_seqs:
                 empty_seqs_path = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
                 if opt.output_root == '../results':
                     opt.output_root = osp.join(opt.output_root, seq)
                     opt.input_video = empty_seqs_path
-                    demo.run_demo(opt)
+                    track_result = demo.run_demo(opt)
+                    result[seq] = track_result
+            return result
         else:
+            result = {}
             for seq in opt.tracking_video_selection[0]:
                 if opt.output_root == '../results':
                     opt.output_root = osp.join(opt.output_root, seq)
                     opt.input_video = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
-                    demo.run_demo(opt)
+                    track_result = demo.run_demo(opt)
+                    result[seq] = track_result
                     output_root = opt.output_root
+            return result
 
         if opt.visual:
             seqs_name_path = paths_loader.SEQS_NAME_PATH
