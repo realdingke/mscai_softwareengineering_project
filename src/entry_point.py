@@ -143,7 +143,16 @@ def main(opt):
             pip.main(['install', '-e','git+https://github.com/CharlesShang/DCNv2@c7f778f28b84c66d3af2bf16f19148a07051dac1#egg=DCNv2', '--user'])
             sys.path.insert(0, "./src/dcnv2")
             import dcn_v2
-
+            
+        # download pretrained model
+        model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/car_hrnet_pretrained')
+        if not os.path.exists(model_path):
+            os.makedirs(model_path)
+        if not osp.exists(model_path + '/model_last.pth'):
+            download_model.download_file_from_google_drive(
+                '1-e6mY2G9PMh3Gvhyis_t6RyNB_JZ03X0',
+                model_path + '/model_last.pth')
+            
         # check pretrained model
         models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
         result_dict["models_name"] = models_name
@@ -209,14 +218,6 @@ def main(opt):
             print(' ' * 6 + seq)
             result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
             
-        # download pretrained model
-        model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/car_hrnet_pretrained')
-        if not os.path.exists(model_path):
-            os.makedirs(model_path)
-        if not osp.exists(model_path + '/model_last.pth'):
-            download_model.download_file_from_google_drive(
-                '1-e6mY2G9PMh3Gvhyis_t6RyNB_JZ03X0',
-                model_path + '/model_last.pth')
     if opt.train_track:
         project_id = opt.project
         api_key = opt.api
