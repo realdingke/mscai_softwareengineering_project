@@ -1,5 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+
+    /*.collapse {
+        background-color: #a2de96;
+        border: none;
+        outline: none;
+        font-size: 25px;
+    }*/
+
+    .active,
+    .collapse:hover {
+        background-color: #438a5e;
+    }
+
+    /*.text {
+        background-color: #e1ffc2;
+        display: none;
+        font-size: 20px;
+    }*/
+    .text-center {
+    text-align: center;}
+
+    form {
+    text-align: center;}
+
+    h1 {text-align: center;}
+    h4 {text-align: center;}
+    p {text-align: center;}
+</style>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -10,12 +39,19 @@
     <form action = "http://localhost:5000/track" method = "post"
         enctype = "multipart/form-data">
          <label for="videos">Tracking videos:</label><br>
+         <select class="form-control" id="videos" name="videos">
+             <option selected="selected">-- Choose --</option>
+             {% for seq in seqs %}
+                <option>{{ seq }}</option>
+             {% endfor %}
+         </select><br>
 		 <input type="text" id="videos" name="videos"><br>
-         <label for="model_type">The type of pre-trained model:</label>
+         <label for="model_type">The name of usable models:</label>
          <select class="form-control" id="model_type" name="model_type">
              <option selected="selected">-- Choose --</option>
-             <option>dla_34</option>
-             <option>hrnet_18</option>
+             {% for model in models %}
+                <option>{{ model }}</option>
+             {% endfor %}
          </select>
          <p><label for="output_format">The tracking results output format:</label>
          <select class="form-control" id="output_format" name="output_format">
@@ -36,5 +72,19 @@
          </div>
          <p><input type = "submit" value = "Tracking" /></p>
     </form>
+    <script>
+        var btn = document.getElementsByClassName("collapse");
+
+        btn[0].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+
+    </script>
 </body>
 </html>

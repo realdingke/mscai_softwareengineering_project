@@ -3,7 +3,7 @@ import os
 import pickle
 import re
 import json
-# import entry_point, paths, train, mctrack
+import entry_point, paths, train, mctrack
 from paths import CLIENT_DATA_PATH
 from clean import clean_files_a
 from lib.opts import opts
@@ -23,12 +23,27 @@ def gen_info():
 
 @app.route('/train_html')
 def train_html():
-    return render_template("train.html")
+    file_name_path = paths.PATHS_OBJ_PATH
+    with open(file_name_path, 'rb') as f:
+        paths_loader = pickle.load(f)
+    seqs_name_path = paths_loader.SEQS_NAME_PATH
+    with open(seqs_name_path, 'rb') as f:
+        seqs_name_dict = pickle.load(f)
+    seqs = seqs_name_dict['labeled_seqs']
+    return render_template("train.html", seqs=seqs)
 
 
 @app.route('/track_html')
 def track_html():
-    return render_template("track.html")
+    models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
+    file_name_path = paths.PATHS_OBJ_PATH
+    with open(file_name_path, 'rb') as f:
+        paths_loader = pickle.load(f)
+    seqs_name_path = paths_loader.SEQS_NAME_PATH
+    with open(seqs_name_path, 'rb') as f:
+        seqs_name_dict = pickle.load(f)
+    seqs = seqs_name_dict['labeled_seqs'] + seqs_name_dict['empty_seqs']
+    return render_template("track.html", models=models_name, seqs=seqs)
 
 
 def exception_handler(func):
