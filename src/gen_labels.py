@@ -181,6 +181,67 @@ def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
             with open(label_fpath, 'a') as f:  # 以追加的方式添加每一帧的label
                 f.write(label_str)
 
+                
+def gen_clsid_info(client, data_root):
+    """generate cls2id & id2cls and save as json files
+    """
+    project = client.get_project()
+    obj_type_dict = {}
+    feature_hash_dict = {}
+    seq_path = data_root + '/train'
+    cls_json_path = seq_path
+    seq_w_nolabel = []
+    #    count = 0
+    for label_uid in project.get_labels_list():
+        #        if count == 4:
+        #            break  # for car dataset only
+        #        count += 1
+        gt_list = []
+        obj_hash_dict = {}
+        try:
+            label = client.get_label_row(label_uid)
+        except:
+            continue
+        seqs_str = label['data_title']
+        ##swap all space in between the seq_name to '_'
+        pattern = '(?<=\w)\s(?=\w)'
+        try:
+            seqs_str = re.sub(pattern, '_', seqs_str)
+        except:
+            seqs_str = seqs_str
+        mkdirs(seq_path + f"/{seqs_str}/gt")
+        seq_ini_file = osp.join(seq_path, f"{seqs_str}", 'seqinfo.ini')
+        seq_info = open(seq_ini_file).read()
+        seq_width = int(seq_info[seq_info.find('imWidth=') + 8:seq_info.find('\nimHeight')])
+        seq_height = int(seq_info[seq_info.find('imHeight=') + 9:seq_info.find('\nimExt')])
+        gt_path = osp.join(seq_path, f"{seqs_str}", 'gt/gt.txt')
+        for frame in list(label['data_units'].values())[0]['labels'].keys():
+            for obj in list(label['data_units'].values())[0]['labels'][frame]['objects']:
+                if obj['objectHash'] not in obj_hash_dict.keys():
+                    obj_hash_dict[obj['objectHash']] = len(obj_hash_dict.keys()) + 1
+                if obj['value'] not in obj_type_dict.keys():
+                    obj_type_dict[obj['value']] = len(obj_type_dict)
+                if obj['featureHash'] not in feature_hash_dict.keys():
+                    feature_hash_dict[obj['featureHash']] = len(feature_hash_dict.keys())
+                pass
+
+
+    # Generate cls and id relationship
+    cls2id = obj_type_dict
+    id2cls = {}
+    for key, val in cls2id.items():
+        id2cls[val] = key
+    with open(osp.join(cls_json_path, 'cls2id.json'), 'w') as f:
+        json.dump(cls2id, f, indent=3)
+    with open(osp.join(cls_json_path, 'id2cls.json'), 'w') as f:
+        json.dump(id2cls, f, indent=3)
+    reverse_featureHash_dct = {}
+    for key, val in feature_hash_dict.items():
+        reverse_featureHash_dct[val] = key
+    with open(osp.join(cls_json_path, 'featureHash.json'), 'w') as f:
+        json.dump(reverse_featureHash_dct, f, indent=3)
+
+
 # if __name__ == '__main__':
 #     project_id = 'eec20d90-c014-4cd4-92ea-72341c3a1ab5'
 #     api_key = 'T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ'
