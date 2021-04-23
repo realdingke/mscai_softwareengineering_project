@@ -143,7 +143,16 @@ def main(opt):
             pip.main(['install', '-e','git+https://github.com/CharlesShang/DCNv2@c7f778f28b84c66d3af2bf16f19148a07051dac1#egg=DCNv2', '--user'])
             sys.path.insert(0, "./src/dcnv2")
             import dcn_v2
-
+            
+        # download pretrained model
+        model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/car_hrnet_pretrained')
+        if not os.path.exists(model_path):
+            os.makedirs(model_path)
+        if not osp.exists(model_path + '/model_last.pth'):
+            download_model.download_file_from_google_drive(
+                '1-e6mY2G9PMh3Gvhyis_t6RyNB_JZ03X0',
+                model_path + '/model_last.pth')
+            
         # check pretrained model
         models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
         result_dict["models_name"] = models_name
@@ -191,33 +200,33 @@ def main(opt):
             pickle.dump(seqs_dict, f)
         preprocess.gen_seqini(seqs, data_path)
         print(f"The root path is:\n{root_path}")
-        result_dict.update({'root_path': f"The root path is:\n{root_path}"})
+        # result_dict.update({'root_path': f"The root path is:\n{root_path}"})
+        result_dict['root_path'] = root_path
         print('The project contains the below datasets:')
-        result_dict.update({'seq_info': 'The project contains the below datasets:\n'})
+        # result_dict.update({'seq_info': 'The project contains the below datasets:\n'})
+        result_dict['seq_info'] = []
         for seq in seqs:
             print(' ' * 6 + seq)
-            result_dict['seq_info'] += (' ' * 6 + seq + '\n')
+            # result_dict['seq_info'] += (' ' * 6 + seq + '\n')
+            result_dict['seq_info'].append(seq)
         print("The videos that have gt labels and can used to train:")
-        result_dict.update({'seq_with_label': "The videos that have gt labels and can used to train:\n"})
+        # result_dict.update({'seq_with_label': "The videos that have gt labels and can used to train:\n"})
+        result_dict['seq_with_label'] = []
         for seq in seqs:
             if seq not in empty_seqs:
                 print(' ' * 6 + seq)
-                result_dict['seq_with_label'] += (' ' * 6 + seq + '\n')
+                result_dict['seq_with_label'].append(seq)
         print("The videos that have no gt labels:")
-        result_dict.update({'seq_without_label': "The videos that have no gt labels:\n"})
+        # result_dict.update({'seq_without_label': "The videos that have no gt labels:\n"})
+        result_dict['seq_without_label'] = []
         for seq in empty_seqs:
             print(' ' * 6 + seq)
-            result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
+            result_dict['seq_without_label'].appen(seq)
+            # result_dict['seq_without_label'] += (' ' * 6 + seq + '\n')
+        return result_dict
             
-        # download pretrained model
-        model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/car_hrnet_pretrained')
-        if not os.path.exists(model_path):
-            os.makedirs(model_path)
-        if not osp.exists(model_path + '/model_last.pth'):
-            download_model.download_file_from_google_drive(
-                '1-e6mY2G9PMh3Gvhyis_t6RyNB_JZ03X0',
-                model_path + '/model_last.pth')
     if opt.train_track:
+        result_dict = {}
         project_id = opt.project
         api_key = opt.api
         client = cord_loader.load_cord_data(project_id, api_key)
@@ -247,7 +256,8 @@ def main(opt):
         else:
             seqs = seqs
 
-        preprocess.save_mp4_frame(seqs, data_path)
+        frame_count_dict = preprocess.save_mp4_frame(seqs, data_path)
+        result_dict['frame_count'] = frame_count_dict
         # modified the data root and label path
         data_root = paths_loader.IMG_ROOT_PATH
         print(data_root)
@@ -287,6 +297,7 @@ def main(opt):
         )
         with open(file_name_path, 'wb') as f:
             pickle.dump(paths_loader, f)
+        return result_dict
     if opt.track:
         # justify if the model has been chosen by the user
         if len(opt.specified_model) != 0:

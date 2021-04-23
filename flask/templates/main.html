@@ -72,10 +72,10 @@
          </select><br></p>
 
     <button type="button" class="collapse">
-    Open the advanced settings (collapsible)
+    Open the training advanced settings (collapsible)
     </button>
 
-    <div class="foldedform">
+    <div class="foldedform" style="display:none;">
          <p> Do you want to randomly split the dataset?</p>
          <div class="row">
             <div class="col-sm-2 col-sm-offset-2">
@@ -121,7 +121,7 @@
             <div class="col-sm-2 ">
                 <input name="save_time" value="False" type="radio" checked="checked"> No
             </div>
-         </div>
+         </div><br>
          <label for="exp_name">Tracking results folder name:</label><br>
          <input type="text" id="exp_name" name="exp_name"><br>
          <p> Do you want to save the total tracking time?</p>
@@ -133,8 +133,8 @@
                 <input name="track_time" value="False" type="radio" checked="checked"> No
             </div>
          </div>
-         <p><input type = "submit" value = "Start training model" /></p>
     </div>
+    <p><input type = "submit" value = "Start training model" /></p>
     </form>
 
     <h4>Type in the information needed for tracking</h4>

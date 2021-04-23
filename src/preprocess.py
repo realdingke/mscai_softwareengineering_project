@@ -149,10 +149,12 @@ def _extract_images(path, save_dir):
             print(f"{frame_count} images generated")
         frame_count += 1
     print(f"{frame_count - 1} images in total")
+    return frame_count - 1
 
 
 def save_mp4_frame(seqs=None,
                    path='/content/drive/MyDrive/car_data_MCMOT/'):
+    result_dict = {}
     if seqs is None:
         seqs = [
             'Heavy_traffic.mp4',
@@ -164,7 +166,10 @@ def save_mp4_frame(seqs=None,
     for seq in seqs:
         v1 = LoadVideo(save_root=save_root, seq_name=seq)
         # v1.save_imgs()    #save imgs func now being superceded by the moviepy method
-        _extract_images(v1.path, v1.save_path)
+        frame_count = _extract_images(v1.path, v1.save_path)
+        result_dict['seq'] = frame_count
+    return result_dict
+
 
 
 def gen_seqini(seqs=None,

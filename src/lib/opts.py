@@ -252,7 +252,7 @@ class opts(object):
 
         # mot: 选择数据集的配置文件
         self.parser.add_argument('--data_cfg', type=str,
-                                 default='../src/lib/cfg/visdrone.json',  # 'mcmot_det.json', 'visdrone.json'
+                                 default='../src/lib/cfg/user_input.json',  # 'mcmot_det.json', 'visdrone.json'
                                  help='load data from cfg')
         # self.parser.add_argument('--data_cfg', type=str,
         #                          default='../src/lib/cfg/mcmot.json',  # mcmot.json, mcmot_det.json,
