@@ -374,7 +374,7 @@ def train(opt):
             if opt.id_weight > 0:  # do tracking(detection and re-id)
                 # save_model(os.path.join(opt.save_dir, 'mcmot_last_track_' + opt.arch + '.pth'),
                 #            epoch, model, optimizer)
-                save_model(os.path.join(opt.save_dir, 'mcmot_last.pth'),
+                save_model(os.path.join(opt.save_dir, 'model_last.pth'),
                            epoch, model, optimizer)
             else:  # only do detection
                 # save_model(os.path.join(opt.save_dir, 'mcmot_last_det_' + opt.arch + '.pth'),
