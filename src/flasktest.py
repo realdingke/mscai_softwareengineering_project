@@ -3,7 +3,7 @@ import os
 import pickle
 import re
 import json
-import entry_point, paths, train, mctrack
+# import entry_point, paths, train, mctrack
 from paths import CLIENT_DATA_PATH
 from clean import clean_files_a
 from lib.opts import opts
@@ -11,39 +11,53 @@ from lib.opts import opts
 app = Flask(__name__)
 opt = opts().init()
 
-#@app.route("/")
-#def test0_api():
+
+# @app.route("/")
+# def test0_api():
 #    return jsonify(data0="Yes, this is DK's first try")
 
 @app.route('/')
 def gen_info():
     return render_template("main.html")
 
+
+@app.route('/train_html')
+def train_html():
+    return render_template("train.html")
+
+
+@app.route('/track_html')
+def track_html():
+    return render_template("track.html")
+
+
 def exception_handler(func):
-  def wrapper(*args, **kwargs):
-    try:
-        return func(*args, **kwargs)
-    except Exception as e:
-        error_code = getattr(e, "code", 500)
-        logger.exception("Service exception: %s", e)
-        r = dict_to_json({"message": e.message, "matches": e.message, "error_code": error_code})
-        return Response(r, status=error_code, mimetype='application/json')
-  # Renaming the function name:
-  wrapper.__name__ = func.__name__
-  return wrapper
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            error_code = getattr(e, "code", 500)
+            logger.exception("Service exception: %s", e)
+            r = dict_to_json({"message": e.message, "matches": e.message, "error_code": error_code})
+            return Response(r, status=error_code, mimetype='application/json')
+
+    # Renaming the function name:
+    wrapper.__name__ = func.__name__
+    return wrapper
 
 
 @app.route('/login', methods=['POST', 'PUT'])
 def login():
-    opt.gen_info = True
-    if request.form['pid'] != '':
-        opt.project = request.form['pid']
-    if request.form['api'] != '':
-        opt.api = request.form['api']
-    # opt.email = request.form['email']
-    results_dict = entry_point.main(opt)
-    opt.gen_info = False
-    return render_template("gen_info.html", opt=opt, results=results_dict)
+    # opt.gen_info = True
+    # if request.form['pid'] != '':
+    #     opt.project = request.form['pid']
+    # if request.form['api'] != '':
+    #     opt.api = request.form['api']
+    # # opt.email = request.form['email']
+    # results_dict = entry_point.main(opt)
+    # opt.gen_info = False
+    return render_template("gen_info.html")
+
 
 @app.route('/train', methods=['POST', 'PUT'])
 def train_track():
@@ -63,7 +77,7 @@ def train_track():
         opt.split_perc = [[float(sp.strip()) for sp in split_perc.split()]]
     if request.form['name'] != '':
         opt.json_name = request.form['name']
-    _ = entry_point.main(opt)
+    results_dict_train_track = entry_point.main(opt)
     # Train
     if request.form['lr'] != '':
         opt.lr = float(request.form['lr'])
@@ -110,7 +124,7 @@ def train_track():
             cls_ids_ls = list(data.keys())
             id_str = ", ".join(cls_ids_ls)
             opt.reid_cls_ids = id_str
-    train.train(opt)
+    results_dict_train = train.train(opt)
 
     # MCTrack
     opt.load_model = '/home/user/exp/mot/' + opt.exp_id + f"/model_{opt.num_epochs}.pth"
@@ -147,15 +161,20 @@ def train_track():
     seqs = [seq.strip() for seq in seqs_str.split()]
     # seqs = [string.replace('_', ' ') for string in seqs]
 
-    mctrack.track(opt,
-         data_root=data_root,
-         seqs=seqs,
-         exp_name=opt.exp_name,
-         show_image=False,
-         save_images=False,
-         save_videos=False)
+    results_dict_track = mctrack.track(opt,
+                                       data_root=data_root,
+                                       seqs=seqs,
+                                       exp_name=opt.exp_name,
+                                       show_image=False,
+                                       save_images=False,
+                                       save_videos=False)
     opt.train_track = False
-    return render_template("train_result.html", opt=opt)
+    return render_template("train_result.html",
+                           opt=opt,
+                           results_track=results_dict_track,
+                           results_train=results_dict_train,
+                           results_train_track=results_dict_train_track,
+                           )
 
 
 @app.route('/track', methods=['POST', 'PUT'])
@@ -179,7 +198,7 @@ def track():
     return render_template("track_result.html", opt=opt)
 
 
-@app.route('/clean', methods=['POST', 'PUT'])
+@app.route('/clean', methods=['GET'])
 def clean():
     clean_files_a()
     return "<b><a href = '/'>click here to return to main page</a></b>"
@@ -191,6 +210,7 @@ def restore():
     _ = entry_point.main(opt)
     opt.restore = False
     return "<b><a href = '/'>click here to return to main page</a></b>"
+
 
 # @app.route('/display_pic', methods=['POST', 'PUT'])
 # def display_pics():

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h4>Type in the information needed for tracking</h4>
+    <h4>Type in the videos on the cord platform that you want to directly track or upload your own video</h4>
+    <form action = "http://localhost:5000/track" method = "post"
+        enctype = "multipart/form-data">
+         <label for="videos">Tracking videos:</label><br>
+		 <input type="text" id="videos" name="videos"><br>
+         <label for="model_type">The type of pre-trained model:</label>
+         <select class="form-control" id="model_type" name="model_type">
+             <option selected="selected">-- Choose --</option>
+             <option>dla_34</option>
+             <option>hrnet_18</option>
+         </select>
+         <p><label for="output_format">The tracking results output format:</label>
+         <select class="form-control" id="output_format" name="output_format">
+             <option selected="selected">-- Choose --</option>
+             <option>text</option>
+             <option>video</option>
+         </select><br></p>
+         <p> Please upload the video that you want to track</p>
+         <input type = "file" name = "file" />
+         <p> Do you want to upload the tracking results to cord platform?</p>
+         <div class="row">
+            <div class="col-sm-2 col-sm-offset-2">
+                <input name="visual" value="True" type="radio"> Yes
+            </div>
+            <div class="col-sm-2 ">
+                <input name="visual" value="False" type="radio" checked="checked"> No
+            </div>
+         </div>
+         <p><input type = "submit" value = "Tracking" /></p>
+    </form>
+</body>
+</html>
