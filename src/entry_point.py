@@ -320,7 +320,7 @@ def main(opt):
             id_str = ", ".join(cls_ids_ls)
             opt.reid_cls_ids = id_str
 
-        if len(opt.input_video) == 0:
+        if len(opt.input_video) != 0:
             video_name = opt.input_video.split("/")[-1][:-4]
             result = {}
             if opt.output_root == '../results':
