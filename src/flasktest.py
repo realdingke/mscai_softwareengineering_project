@@ -209,6 +209,10 @@ def track():
         opt.visual = True
     else:
         opt.visual = False
+    if request.values.get('overwrite') == 'True':
+        opt.overwrite = True
+    else:
+        opt.overwrite = False
     _ = entry_point.main(opt)
     opt.track = False
     return render_template("track_result.html", opt=opt)
@@ -220,7 +224,7 @@ def clean():
     return "<b><a href = '/'>click here to return to main page</a></b>"
 
 
-@app.route('/restore', methods=['POST', 'PUT'])
+@app.route('/restore', methods=['GET'])
 def restore():
     opt.restore = True
     _ = entry_point.main(opt)
