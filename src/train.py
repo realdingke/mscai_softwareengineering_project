@@ -190,7 +190,7 @@ def save_training_time(opt, data_config, epoch_time=None, total_time=None):
 
 
 
-def train(opt):
+def train(opt, opt_2=None):
     result_dict = {}
     torch.manual_seed(opt.seed)
     torch.backends.cudnn.benchmark = not opt.not_cuda_benchmark and not opt.test
@@ -219,7 +219,7 @@ def train(opt):
 
     # need to modify
     if opt.add_test_dataset:
-        test_dataset, opt_2 = add_test_loader(opt, data_config, transforms)
+        test_dataset, opt_2 = add_test_loader(opt_2, data_config, transforms)
 
     logger = Logger(opt)
 
@@ -438,6 +438,8 @@ def train(opt):
 if __name__ == '__main__':
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # '0, 1'
     opt = opts().parse()
+    if opt.add_test_dataset:
+        opt_2 = opts().parse()
     # automatically identify reid_cls_ids
     file_name_path = paths.PATHS_OBJ_PATH
     if os.path.isfile(file_name_path):
@@ -451,5 +453,7 @@ if __name__ == '__main__':
             cls_ids_ls = list(data.keys())
             id_str = ", ".join(cls_ids_ls)
             opt.reid_cls_ids = id_str
-
-    train(opt)
+    if opt.add_test_dataset:
+        train(opt, opt_2)
+    else:
+        train(opt)
