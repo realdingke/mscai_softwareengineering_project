@@ -34,7 +34,7 @@
 
     <if opt.save_time = True>
         <p>training time</p>
-        {% for train_time in results_train[‘training_time’][‘total_time’] %}
+        {% for train_time in results_train[‘training_time’][‘epoch_time’] %}
             <p>{{ train_time }}</p>
         {% endfor %}
     </if>
