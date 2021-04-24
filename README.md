@@ -17,7 +17,7 @@ Highlights on visdrone datasets are below:
 ### Means of running the pipeline: CLI or API based 
 The pipeline is designed to be run via two approaches: traditional CLI approach or the more user-friendly API.
 
-### - [x] CLI approach:
+- [x] CLI approach:
 The below are instructions for running the pipeline via a CLI.
 
 ### Entry Point
