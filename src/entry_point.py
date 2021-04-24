@@ -308,7 +308,7 @@ def main(opt):
             random_seed=opt.rseed,
             random_split=opt.rand_split
         )
-        paths_loader.TEST_DIR_NAME_PATH += test_dir_name
+        paths_loader.TEST_DIR_NAME_PATH =osp.join(paths_loader.IMG_ROOT_PATH, 'test', test_dir_name)
         # save project_name to file_name.data
         client_data_path = osp.join(paths_loader.DATA_PATH, '..', 'client_data')
         file_name_path = osp.join(
