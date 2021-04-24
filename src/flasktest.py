@@ -170,7 +170,7 @@ def train_track():
                            )
 
 
-@app.route('/mctrack')
+@app.route('/mctrack', methods=['POST', 'PUT'])
 def mctrack():
     # Coped from mctrack main function
 
