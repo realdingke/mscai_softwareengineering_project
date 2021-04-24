@@ -171,7 +171,7 @@ def train_track():
 
 
 @app.route('/mctrack', methods=['POST', 'PUT'])
-def mctrack():
+def mctrack_main_process():
     # Coped from mctrack main function
 
     # os.environ['CUDA_VISIBLE_DEVICES'] = '1'  # 0
