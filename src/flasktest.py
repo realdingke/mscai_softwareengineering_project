@@ -49,7 +49,14 @@ def track_html():
 
 @app.route('/mctrack_print')
 def mctrack_print():
-    return render_template("mctrack.html")
+    file_name_path = paths.PATHS_OBJ_PATH
+    with open(file_name_path, 'rb') as f:
+        paths_loader = pickle.load(f)
+    seqs_name_path = paths_loader.SEQS_NAME_PATH
+    with open(seqs_name_path, 'rb') as f:
+        seqs_name_dict = pickle.load(f)
+    seqs = seqs_name_dict['labeled_seqs']
+    return render_template("mctrack.html", seqs=seqs)
 
 
 @app.route('/mctrack_evaluation/<result_name>')
@@ -227,7 +234,7 @@ def mctrack_main_process():
                                        save_images=False,
                                        save_videos=False)
     opt.train_track = False
-    return render_template("mctrack_result.html", results_track=results_dict_track)
+    return render_template("mctrack_result.html", opt=opt_track, results_track=results_dict_track)
 
 @app.route('/track', methods=['POST', 'PUT'])
 def track():
