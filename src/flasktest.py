@@ -141,10 +141,11 @@ def train_track():
         opt_train.num_epochs = int(request.form['epoch'])
     if request.form['drop'] != '':
         opt_train.lr_step = request.form['drop']
-    try:
-        opt_train.lr_step = [int(i) for i in opt.lr_step.split(',')]
-    except:
-        opt_train.lr_step = [int(opt.lr_step)]
+    if type(opt.lr_step) == str:
+        try:
+            opt_train.lr_step = [int(i) for i in opt.lr_step.split(',')]
+        except:
+            opt_train.lr_step = [int(opt.lr_step)]
     if request.form['exp_id'] != '':
         opt_train.exp_id = request.form['exp_id']
     opt.exp_name = opt_train.exp_id
