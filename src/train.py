@@ -73,7 +73,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
     mkdirs(path)
     if test_losses is None:
         fig, ax = plt.subplots(2, 2)
-        fig.subplots_adjust(hspace=0.3, wspace=0.3)
+        fig.subplots_adjust(hspace=0.5, wspace=0.5)
         ax[0, 0].plot(np.arange(1, opt.num_epochs + 1),
                       np.array(train_losses['hm']),
                       label='train')
@@ -113,7 +113,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
         plt.savefig(total_loss_plot_path)
     else:
         fig, ax = plt.subplots(2, 2)
-        fig.subplots_adjust(hspace=0.3, wspace=0.3)
+        fig.subplots_adjust(hspace=0.5, wspace=0.5)
         ax[0, 0].plot(np.arange(1, opt.num_epochs + 1),
                       np.array(train_losses['hm']),
                       label='train')
