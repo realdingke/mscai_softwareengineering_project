@@ -450,7 +450,7 @@ def track(opt,
 
     html_root = osp.join(paths.ROOT_PATH, 'templates')
     html_name = xlsx_to_html(result_root, html_root, 'summary_{}.xlsx'.format(exp_name))
-    result_dict['summary_path'] = osp.join(html_root, html_name)
+    result_dict['summary_path'] = html_name
 
     return result_dict
 
