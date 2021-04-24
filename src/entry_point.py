@@ -362,18 +362,16 @@ def main(opt):
 
         if len(opt.input_video) != 0:
             video_name = opt.input_video.split("/")[-1][:-4]
-            result = {}
             if opt.output_root == '../results':
                 opt.output_root = osp.join(opt.output_root, video_name)
                 track_result = demo.run_demo(opt)
-                result[video_name] = track_result
+                result_dict[video_name] = track_result
 
         elif len(opt.tracking_video_selection) == 0:
             seqs_name_path = paths_loader.SEQS_NAME_PATH
             with open(seqs_name_path, 'rb') as f:
                 seqs_name_dict = pickle.load(f)
             empty_seqs = seqs_name_dict['empty_seqs']
-            result = {}
             for seq in empty_seqs:
                 empty_seqs_path = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
                 if opt.output_root == '../results':
@@ -384,10 +382,9 @@ def main(opt):
                         os.remove(output_video_path)
                     opt.input_video = empty_seqs_path
                     track_result = demo.run_demo(opt)
-                    result[seq] = track_result
+                    result_dict[seq] = track_result
 
         else:
-            result = {}
             for seq in opt.tracking_video_selection[0]:
                 if opt.output_root == '../results':
                     opt.output_root = osp.join(opt.output_root, seq)
@@ -397,7 +394,7 @@ def main(opt):
                         os.remove(output_video_path)
                     opt.input_video = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
                     track_result = demo.run_demo(opt)
-                    result[seq] = track_result
+                    result_dict[seq] = track_result
                     output_root = opt.output_root
 
 
