@@ -51,6 +51,11 @@ def track_html():
 def mctrack_print():
     return render_template("mctrack.html")
 
+
+@app.route('/mctrack_evaluation/<result_name>')
+def mctrack_evaluation(result_name):
+    return render_template(result_name)
+
 def exception_handler(func):
     def wrapper(*args, **kwargs):
         try:
