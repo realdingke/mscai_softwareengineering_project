@@ -51,6 +51,11 @@ def track_html():
 def mctrack_print():
     return render_template("mctrack.html")
 
+
+@app.route('/mctrack_evaluation/<result_name>')
+def mctrack_evaluation(result_name):
+    return render_template(result_name)
+
 def exception_handler(func):
     def wrapper(*args, **kwargs):
         try:
@@ -165,8 +170,8 @@ def train_track():
                            )
 
 
-@app.route('/mctrack')
-def mctrack():
+@app.route('/mctrack', methods=['POST', 'PUT'])
+def mctrack_main_process():
     # Coped from mctrack main function
 
     # os.environ['CUDA_VISIBLE_DEVICES'] = '1'  # 0
@@ -187,6 +192,7 @@ def mctrack():
         opt_track.save_track_time = False
     # if request.form[] != '':
     #     opt.conf_thres = request.form[]
+    file_name_path = paths.PATHS_OBJ_PATH
     if os.path.isfile(file_name_path):
         with open(file_name_path, 'rb') as f:
             path_object = pickle.load(f)

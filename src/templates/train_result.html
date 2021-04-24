@@ -7,7 +7,7 @@
 <body>
     <h4>Results</h4>
     <p>epoch</p>
-    {% for epoch in opt.num_epochs %}
+    {% for epoch in range(opt.num_epochs) %}
         <p>{{ epoch }}</p>
     {% endfor %}
     <p>training losses</p>
