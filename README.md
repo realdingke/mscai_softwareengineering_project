@@ -105,9 +105,9 @@ The `--vs` flag will specify the name of the video you want to track on; `--spec
 #### Direct tracking
 Should the user wants to directly track using a pretrained model or previously-trained model, similar to above, under `/src` (root dir) first run:
 
-    python3 entry_point.py --track -vs Video_of_cattle_1.mp4 --specify_model car_hrnet_pretrained  --visual
+    python3 entry_point.py --track -vs Video_of_cattle_1.mp4 --specify_model hrnet_pretrained  --visual
 
-This example code will run tracking with a pretrained model on specified video. Note there are currently two pretrained models supported by the pipeline (will be automatically downloaded at the start), they can be specified by calling the `--specify_model` flag with `car_hrnet_pretrained` or `cattle_dla_pretrained`.
+This example code will run tracking with a pretrained model on specified video. Note there is currently one pretrained model supported by the pipeline (will be automatically downloaded at the start), it can be specified by calling the `--specify_model` flag with `hrnet_pretrained`.
 
 
 - - - -
