@@ -35,7 +35,7 @@
     <div class="if/else">
         {% if opt.save_time == True %}
             <p>training time</p>
-            {% for train_time in results_train[‘training_time’][‘epoch_time’] %}
+            {% for train_time in results_train['training_time']['epoch_time'] %}
                 <p>{{ train_time }}</p>
             {% endfor %}
         {% endif %}
@@ -69,15 +69,15 @@
 
     <div class="if/else">
         {% if opt.plot_loss == True %}
-            <img src={{results_train[‘sub_loss_plot’]}} width="1280" height="720">
-            <img src={{results_train[‘total_loss_plot’]}} width="1280" height="720">
+            <img src={{results_train['sub_loss_plot']}} width="1280" height="720">
+            <img src={{results_train['total_loss_plot']}} width="1280" height="720">
         {% endif %}
     </div>
 
     <div class="if/else">
         {% if opt.save_time == True %}
                 <p>total training time</p>
-                <p>{{ results_train[‘training_time’][‘total_time’] }}</p>
+                <p>{{ results_train['training_time']['total_time'] }}</p>
         {% endif %}
     </div>
 
