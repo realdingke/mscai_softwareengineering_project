@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h4>Results</h4>
+    {% for seq, values in results_track['det_path'].items() %}
+        <td>{{ seq }}:</td><td>{{ values }}</td>
+    {% endfor %}
+    <p>tracking total time:</p><p>{{results_track[‘tracking_time’][‘total_time’]}}</p>
+
+    {% for seq, values in results_track[‘tracking_time’][‘time_sequences’].items() %}
+        <td>{{ seq }}:</td><td>{{ values }}</td>
+    {% endfor %}
+
+    <div class="if/else">
+              {% if {{opt.save_video}} = True %}
+                {% for seq, values in results_track[‘video_path’].items() %}
+                    <td>{{ seq }}:</td><td>{{ values }}</td>
+                {% endfor %}
+              {% endif %}
+              </div>
+<input type="button" value="Evaluation Results" οnclick="window.open({{results_track[‘summary_path’]}})" />
+</body>
+</html>

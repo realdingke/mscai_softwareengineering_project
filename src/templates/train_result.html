@@ -6,28 +6,106 @@
 </head>
 <body>
     <h4>Results</h4>
-    <p>frame count</p>
+    <p>epoch</p>
+    {% for epoch in opt.num_epochs %}
+        <p>{{ epoch }}</p>
+    {% endfor %}
+    <p>training losses</p>
+    <p>loss</p>
+    {% for loss in results_train["train_losses"]['loss'] %}
+        <p>{{ loss }}</p>
+    {% endfor %}
+    <p>hm_loss</p>
+    {% for hm_loss in results_train["train_losses"]['hm'] %}
+        <p>{{ hm_loss }}</p>
+    {% endfor %}
+    <p>wh_loss</p>
+    {% for wh_loss in results_train["train_losses"]['wh'] %}
+        <p>{{ wh_loss }}</p>
+    {% endfor %}
+    <p>off_loss</p>
+    {% for off_loss in results_train["train_losses"]['off'] %}
+        <p>{{ off_loss }}</p>
+    {% endfor %}
+    <p>id_loss</p>
+    {% for id_loss in results_train["train_losses"]['id'] %}
+        <p>{{ id_loss }}</p>
+    {% endfor %}
 
-    <p>{{ opt.project }}</p>
-    <p>{{ opt.api }}</p>
-    <p>{{ opt.dataset_selection }}</p>
-    <p>{{ opt.rand_split }}</p>
-    <p>{{ opt.rseed }}</p>
-    <p>{{ opt.split_perc }}</p>
-    <p>{{ opt.json_name }}</p>
-    <p>{{ opt.lr }}</p>
-    <p>{{ opt.batch_size }}</p>
-    <p>{{ opt.num_epochs }}</p>
-    <p>{{ opt.lr_step }}</p>
-    <p>{{ opt.exp_id }}</p>
-    <p>{{ opt.arch }}</p>
-    <p>{{ opt.add_test_dataset }}</p>
-    <p>{{ opt.plot_loss }}</p>
-    <p>{{ opt.save_time }}</p>
-    <p>{{ opt.output_format }}</p>
-    <p>{{ opt.exp_name }}</p>
-    <p>{{ opt.save_track_time }}</p>
-    <p>successful train</p>
-    <b><a href = '/'>click here to return to main page</a></b>
+    <div class="if/else">
+        {% if opt.save_time == True %}
+            <p>training time</p>
+            {% for train_time in results_train['training_time']['epoch_time'] %}
+                <p>{{ train_time }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="if/else">
+        {% if opt.add_test_dataset == True %}
+            <p>test losses</p>
+            <p>loss</p>
+            {% for loss in results_train["test_losses"]['loss'] %}
+                <p>{{ loss }}</p>
+            {% endfor %}
+            <p>hm_loss</p>
+            {% for hm_loss in results_train["test_losses"]['hm'] %}
+                <p>{{ hm_loss }}</p>
+            {% endfor %}
+            <p>wh_loss</p>
+            {% for wh_loss in results_train["test_losses"]['wh'] %}
+                <p>{{ wh_loss }}</p>
+            {% endfor %}
+            <p>off_loss</p>
+            {% for off_loss in results_train["test_losses"]['off'] %}
+                <p>{{ off_loss }}</p>
+            {% endfor %}
+            <p>id_loss</p>
+            {% for id_loss in results_train["test_losses"]['id'] %}
+                <p>{{ id_loss }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="if/else">
+        {% if opt.plot_loss == True %}
+            <img src={{results_train['sub_loss_plot']}} width="1280" height="720">
+            <img src={{results_train['total_loss_plot']}} width="1280" height="720">
+        {% endif %}
+    </div>
+
+    <div class="if/else">
+        {% if opt.save_time == True %}
+                <p>total training time</p>
+                <p>{{ results_train['training_time']['total_time'] }}</p>
+        {% endif %}
+    </div>
+
+
+
+
+<!--    <p>{{ opt.project }}</p>-->
+<!--    <p>{{ opt.api }}</p>-->
+<!--    <p>{{ opt.dataset_selection }}</p>-->
+<!--    <p>{{ opt.rand_split }}</p>-->
+<!--    <p>{{ opt.rseed }}</p>-->
+<!--    <p>{{ opt.split_perc }}</p>-->
+<!--    <p>{{ opt.json_name }}</p>-->
+<!--    <p>{{ opt.lr }}</p>-->
+<!--    <p>{{ opt.batch_size }}</p>-->
+<!--    <p>{{ opt.num_epochs }}</p>-->
+<!--    <p>{{ opt.lr_step }}</p>-->
+<!--    <p>{{ opt.exp_id }}</p>-->
+<!--    <p>{{ opt.arch }}</p>-->
+<!--    <p>{{ opt.add_test_dataset }}</p>-->
+<!--    <p>{{ opt.plot_loss }}</p>-->
+<!--    <p>{{ opt.save_time }}</p>-->
+<!--    <p>{{ opt.output_format }}</p>-->
+<!--    <p>{{ opt.exp_name }}</p>-->
+<!--    <p>{{ opt.save_track_time }}</p>-->
+<!--    <p>successful train</p>-->
+<!--    <b><a href = '/'>click here to return to main page</a></b>-->
+<b><a href = '/mctrack_print'>click here to return to see mctrack results</a></b>
+>>>>>>> 6cd4ccf9de664c7e93c44b3df55b7cfbaccb1b79
 </body>
 </html>
