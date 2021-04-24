@@ -1,7 +1,7 @@
 # MscAI Software Engineering Group Project (Group 6)
 This is the Imperial College Msc AI group project on multi-object tracking, originating from a proposal made by Imperial's industrial partner Cord AI which also grants access to the object tracking datasets stored on its own Cord platform. 
 
-The project essentially rests upon ifzhang's fundamental approach of FairMOT (Github homepage is [here](https://github.com/ifzhang/FairMOT); paper: [FairMOT: On the Fairness of Detection and Re-Identification in Multiple Object Tracking](https://arxiv.org/pdf/2004.01888v5.pdf)), linking up with the Cord's database and constructing an highly automated pipeline that can enable user to either train new models from scratch or track with existing models (from after the training scheme or pre-trained model downloadable from public URL). It is also worth noting the training-tracking pipeline possesses full multi-class capabilities (multi-class training & evaluation), building onto the powerful MCMOT modifications by CaptainEven whose homepage is linked here: [FairMOTVehicle](https://github.com/CaptainEven/FairMOTVehicle).
+The project essentially rests upon ifzhang's fundamental approach of FairMOT (Github homepage is [here](https://github.com/ifzhang/FairMOT); paper: [FairMOT: On the Fairness of Detection and Re-Identification in Multiple Object Tracking](https://arxiv.org/pdf/2004.01888v5.pdf)), linking up with the Cord's database and constructing an highly automated pipeline that can enable user to either train new models from scratch or track with existing models (from after the training scheme or pre-trained model downloadable from public URL). It is also worth noting the training-tracking pipeline possesses full multi-class capabilities (multi-class training & evaluation), building onto the powerful MCMOT modifications by CaptainEven whose homepage is: [MCMOT](https://github.com/CaptainEven/MCMOT).
 
 ### Some demos/highlights
 Highlights on traffic datasets are below:
@@ -15,12 +15,19 @@ Highlights on visdrone datasets are below:
 
 
 ### Means of running the pipeline: CLI or API based 
-The pipeline is designed to be run via two approaches: traditional CLI approach or the more user-friendly API.
+The entire pipeline is containerised to remove system and environment constraints. As such, one design feature is its flexibility of being able to run via two approaches: traditional CLI approach or the more user-friendly API.
+
+- - - -
 
 - [x] CLI approach:
 The below are instructions for running the pipeline via a CLI.
 
-### Entry Point
+#### Setting up the environment and build the dockerfile
+It is our recommendation that the pipeline to be run using Google Cloud's computing service. First create a Virtual Machine(VM) instance on Google cloud: check the GPU option and select the operating system to be `Ubuntu 16.04`. Then ssh connect to the VM and install the necessary Nvidia driver (version==418.126.02):
+
+
+
+#### Main entry point
 The entry point is located inside the `/src` folder which also corresponds to the default root directory of the program.
 
 The first step always is to run the entry point file with `--gen_info` flag to see the important dataset information, facilitating user's decision to run desired pipeline branch with appropriate data and model:
@@ -28,7 +35,7 @@ The first step always is to run the entry point file with `--gen_info` flag to s
     python3 entry_point.py --gen_info
 
 
-### Training
+#### Training and tracking
 Under `/src` (root dir) run:
 
     python3 entry_point.py --train_track
@@ -36,7 +43,7 @@ Under `/src` (root dir) run:
 Using the `--train_track` flag will train a new model from sratch with architecture, learning rate, epoch number, batch size etc. of user's choosing.
 
 
-### Tracking
+#### Direct tracking
 Under `/src` (root dir) first run:
 
     python3 entry_point.py --track
