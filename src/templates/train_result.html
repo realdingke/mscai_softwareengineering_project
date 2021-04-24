@@ -32,46 +32,54 @@
         <p>{{ id_loss }}</p>
     {% endfor %}
 
-    <if opt.save_time = True>
-        <p>training time</p>
-        {% for train_time in results_train[‘training_time’][‘epoch_time’] %}
-            <p>{{ train_time }}</p>
-        {% endfor %}
-    </if>
+    <div class="if/else">
+        {% if opt.save_time == True %}
+            <p>training time</p>
+            {% for train_time in results_train[‘training_time’][‘epoch_time’] %}
+                <p>{{ train_time }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
 
-    <if opt.add_test_dataset = True>
-        <p>test losses</p>
-    <p>loss</p>
-    {% for loss in results_train["test_losses"]['loss'] %}
-        <p>{{ loss }}</p>
-    {% endfor %}
-    <p>hm_loss</p>
-    {% for hm_loss in results_train["test_losses"]['hm'] %}
-        <p>{{ hm_loss }}</p>
-    {% endfor %}
-    <p>wh_loss</p>
-    {% for wh_loss in results_train["test_losses"]['wh'] %}
-        <p>{{ wh_loss }}</p>
-    {% endfor %}
-    <p>off_loss</p>
-    {% for off_loss in results_train["test_losses"]['off'] %}
-        <p>{{ off_loss }}</p>
-    {% endfor %}
-    <p>id_loss</p>
-    {% for id_loss in results_train["test_losses"]['id'] %}
-        <p>{{ id_loss }}</p>
-    {% endfor %}
-    </if>
-    
-    <if opt.plot_loss = True>
-    <img src={{results_train[‘sub_loss_plot’]}} width="1280" height="720">
-    <img src={{results_train[‘total_loss_plot’]}} width="1280" height="720">
-    </if>
+    <div class="if/else">
+        {% if opt.add_test_dataset == True %}
+            <p>test losses</p>
+            <p>loss</p>
+            {% for loss in results_train["test_losses"]['loss'] %}
+                <p>{{ loss }}</p>
+            {% endfor %}
+            <p>hm_loss</p>
+            {% for hm_loss in results_train["test_losses"]['hm'] %}
+                <p>{{ hm_loss }}</p>
+            {% endfor %}
+            <p>wh_loss</p>
+            {% for wh_loss in results_train["test_losses"]['wh'] %}
+                <p>{{ wh_loss }}</p>
+            {% endfor %}
+            <p>off_loss</p>
+            {% for off_loss in results_train["test_losses"]['off'] %}
+                <p>{{ off_loss }}</p>
+            {% endfor %}
+            <p>id_loss</p>
+            {% for id_loss in results_train["test_losses"]['id'] %}
+                <p>{{ id_loss }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
 
-    <if opt.save_time = True>
-        <p>total training time</p>
-        <p>{{ results_train[‘training_time’][‘total_time’] }}</p>
-    </if>
+    <div class="if/else">
+        {% if opt.plot_loss == True %}
+            <img src={{results_train[‘sub_loss_plot’]}} width="1280" height="720">
+            <img src={{results_train[‘total_loss_plot’]}} width="1280" height="720">
+        {% endif %}
+    </div>
+
+    <div class="if/else">
+        {% if opt.save_time == True %}
+                <p>total training time</p>
+                <p>{{ results_train[‘training_time’][‘total_time’] }}</p>
+        {% endif %}
+    </div>
 
 
 
@@ -97,5 +105,6 @@
 <!--    <p>{{ opt.save_track_time }}</p>-->
 <!--    <p>successful train</p>-->
 <!--    <b><a href = '/'>click here to return to main page</a></b>-->
+<b><a href = '/mctrack_print'>click here to return to see mctrack results</a></b>
 </body>
 </html>
