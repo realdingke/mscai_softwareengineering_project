@@ -115,6 +115,7 @@ def train_track():
     
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # '0, 1'
     opt_train = opts().parse()
+
     # automatically identify reid_cls_ids
     file_name_path = paths.PATHS_OBJ_PATH
     opt_train.load_model = ''
@@ -155,6 +156,7 @@ def train_track():
         opt_train.arch = model_type
     if request.values.get('add_test') == 'True':
         opt_train.add_test_dataset = True
+        opt_2 = opts().parse()
     else:
         opt_train.add_test_dataset = False
     if request.values.get('plot_loss') == 'True':
@@ -171,8 +173,10 @@ def train_track():
         opt_train.load_model = os.path.join(model_path, 'model_last.pth')
     # if request.form[] != '':
     #     opt_train.num_iters = request.form[]
-
-    results_dict_train = train.train(opt_train)
+    if opt_train.add_test_dataset:
+        results_dict_train = train.train(opt_train, opt_2)
+    else:
+        results_dict_train = train.train(opt_train)
 
     return render_template("train_result.html",
                            opt=opt_train,
