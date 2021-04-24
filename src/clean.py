@@ -44,7 +44,7 @@ def clean_model():
     if osp.exists(model_root):
         for directories in os.listdir(model_root):
             dir_path = osp.join(model_root, directories)
-            if directories != 'car_hrnet_pretrained':
+            if directories != 'hrnet_pretrained':
                 shutil.rmtree(dir_path)
 
 
