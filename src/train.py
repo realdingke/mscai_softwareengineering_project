@@ -77,19 +77,23 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
         ax[0, 0].plot(np.arange(1, opt.num_epochs + 1),
                       np.array(train_losses['hm']),
                       label='train')
+        ax[0, 0].title.set_text('Training hm loss')
         ax[0, 0].set_ylabel('hm loss')
         ax[0, 1].plot(np.arange(1, opt.num_epochs + 1),
                       np.array(train_losses['wh']),
                       label='train')
         ax[0, 1].set_ylabel('wh loss')
+        ax[0, 1].title.set_text('Training wh loss')
         ax[1, 0].plot(np.arange(1, opt.num_epochs + 1),
                       np.array(train_losses['off']),
                       label='train')
         ax[1, 0].set_ylabel('off loss')
+        ax[1, 0].title.set_text('Training off loss')
         ax[1, 1].plot(np.arange(1, opt.num_epochs + 1),
                       np.array(train_losses['id']),
                       label='train')
         ax[1, 1].set_ylabel('id loss')
+        ax[1, 1].title.set_text('Training id loss')
         for i in range(2):
             for j in range(2):
                 ax[i, j].set_xlabel('epochs')
@@ -98,6 +102,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
         plt.savefig(sub_loss_plot_path)
 
         plt.figure()
+        plt.title("Total training loss curve")
         plt.plot(np.arange(1, opt.num_epochs + 1),
                  np.array(train_losses['loss']),
                  label='train')
@@ -116,6 +121,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
                       np.array(test_losses['hm']),
                       label='test')
         ax[0, 0].set_ylabel('hm loss')
+        ax[0, 0].title.set_text('Training and testing hm loss')
         ax[0, 1].plot(np.arange(1, opt.num_epochs + 1),
                       np.array(train_losses['wh']),
                       label='train')
@@ -123,6 +129,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
                       np.array(test_losses['wh']),
                       label='test')
         ax[0, 1].set_ylabel('wh loss')
+        ax[0, 1].title.set_text('Training and testing wh loss')
         ax[1, 0].plot(np.arange(1, opt.num_epochs + 1),
                       np.array(train_losses['off']),
                       label='train')
@@ -130,6 +137,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
                       np.array(test_losses['off']),
                       label='test')
         ax[1, 0].set_ylabel('off loss')
+        ax[1, 0].title.set_text('Training and testing off loss')
         ax[1, 1].plot(np.arange(1, opt.num_epochs + 1),
                       np.array(train_losses['id']),
                       label='train')
@@ -137,6 +145,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
                       np.array(test_losses['id']),
                       label='test')
         ax[1, 1].set_ylabel('id loss')
+        ax[1, 1].title.set_text('Training and testing id loss')
         for i in range(2):
             for j in range(2):
                 ax[i, j].set_xlabel('epochs')
@@ -145,6 +154,7 @@ def plot_loss_curves(opt, data_config, train_losses=None, test_losses=None):
         sub_loss_plot_path = os.path.join(path, 'sub_loss.png')
         plt.savefig(sub_loss_plot_path)
         plt.figure()
+        plt.title("Total training and testing loss curves")
         plt.plot(np.arange(1, opt.num_epochs + 1),
                  np.array(train_losses['loss']),
                  label='train')
