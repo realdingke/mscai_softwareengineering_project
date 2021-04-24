@@ -378,6 +378,10 @@ def main(opt):
                 empty_seqs_path = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
                 if opt.output_root == '../results':
                     opt.output_root = osp.join(opt.output_root, seq)
+                    seq_name = seq.split('.')[-2]
+                    output_video_path = opt.output_root + f'/{seq_name}_track.mp4'
+                    if osp.exists(output_video_path):
+                        os.remove(output_video_path)
                     opt.input_video = empty_seqs_path
                     track_result = demo.run_demo(opt)
                     result[seq] = track_result
@@ -387,6 +391,10 @@ def main(opt):
             for seq in opt.tracking_video_selection[0]:
                 if opt.output_root == '../results':
                     opt.output_root = osp.join(opt.output_root, seq)
+                    seq_name = seq.split('.')[-2]
+                    output_video_path = opt.output_root + f'/{seq_name}_track.mp4'
+                    if osp.exists(output_video_path):
+                        os.remove(output_video_path)
                     opt.input_video = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
                     track_result = demo.run_demo(opt)
                     result[seq] = track_result

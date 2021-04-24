@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory, redirect, url_for, request, render_template
 import os
+import os.path as osp
 import pickle
 import re
 import json
@@ -93,42 +94,14 @@ def train_track():
     if request.form['name'] != '':
         opt.json_name = request.form['name']
     results_dict_train_track = entry_point.main(opt)
-    # Train
-    if request.form['lr'] != '':
-        opt.lr = float(request.form['lr'])
-    if request.form['batch'] != '':
-        opt.batch_size = int(request.form['batch'])
-    if request.form['epoch'] != '':
-        opt.num_epochs = int(request.form['epoch'])
-    if request.form['drop'] != '':
-        opt.lr_step = request.form['drop']
-    if request.form['exp_id'] != '':
-        opt.exp_id = request.form['exp_id']
-        opt.exp_name = opt.exp_id
-    model_type = request.values.get('model_type')
-    if model_type != '-- Choose --':
-        opt.arch = model_type
-    if request.values.get('add_test') == 'True':
-        opt.add_test_dataset = True
-    else:
-        opt.add_test_dataset = False
-    if request.values.get('plot_loss') == 'True':
-        opt.plot_loss = True
-    else:
-        opt.plot_loss = False
-    if request.values.get('save_time') == 'True':
-        opt.save_time = True
-    else:
-        opt.save_time = False
-    # if request.form[] != '':
-    #     opt.num_iters = request.form[]
 
     # coped from train main function
+    
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # '0, 1'
-    # opt = opts().parse()
+    opt_train = opts().parse()
     # automatically identify reid_cls_ids
     file_name_path = paths.PATHS_OBJ_PATH
-    opt.load_model = ''
+    opt_train.load_model = ''
     if os.path.isfile(file_name_path):
         with open(file_name_path, 'rb') as f:
             paths_loader = pickle.load(f)
@@ -139,30 +112,79 @@ def train_track():
                 data = json.load(f)
             cls_ids_ls = list(data.keys())
             id_str = ", ".join(cls_ids_ls)
-            opt.reid_cls_ids = id_str
-    results_dict_train = train.train(opt)
+            opt_train.reid_cls_ids = id_str
+
+    # Train
+    opt_train.root_dir = os.path.join(paths.ROOT_PATH, '..')
+    opt_train.exp_dir = os.path.join(opt_train.root_dir, 'exp', opt_train.task)
+    if request.form['lr'] != '':
+        opt_train.lr = float(request.form['lr'])
+    if request.form['batch'] != '':
+        opt_train.batch_size = int(request.form['batch'])
+    if request.form['epoch'] != '':
+        opt_train.num_epochs = int(request.form['epoch'])
+    if request.form['drop'] != '':
+        opt_train.lr_step = request.form['drop']
+    opt_train.lr_step = [int(i) for i in opt.lr_step.split(',')]
+    if request.form['exp_id'] != '':
+        opt_train.exp_id = request.form['exp_id']
+    opt_train.save_dir = os.path.join(opt_train.exp_dir, opt_train.exp_id)
+    model_type = request.values.get('model_type')
+    if model_type != '-- Choose --':
+        opt_train.arch = model_type
+    if request.values.get('add_test') == 'True':
+        opt_train.add_test_dataset = True
+    else:
+        opt_train.add_test_dataset = False
+    if request.values.get('plot_loss') == 'True':
+        opt_train.plot_loss = True
+    else:
+        opt_train.plot_loss = False
+    if request.values.get('save_time') == 'True':
+        opt_train.save_time = True
+    else:
+        opt_train.save_time = False
+    if opt_train.resume and opt_train.load_model == '':
+        model_path = opt_train.save_dir[:-4] if opt_train.save_dir.endswith('TEST') \
+            else opt_train.save_dir
+        opt_train.load_model = os.path.join(model_path, 'model_last.pth')
+    # if request.form[] != '':
+    #     opt_train.num_iters = request.form[]
+
+    results_dict_train = train.train(opt_train)
+
+    # Coped from mctrack main function
+    
+    # os.environ['CUDA_VISIBLE_DEVICES'] = '1'  # 0
+    opt_track = opts().init()
 
     # MCTrack
-    opt.load_model = '/home/user/exp/mot/' + opt.exp_id + f"/model_{opt.num_epochs}.pth"
+
+    opt_track.exp_name = opt_train.exp_id
+    opt_track.load_model = '/home/user/exp/mot/' + opt_train.exp_id + "/model_last.pth"
     output_format = request.values.get('output_format')
     if output_format != '-- Choose --':
-        opt.output_format = output_format
+        opt_track.output_format = output_format
     # if request.form['exp_name'] != '':
     #     opt.exp_name = request.form['exp_name']
     if request.values.get('track_time') == 'True':
-        opt.save_track_time = True
+        opt_track.save_track_time = True
     else:
-        opt.save_track_time = False
+        opt_track.save_track_time = False
     # if request.form[] != '':
     #     opt.conf_thres = request.form[]
-
-    # Coped from mctrack main function
-    # os.environ['CUDA_VISIBLE_DEVICES'] = '1'  # 0
-    # opt = opts().init()
     if os.path.isfile(file_name_path):
         with open(file_name_path, 'rb') as f:
             path_object = pickle.load(f)
-        if not opt.val_mot16:
+        load_model_ls = opt_track.load_model.split("/")
+        model_name_path = "/".join(load_model_ls[:-1])
+        opt_path = osp.join(model_name_path, 'opt.txt')
+        with open(opt_path, "r") as f:
+            content = f.read()
+        pattern = re.compile('arch: [a-z]+_[0-9]+')
+        arch = re.findall(pattern, content)
+        opt_track.arch = arch[0][6:]
+        if not opt_track.val_mot16:
             data_root = path_object.TEST_DIR_NAME_PATH
             seqs_str = os.listdir(data_root)
             seqs_str = '  \n'.join(seqs_str)
@@ -177,10 +199,10 @@ def train_track():
     seqs = [seq.strip() for seq in seqs_str.split()]
     # seqs = [string.replace('_', ' ') for string in seqs]
 
-    results_dict_track = mctrack.track(opt,
+    results_dict_track = mctrack.track(opt_track,
                                        data_root=data_root,
                                        seqs=seqs,
-                                       exp_name=opt.exp_name,
+                                       exp_name=opt_track.exp_name,
                                        show_image=False,
                                        save_images=False,
                                        save_videos=False)
