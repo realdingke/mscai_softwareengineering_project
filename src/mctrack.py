@@ -39,7 +39,7 @@ def xlsx_to_html(input_path, output_path, file_name):
     df.to_csv(csv_path, encoding='utf-8', index=False)
     csv_file = pd.read_csv(csv_path)
     html_path = os.path.join(output_path, f'{file_name[:-5]}.html')
-    csv_file.to_html(html_path)
+    csv_file.to_html(html_path, index=False, border=1, justify='center')
     return f'{file_name[:-5]}.html'
 
 def write_results(filename, results, data_type):
