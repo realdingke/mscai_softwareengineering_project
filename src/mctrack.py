@@ -27,10 +27,20 @@ from lib.tracking_utils.timer import Timer
 from lib.tracking_utils.evaluation import Evaluator, MCEvaluator
 import lib.datasets.dataset.jde as datasets
 # from gen_labels_detrac_mcmot import get_cls_info
-
+import pandas as pd
 from lib.tracking_utils.utils import mkdir_if_missing
 from lib.opts import opts
 
+
+def xlsx_to_html(input_path, output_path, file_name):
+    xlsx_path = os.path.join(input_path, file_name)
+    df = pd.read_excel(xlsx_path,engine='openpyxl')
+    csv_path = os.path.join(input_path, f'{file_name[:-5]}.csv')
+    df.to_csv(csv_path, encoding='utf-8', index=False)
+    csv_file = pd.read_csv(csv_path)
+    html_path = os.path.join(output_path, f'{file_name[:-5]}.html')
+    csv_file.to_html(html_path)
+    return f'{file_name[:-5]}.html'
 
 def write_results(filename, results, data_type):
     if data_type == 'mot':
@@ -437,8 +447,11 @@ def track(opt,
     print(strsummary)
     MCEvaluator.save_summary(summary, os.path.join(
         result_root, 'summary_{}.xlsx'.format(exp_name)))
-    result_dict['summary_path'] = os.path.join(
-        result_root, 'summary_{}.xlsx'.format(exp_name))
+
+    html_root = osp.join(paths.ROOT_PATH, '..', 'flask', 'templates')
+    html_name = xlsx_to_html(result_root, html_root, 'summary_{}.xlsx'.format(exp_name))
+    result_dict['summary_path'] = osp.join(html_root, html_name)
+    
     return result_dict
 
 
