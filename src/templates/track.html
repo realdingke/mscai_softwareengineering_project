@@ -42,7 +42,7 @@
          <p>{% for seq in seqs %}
              <input type="checkbox" id="videos" name="videos" value={{ seq }} />{{ seq }}
          {% endfor %}</p>
-         <label for="model_type">The name of usable models:</label>
+         <label for="model_type">Model selection:</label>
          <select class="form-control" id="model_type" name="model_type">
              <option selected="selected">-- Choose --</option>
              {% for model in models %}

@@ -141,7 +141,11 @@ def train_track():
         opt_train.num_epochs = int(request.form['epoch'])
     if request.form['drop'] != '':
         opt_train.lr_step = request.form['drop']
-    opt_train.lr_step = [int(i) for i in opt.lr_step.split(',')]
+    if type(opt.lr_step) == str:
+        try:
+            opt_train.lr_step = [int(i) for i in opt.lr_step.split(',')]
+        except:
+            opt_train.lr_step = [int(opt.lr_step)]
     if request.form['exp_id'] != '':
         opt_train.exp_id = request.form['exp_id']
     opt.exp_name = opt_train.exp_id
@@ -264,7 +268,8 @@ def track():
 @app.route('/clean', methods=['GET'])
 def clean():
     clean_files_a()
-    return "<b><a href = '/'>click here to return to main page</a></b>"
+    # return "<b><a href = '/'>click here to return to main page</a></b>"
+    return render_template("dummy.html")
 
 
 @app.route('/restore', methods=['GET'])
@@ -272,7 +277,8 @@ def restore():
     opt.restore = True
     _ = entry_point.main(opt)
     opt.restore = False
-    return "<b><a href = '/'>click here to return to main page</a></b>"
+    # return "<b><a href = '/'>click here to return to main page</a></b>"
+    return render_template("dummy.html")
 
 
 @app.route('/clean_all', methods=['GET'])
@@ -280,7 +286,8 @@ def clean_all():
     opt.clean_model = True
     _ = entry_point.main(opt)
     opt.clean_model = False
-    return "<b><a href = '/'>click here to return to main page</a></b>"
+    # return "<b><a href = '/'>click here to return to main page</a></b>"
+    return render_template("dummy.html")
 # @app.route('/display_pic', methods=['POST', 'PUT'])
 # def display_pics():
 #     pics =
