@@ -502,7 +502,7 @@ class opts(object):
         # print("type opt:", type(opt))
         # print("exp_dir:", opt.exp_dir)
         opt.save_dir = os.path.join(opt.exp_dir, opt.exp_id)
-        # print("save_dir:", opt.save_dir)
+
         opt.debug_dir = os.path.join(opt.save_dir, 'debug')
         # print('The output will be saved to ', opt.save_dir)
 
