@@ -47,6 +47,10 @@ def track_html():
     return render_template("track.html", models=models_name, seqs=seqs)
 
 
+@app.route('/mctrack_print')
+def mctrack_print():
+    return render_template("mctrack.html")
+
 def exception_handler(func):
     def wrapper(*args, **kwargs):
         try:
@@ -128,6 +132,7 @@ def train_track():
     opt_train.lr_step = [int(i) for i in opt.lr_step.split(',')]
     if request.form['exp_id'] != '':
         opt_train.exp_id = request.form['exp_id']
+    opt.exp_name = opt_train.exp_id
     opt_train.save_dir = os.path.join(opt_train.exp_dir, opt_train.exp_id)
     model_type = request.values.get('model_type')
     if model_type != '-- Choose --':
@@ -153,15 +158,24 @@ def train_track():
 
     results_dict_train = train.train(opt_train)
 
+    return render_template("train_result.html",
+                           opt=opt_train,
+                           results_train=results_dict_train,
+                           results_train_track=results_dict_train_track,
+                           )
+
+
+@app.route('/mctrack')
+def mctrack():
     # Coped from mctrack main function
-    
+
     # os.environ['CUDA_VISIBLE_DEVICES'] = '1'  # 0
     opt_track = opts().init()
 
     # MCTrack
 
-    opt_track.exp_name = opt_train.exp_id
-    opt_track.load_model = '/home/user/exp/mot/' + opt_train.exp_id + "/model_last.pth"
+    opt_track.exp_name = opt.exp_name
+    opt_track.load_model = '/home/user/exp/mot/' + opt_track.exp_name + "/model_last.pth"
     output_format = request.values.get('output_format')
     if output_format != '-- Choose --':
         opt_track.output_format = output_format
@@ -207,13 +221,7 @@ def train_track():
                                        save_images=False,
                                        save_videos=False)
     opt.train_track = False
-    return render_template("train_result.html",
-                           opt=opt_train,
-                           results_track=results_dict_track,
-                           results_train=results_dict_train,
-                           results_train_track=results_dict_train_track,
-                           )
-
+    return render_template("mctrack_result.html", results_track=results_dict_track)
 
 @app.route('/track', methods=['POST', 'PUT'])
 def track():
