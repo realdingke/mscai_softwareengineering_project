@@ -208,7 +208,7 @@ def train_track():
                                        save_videos=False)
     opt.train_track = False
     return render_template("train_result.html",
-                           opt=opt,
+                           opt=opt_train,
                            results_track=results_dict_track,
                            results_train=results_dict_train,
                            results_train_track=results_dict_train_track,
@@ -235,9 +235,9 @@ def track():
         opt.overwrite = True
     else:
         opt.overwrite = False
-    _ = entry_point.main(opt)
+    results_dict = entry_point.main(opt)
     opt.track = False
-    return render_template("track_result.html", opt=opt)
+    return render_template("track_result.html", results=results_dict)
 
 
 @app.route('/clean', methods=['GET'])

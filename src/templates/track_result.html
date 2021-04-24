@@ -6,11 +6,15 @@
 </head>
 <body>
     <h4>Results</h4>
-    <p>{{ opt.tracking_video_selection }}</p>
-    <p>{{ opt.output_format }}</p>
-    <p>{{ opt.arch }}</p>
-    <p>{{ opt.visual }}</p>
-    <p>successful gen_info</p>
+    {% for video, values in results.items() %}
+        <td>{{ video }}:</td>
+        {% for key, value in values.items() %}
+            <td>{{ key }}:</td><td>{{ value }}</td>
+        {% endfor %}
+    {% endfor %}
+    <p>[‘det_path’]</p>
+    <p>successful track</p>
     <b><a href = '/'>click here to return to main page</a></b>
+    <b><a href = 'https://app.cord.tech/'>click here to go to the cord page to see visual results</a></b>
 </body>
 </html>

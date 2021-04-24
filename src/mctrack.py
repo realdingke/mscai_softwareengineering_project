@@ -448,10 +448,10 @@ def track(opt,
     MCEvaluator.save_summary(summary, os.path.join(
         result_root, 'summary_{}.xlsx'.format(exp_name)))
 
-    html_root = osp.join(paths.ROOT_PATH, '..', 'flask', 'templates')
+    html_root = osp.join(paths.ROOT_PATH, 'templates')
     html_name = xlsx_to_html(result_root, html_root, 'summary_{}.xlsx'.format(exp_name))
     result_dict['summary_path'] = osp.join(html_root, html_name)
-    
+
     return result_dict
 
 
@@ -462,9 +462,10 @@ if __name__ == '__main__':
     if os.path.isfile(path_object):
         with open(path_object, 'rb') as f:
             path_object = pickle.load(f)
-        with open(paths.TRAIN_MODEL_PATH, "rb") as f:
-            train_model_path = pickle.load(f)
-        opt.load_model = train_model_path
+        if os.path.isfile(paths.TRAIN_MODEL_PATH):
+            with open(paths.TRAIN_MODEL_PATH, "rb") as f:
+                train_model_path = pickle.load(f)
+            opt.load_model = train_model_path
 
         load_model_ls = opt.load_model.split("/")
         model_name_path = "/".join(load_model_ls[:-1])
