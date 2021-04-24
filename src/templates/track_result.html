@@ -13,7 +13,12 @@
         {% endfor %}
     {% endfor %}
     <p>successful track</p>
-    <b><a href = '/'>click here to return to main page</a></b>
+    <p><b><a href = '/track_html'>click here to start tracking the whole video</a></b></p>
+    <p><b><a href = '/train_html'>click here to start new training</a></b></p>
+    <p><b><a href = '/'>click here to return to main page</a></b></p>
     <input type="button" value="click here to go to the cord page to see visual results" onclick="window.open('https://app.cord.tech/')"/>
+    <p><input type="button" value="click here to clean the downloaded files" onclick="window.open('/clean')"/></p>
+    <p><input type="button" value="click here to restore the gt data on cord platform" onclick="window.open('/restore')"/></p>
+    <p><input type="button" value="click here to clean all the models except pretrained one" onclick="window.open('/clean_all')"/></p>
 </body>
 </html>

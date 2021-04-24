@@ -45,12 +45,9 @@
          <input type="text" id="api" name="api">
          <p><input type = "submit" value = "generate project information" /></p>
     </form>
-
-    <b><a href = '/restore'>click here to restore the gt data on cord platform</a></b>
-    <b><a href = '/clean'>click here to clean the downloaded files</a></b>
-    <b><a href = '/clean_all'>click here to clean all the models except pretrained one</a></b>
-
-    <b><a href = '/mctrack_print'>backdoor to mctrack</a></b>
+    <p><input type="button" value="click here to clean the downloaded files" onclick="window.open('/clean')"/></p>
+    <p><input type="button" value="click here to restore the gt data on cord platform" onclick="window.open('/restore')"/></p>
+    <p><input type="button" value="click here to clean all the models except pretrained one" onclick="window.open('/clean_all')"/></p>
     <script>
         var btn = document.getElementsByClassName("collapse");
 
