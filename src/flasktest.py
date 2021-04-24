@@ -192,6 +192,7 @@ def mctrack():
         opt_track.save_track_time = False
     # if request.form[] != '':
     #     opt.conf_thres = request.form[]
+    file_name_path = paths.PATHS_OBJ_PATH
     if os.path.isfile(file_name_path):
         with open(file_name_path, 'rb') as f:
             path_object = pickle.load(f)
