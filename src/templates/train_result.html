@@ -1,40 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+
+    /*.collapse {
+        background-color: #a2de96;
+        border: none;
+        outline: none;
+        font-size: 25px;
+    }*/
+
+    .active,
+    .collapse:hover {
+        background-color: #438a5e;
+    }
+
+    /*.text {
+        background-color: #e1ffc2;
+        display: none;
+        font-size: 20px;
+    }*/
+    .text-center {
+    text-align: center;}
+
+    form {
+    text-align: center;}
+
+    h1 {text-align: center;}
+    h2 {text-align: center;}
+    h3 {text-align: center;}
+    h4 {text-align: center;}
+    h5 {text-align: center;}
+    p {text-align: center;}
+</style>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Training results</title>
 </head>
 <body>
-    <h4>Results</h4>
-    <p>epoch</p>
+    <h2>Training results</h2>
+    <h4>epoch</h4>
     {% for epoch in range(opt.num_epochs) %}
         <p>{{ epoch }}</p>
     {% endfor %}
-    <p>training losses</p>
-    <p>loss</p>
+    <h4>training losses</h4>
+    <h5>loss</h5>
     {% for loss in results_train["train_losses"]['loss'] %}
         <p>{{ loss }}</p>
     {% endfor %}
-    <p>hm_loss</p>
+    <h5>hm_loss</h5>
     {% for hm_loss in results_train["train_losses"]['hm'] %}
         <p>{{ hm_loss }}</p>
     {% endfor %}
-    <p>wh_loss</p>
+    <h5>wh_loss</h5>
     {% for wh_loss in results_train["train_losses"]['wh'] %}
         <p>{{ wh_loss }}</p>
     {% endfor %}
-    <p>off_loss</p>
+    <h5>off_loss</h5>
     {% for off_loss in results_train["train_losses"]['off'] %}
         <p>{{ off_loss }}</p>
     {% endfor %}
-    <p>id_loss</p>
+    <h5>id_loss</h5>
     {% for id_loss in results_train["train_losses"]['id'] %}
         <p>{{ id_loss }}</p>
     {% endfor %}
 
     <div class="if/else">
         {% if opt.save_time == True %}
-            <p>training time</p>
+            <h4>training time</h4>
             {% for train_time in results_train['training_time']['epoch_time'] %}
                 <p>{{ train_time }}</p>
             {% endfor %}
@@ -43,24 +75,24 @@
 
     <div class="if/else">
         {% if opt.add_test_dataset == True %}
-            <p>test losses</p>
-            <p>loss</p>
+            <h4>test losses</h4>
+            <h5>loss</h5>
             {% for loss in results_train["test_losses"]['loss'] %}
                 <p>{{ loss }}</p>
             {% endfor %}
-            <p>hm_loss</p>
+            <h5>hm_loss</h5>
             {% for hm_loss in results_train["test_losses"]['hm'] %}
                 <p>{{ hm_loss }}</p>
             {% endfor %}
-            <p>wh_loss</p>
+            <h5>wh_loss</h5>
             {% for wh_loss in results_train["test_losses"]['wh'] %}
                 <p>{{ wh_loss }}</p>
             {% endfor %}
-            <p>off_loss</p>
+            <h5>off_loss</h5>
             {% for off_loss in results_train["test_losses"]['off'] %}
                 <p>{{ off_loss }}</p>
             {% endfor %}
-            <p>id_loss</p>
+            <h5>id_loss</h5>
             {% for id_loss in results_train["test_losses"]['id'] %}
                 <p>{{ id_loss }}</p>
             {% endfor %}
@@ -105,7 +137,8 @@
 <!--    <p>{{ opt.save_track_time }}</p>-->
 <!--    <p>successful train</p>-->
 <!--    <b><a href = '/'>click here to return to main page</a></b>-->
-<p><b><a href = '/mctrack_print'>click here to run mctrack and see evaluation results on test dataset</a></b></p>
-<p><b><a href = '/track_html'>click here to track the whole video</a></b></p>
+<h3>Next step:</h3>
+<p><a class="button" href="/mctrack_print">click here to run mctrack and see evaluation results on test dataset</a></p>
+<p><a class="button" href="/track_html">click here to track the whole video</a></p>
 </body>
 </html>

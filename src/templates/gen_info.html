@@ -1,32 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+
+    /*.collapse {
+        background-color: #a2de96;
+        border: none;
+        outline: none;
+        font-size: 25px;
+    }*/
+
+    .active,
+    .collapse:hover {
+        background-color: #438a5e;
+    }
+
+    /*.text {
+        background-color: #e1ffc2;
+        display: none;
+        font-size: 20px;
+    }*/
+    .text-center {
+    text-align: center;}
+
+    form {
+    text-align: center;}
+
+    h1 {text-align: center;}
+    h2 {text-align: center;}
+    h3 {text-align: center;}
+    h4 {text-align: center;}
+    p {text-align: center;}
+</style>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Project information</title>
 </head>
 <body>
-    <h4>Results</h4>
-    <p>usable models</p>
+    <h2>Project basic information</h2>
+    <h4>Usable models</h4>
     {% for model in results["models_name"] %}
-        <p>{{ model }}</p>
+        <td>{{ model }}</td>
     {% endfor %}
-    <p>root path</p>
-    <p>{{ results["root_path"] }}</p>
-    <p>videos in cord</p>
+    <h4>Root path</h4>
+    <td>{{ results["root_path"] }}</td>
+    <h4>Videos in this project</h4>
     {% for seq_all in results["seq_info"] %}
-        <p>{{ seq_all }}</p>
+        <td>{{ seq_all }}</td>
     {% endfor %}
-    <p>videos have gt labels</p>
+    <h4>Videos have ground truth labels</h4>
     {% for seq_with in results["seq_with_label"] %}
-        <p>{{ seq_with }}</p>
+        <td>{{ seq_with }}</td>
     {% endfor %}
-    <p>videos without gt labels</p>
+    <h4>Videos without ground truth labels</h4>
     {% for seq_without in results["seq_without_label"] %}
-        <p>{{ seq_without }}</p>
+        <td>{{ seq_without }}</td>
     {% endfor %}
-    <p>successful gen_info</p>
-    <p><b><a href = '/train_html'>click here to return to start training</a></b></p>
-    <p><b><a href = '/track_html'>click here to return to start tracking</a></b></p>
+    <h3>Next step:</h3>
+    <p><a class="button" href="/train_html">click here to start training</a></p>
+    <p><a class="button" href="/track_html">click here to start tracking</a></p>
 
 </body>
 </html>

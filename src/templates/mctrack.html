@@ -26,19 +26,21 @@
     text-align: center;}
 
     h1 {text-align: center;}
+    h2 {text-align: center;}
+    h3 {text-align: center;}
     h4 {text-align: center;}
     p {text-align: center;}
 </style>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Multi-class tracking for model evaluation</title>
 </head>
 <body>
-    <h4>Type in the information needed for training</h4>
+    <h2>Type in the information needed for training</h2>
     <h4>Type the videos that you want to use for training or leave blank for training all the trainable seqs</h4>
     <form action = "http://localhost:5000/mctrack" method = "post">
-         <p><label for="output_format">The tracking results output format:</label>
-         <select class="form-control" id="output_format" name="output_format">
+        <p><label for="output_format">The tracking results output format:</label></p>
+         <p><select class="form-control" id="output_format" name="output_format">
              <option selected="selected">-- Choose --</option>
              <option>text</option>
              <option>video</option>

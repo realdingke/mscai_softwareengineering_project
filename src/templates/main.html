@@ -26,6 +26,7 @@
     text-align: center;}
 
     h1 {text-align: center;}
+    h3 {text-align: center;}
     h4 {text-align: center;}
     p {text-align: center;}
 </style>
@@ -45,9 +46,10 @@
          <input type="text" id="api" name="api">
          <p><input type = "submit" value = "generate project information" /></p>
     </form>
-    <p><input type="button" value="click here to clean the downloaded files" onclick="window.open('/clean')"/></p>
-    <p><input type="button" value="click here to restore the gt data on cord platform" onclick="window.open('/restore')"/></p>
-    <p><input type="button" value="click here to clean all the models except pretrained one" onclick="window.open('/clean_all')"/></p>
+    <h3>Additional functions:</h3>
+    <p><input type="button" value="click here to clean the downloaded files" onclick="window.open('/clean')"/>
+    <input type="button" value="click here to restore the gt data on cord platform" onclick="window.open('/restore')"/>
+    <input type="button" value="click here to clean all the models except pretrained one" onclick="window.open('/clean_all')"/></p>
     <script>
         var btn = document.getElementsByClassName("collapse");
 

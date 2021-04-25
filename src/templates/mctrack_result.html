@@ -1,15 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+
+    /*.collapse {
+        background-color: #a2de96;
+        border: none;
+        outline: none;
+        font-size: 25px;
+    }*/
+
+    .active,
+    .collapse:hover {
+        background-color: #438a5e;
+    }
+
+    /*.text {
+        background-color: #e1ffc2;
+        display: none;
+        font-size: 20px;
+    }*/
+    .text-center {
+    text-align: center;}
+
+    form {
+    text-align: center;}
+
+    h1 {text-align: center;}
+    h2 {text-align: center;}
+    h3 {text-align: center;}
+    h4 {text-align: center;}
+    p {text-align: center;}
+</style>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>MCtrack results</title>
 </head>
 <body>
-    <h4>Results</h4>
+    <h2>Results</h2>
     {% for seq, values in results_track['det_path'].items() %}
         <td>{{ seq }}:</td><td>{{ values }}</td>
     {% endfor %}
-    <p>tracking total time:</p><p>{{results_track['tracking_time']['total_time']}}</p>
+    <h4>tracking total time:</h4><p>{{results_track['tracking_time']['total_time']}}</p>
 
     {% for seq, values in results_track['tracking_time']['time_sequences'].items() %}
         <td>{{ seq }}:</td><td>{{ values }}</td>
@@ -22,12 +53,14 @@
                 {% endfor %}
               {% endif %}
               </div>
-<p><b><a href = '/track_html'>click here to start tracking the whole video</a></b></p>
-<p><b><a href = '/train_html'>click here to start new training</a></b></p>
-<p><b><a href = '/'>click here to return to main page</a></b></p>
-<input type="button" value="Evaluation Results" onclick="window.open('/mctrack_evaluation/{{results_track["summary_path"]}}')"/>
-<p><input type="button" value="click here to clean the downloaded files" onclick="window.open('/clean')"/></p>
-<p><input type="button" value="click here to restore the gt data on cord platform" onclick="window.open('/restore')"/></p>
-<p><input type="button" value="click here to clean all the models except pretrained one" onclick="window.open('/clean_all')"/></p>
+<p><input type="button" value="Evaluation Results" onclick="window.open('/mctrack_evaluation/{{results_track["summary_path"]}}')"/></p>
+<h3>Next step:</h3>
+<p><a class="button" href="/train_html">click here to start tracking the whole video</a></p>
+<p><a class="button" href="/track_html">click here to start new training</a></p>
+<p><a class="button" href="/">click here to return to main page</a></p>
+<h3>Additional functions:</h3>
+<p><input type="button" value="click here to clean the downloaded files" onclick="window.open('/clean')"/>
+<input type="button" value="click here to restore the gt data on cord platform" onclick="window.open('/restore')"/>
+<input type="button" value="click here to clean all the models except pretrained one" onclick="window.open('/clean_all')"/></p>
 </body>
 </html>

@@ -26,31 +26,33 @@
     text-align: center;}
 
     h1 {text-align: center;}
+    h2 {text-align: center;}
+    h3 {text-align: center;}
     h4 {text-align: center;}
     p {text-align: center;}
 </style>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Tracking whole video</title>
 </head>
 <body>
-    <h4>Type in the information needed for tracking</h4>
+    <h2>Type in the information needed for tracking</h2>
     <h4>Type in the videos on the cord platform that you want to directly track or upload your own video</h4>
     <form action = "http://localhost:5000/track" method = "post"
         enctype = "multipart/form-data">
-         <label for="videos">Tracking videos:</label><br>
+         <p><label for="videos">Tracking videos:</label></p>
          <p>{% for seq in seqs %}
              <input type="checkbox" id="videos" name="videos" value={{ seq }} />{{ seq }}
          {% endfor %}</p>
-         <label for="model_type">Model selection:</label>
-         <select class="form-control" id="model_type" name="model_type">
+         <p><label for="model_type">Model selection:</label></p>
+         <p><select class="form-control" id="model_type" name="model_type">
              <option selected="selected">-- Choose --</option>
              {% for model in models %}
                 <option>{{ model }}</option>
              {% endfor %}
-         </select>
-         <p><label for="output_format">The tracking results output format:</label>
-         <select class="form-control" id="output_format" name="output_format">
+         </select></p>
+        <p><label for="output_format">The tracking results output format:</label></p>
+         <p><select class="form-control" id="output_format" name="output_format" >
              <option selected="selected">-- Choose --</option>
              <option>text</option>
              <option>video</option>
