@@ -15,7 +15,7 @@ ap.add_argument("-v", "--video", type=str,
                 help="path to input video file")
 ap.add_argument("-t", "--tracker", type=str, default="CSRT",
                 help="OpenCV object tracker type: BOOSTING, MIL,\
-                KCF,TLD, MEDIANFLOW, GOTURN, MOSSE, CSRT")
+                KCF,TLD, MEDIANFLOW, MOSSE, CSRT")
 ap.add_argument("-gt","--ground_truth_file", type=str,
                 help="path to bounding boxes info file")
 args = ap.parse_args()
@@ -64,8 +64,6 @@ else:
         tracker_class = cv2.TrackerTLD_create
     elif args.tracker == 'MEDIANFLOW':
         tracker_class = cv2.TrackerMedianFlow_create
-    elif args.tracker == 'GOTURN':
-        tracker_class = cv2.TrackerGOTURN_create
     elif args.tracker == 'BOOSTING':
         tracker_class = cv2.TrackerBoosting_create
     elif args.tracker == 'MIL':
