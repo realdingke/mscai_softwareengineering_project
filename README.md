@@ -135,4 +135,14 @@ First cd to the root folder, then you can either open up a cmd window and run th
     
     ./start.sh
 
-Or you can simply double click on the start.sh shell file and run it. You will then end up in the main page.
+Or you can simply double click on the start.sh shell file and run it. You will still then end up in the main page.
+
+#### The main page
+The main page you should arrive at is shown below, type in the Project ID and API key provided by Cord and click generate project information, you will be redirected to a page conatining vital project dataset info i.e. videos with labels or without labels, helping you to a decision which video to be used for training or direct tracking.
+
+![api1](demos/api_1.png)
+
+#### The training page
+Then click the start training to be redirected to the training page where you an specify which model (arch, lr, epoch_num, batch_size etc.) to be trained on and which video.
+
+![api1](demos/api_2.png)
