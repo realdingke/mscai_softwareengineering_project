@@ -66,7 +66,6 @@ Then entering the container will automatically bring you to the program's root:
 The entire pipeline is designed to be able to run via two approaches: traditional CLI approach or the more user-friendly API.
 - - - -
 #### Below are instructions for running the pipeline via a CLI.
-- - - -
 
 - [x] CLI approach
 - [ ] API approach
@@ -115,7 +114,6 @@ This example code will run tracking with a pretrained model on specified video. 
 
 - - - -
 #### Below are instructions for running the pipeline via a API.
-- - - -
 
 - [ ] CLI approach
 - [x] API approach
