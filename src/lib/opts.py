@@ -360,7 +360,7 @@ class opts(object):
             "--project",
             type=str,
             nargs='?',
-            default='eec20d90-c014-4cd4-92ea-72341c3a1ab5',
+            default=' ',
             help="User input the project ID",
         )
 
@@ -368,7 +368,7 @@ class opts(object):
             "--api",
             type=str,
             nargs='?',
-            default='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ',
+            default=' ',
             help="User input the API key",
         )
 
