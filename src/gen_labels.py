@@ -245,8 +245,8 @@ def gen_clsid_info(client, data_root):
 
 
 # if __name__ == '__main__':
-#     project_id = 'eec20d90-c014-4cd4-92ea-72341c3a1ab5'
-#     api_key = 'T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ'
+#     project_id = opt.project
+#     api_key = opt.api
 #     obj_type_dict = {
 #         'bus': 4,
 #         'car': 0,
