@@ -5,10 +5,13 @@ The project essentially rests upon ifzhang's fundamental approach of FairMOT (Gi
 
 ### Some demos/highlights
 Highlights on traffic datasets are below:
-![Highway traffic](demos/Highway_traffic.gif)
+![Highway traffic](demos/Heavy_traffic (1).gif)
+![Highway traffic1](demos/Highway_traffic.gif)
+![Highway traffic3](demos/Highway_traffic_2.gif)
+![Highway traffic2](demos/Light_traffic (1).gif)
 
 Highlights on visdrone datasets are below:
-![Cattle](demos/cattle.gif)
+![Cattle](demos/cattle (1).gif)
 
 ### Overall structure of the pipeline
 ![pipeline structure overview](demos/pipeline_structure_overview.jpg)
