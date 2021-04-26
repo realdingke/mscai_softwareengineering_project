@@ -5,16 +5,13 @@ The project essentially rests upon ifzhang's fundamental approach of FairMOT (Gi
 
 ### Some demos/highlights
 Highlights on traffic datasets are below:
-![Highway traffic](demos/Heavy_traffic (1).gif)
-![Highway traffic1](demos/Highway_traffic.gif)
-![Highway traffic3](demos/Highway_traffic_2.gif)
-![Highway traffic2](demos/Light_traffic (1).gif)
+![Highway traffic](demos/1.gif)
+![Highway traffic1](demos/2.gif)
+![Highway traffic3](demos/3.gif)
+![Highway traffic2](demos/4.gif)
 
 Highlights on visdrone datasets are below:
-![Cattle](demos/cattle (1).gif)
-
-### Overall structure of the pipeline
-![pipeline structure overview](demos/pipeline_structure_overview.jpg)
+![Cattle](demos/5.gif)
 
 
 
@@ -74,6 +71,9 @@ The entire pipeline is designed to be able to run via two approaches: traditiona
 - [x] CLI approach
 - [ ] API approach
 
+#### Overall structure of the pipeline flow using the CLI
+![pipeline structure overview](demos/pipeline_flow.png)
+
 
 #### Check and understand the dataset
 The entry point is located inside the `/src` folder which also corresponds to the default root directory of the program.
@@ -120,4 +120,13 @@ This example code will run tracking with a pretrained model on specified video. 
 - [ ] CLI approach
 - [x] API approach
 
+#### Overall structure of the pipeline flow using the API
+Check the below the flow of the API to have a general idea of how to use it.
+![pipeline structure overview](demos/api_flow.png)
 
+#### Run the API locally
+First cd to the root folder, then you can either open up a cmd window and run the below command to enter the API's main page endpoint:
+    
+    ./start.sh
+
+Or you can simply double click on the start.sh shell file and run it. You will then end up in the main page.
