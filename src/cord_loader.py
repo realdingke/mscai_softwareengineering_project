@@ -66,7 +66,7 @@ def get_cls_info(root='/content/drive/MyDrive/car_data_MCMOT/images/train/'):
     return cls2id_dct, id2cls_dct_new
 
 
-def gen_obj_json(root='/content/drive/MyDrive/car_data_MCMOT/', client=load_cord_data()):
+def gen_obj_json(client, root='/content/drive/MyDrive/car_data_MCMOT/'):
     project = client.get_project()
     pattern = '(?<=\w)\s(?=\w)'
     obj_jsons_list = []
