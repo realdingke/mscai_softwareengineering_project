@@ -34,13 +34,13 @@
 					"formdata": [
 						{
 							"key": "pid",
-							"value": "235aa1ec-8d5e-4253-b673-1386af826fae",
+							"value": "",
 							"description": "Project id ",
 							"type": "text"
 						},
 						{
 							"key": "api",
-							"value": "vV_rHH11febK3F2ivQYO_qzlLO9nNTCPxaGblNrfJzg",
+							"value": "",
 							"description": "API key",
 							"type": "text"
 						}
