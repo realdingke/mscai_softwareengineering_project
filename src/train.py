@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 import torch
 
-# my_visible_devs = '1'  # '0, 3'  # 设置可运行GPU编号
+# my_visible_devs = '1'  # '0, 3'  # Set the number of runnable GPUs
 # os.environ['CUDA_VISIBLE_DEVICES'] = my_visible_devs
 # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 import pickle
