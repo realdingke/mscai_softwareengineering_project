@@ -70,7 +70,7 @@ def main(opt):
         cord_loader.mkdirs(data_path)
         seqs = cord_loader.gen_seq_name_list(client)
 
-        obj_jsons_list = cord_loader.gen_obj_json(client=client, data_path)
+        obj_jsons_list = cord_loader.gen_obj_json(client=client, root=data_path)
         preprocess.download_mp4(data_path, seqs)
         empty_seqs = cord_loader.judge_video_info(obj_jsons_list)
         seqs_dict = {'labeled_seqs': [seq for seq in seqs if seq not in empty_seqs],
