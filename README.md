@@ -89,7 +89,7 @@ Should the user choose to go through the full length of our pipeline, that is to
 
     python3 entry_point.py --train_track --project [project_id] --api [api_key]
 
-Using the `--train_track` flag will move onto the pipeline branch where a new model is trained with architecture, learning rate, epoch number, batch size etc. of user's choosing. Again you still need to manually enter the project id and api key to specify the dataset. Note by default this will train on all video with labels, should the user want to train only on certain video use `--ds` flag to specify the video names(this flag has action "append" meaning it can take multiple arguments in a row).
+Using the `--train_track` flag will move onto the pipeline branch where a new model is trained with architecture, learning rate, epoch number, batch size etc. of user's choosing. Again you still need to manually enter the project id and api key to specify the dataset. Note by default this will train on all video with labels, should the user want to train only on certain video use `--ds` flag to specify the video names(this flag has action "append" meaning it can take multiple arguments in a row). If the user intends to split the datasets into training and testing datasets, use `--split_perc` flag to specificy each video's train split ratio (The default setting of the train split ratio for all videos is 0.8 which is designed for the model selection part, if the user doesn't want to split, `--split_perc` should be 1 for all the videos). `--rand_split` flag would specify whether the training sequences would be randomly chosen.
 
 Then start training by running the `train.py` under `/src`, an example would be:
 
@@ -103,6 +103,14 @@ After the trained model is saved, should the user want to track video with this 
 
 The `--vs` flag will specify the name of the video you want to track on; `--specify_model` flag will specify the model to be used for tracking, `--arch` will specify the architecture of that model (note here the necessity of calling `--arch` has been removed as now the pipeline can automatically identify the model architecture from the model name specified). Finally the `--visual` flag will write the tracking results (bounding boxes at each frame) onto the Cord visualizer.
 
+#### Model Selection
+After the trained model is saved, the user could track the testing dataset and generate the statistical evaluation if the dataset has been split. The user could select a better model based on the statistical evaluation. 
+
+Start tracking by running the `mctrack.py` under `/src`, an example would be:
+    
+    python3 mctrack.py --load_model /content/mscai_softwareengineering_project/exp/mot/test_model_1/model_last.pth --exp_name "test_model_1" --output_format 'video'
+
+The `--exp_name` will specify the savename of the final evaluation result and the output videos; `--load_model` will specify the absolute path of the model to be used for tracking. `--output_format` will specify the output format, the default format is .txt file.
 
 #### Direct tracking
 Should the user wants to directly track using a pretrained model or previously-trained model, similar to above, under `/src` (root dir) first run:
