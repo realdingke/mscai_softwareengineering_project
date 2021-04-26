@@ -11,120 +11,6 @@ from lib.opts import opts
 import sys
 
 
-# def _init_parser():
-#     """
-#     Parser for command line arguments for the program
-#     """
-#
-#     parser = argparse.ArgumentParser(
-#         description="""This helps run the parser functionalities for training a new model
-#                     """,
-#         allow_abbrev=False,
-#     )
-#
-#     parser.add_argument(
-#         "-t",
-#         "--test",
-#         action="store_true",
-#         help="test the whole parser function",
-#     )
-#
-#     parser.add_argument(
-#         "--track",
-#         action="store_true",
-#         help="save the video paths for later tracking",
-#     )
-#
-#     parser.add_argument(
-#         "--load_api",
-#         action="store_true",
-#         help="test the whole parser function",
-#     )
-#
-#     parser.add_argument(
-#         "--gen_info",
-#         action="store_true",
-#         help="print out the root path and basic project info",
-#     )
-#
-#     parser.add_argument(
-#         "--project",
-#         type=str,
-#         nargs='?',
-#         default='eec20d90-c014-4cd4-92ea-72341c3a1ab5',
-#         help="User input the project ID",
-#     )
-#
-#     parser.add_argument(
-#         "--api",
-#         type=str,
-#         nargs='?',
-#         default='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ',
-#         help="User input the API key",
-#     )
-#
-#     #    parser.add_argument(
-#     #        "--data_root",
-#     #        type=str,
-#     #        nargs='?',
-#     #        default='/data/',
-#     #        help="User input the root directory for storing data",
-#     #    )
-#
-#     parser.add_argument(
-#         "-ds",
-#         "--dataset_selection",
-#         type=str,
-#         action="append",
-#         default=[],
-#         help="User defines the datasets to be used",
-#     )
-#
-#     parser.add_argument(
-#         "-vs",
-#         "--tracking_video_selection",
-#         type=str,
-#         action="append",
-#         default=[],
-#         help="User defines the videos to be directly tracked",
-#     )
-#
-#     parser.add_argument(
-#         "--json_name",
-#         type=str,
-#         nargs='?',
-#         default='user_input',
-#         help="User input the name for training information json file",
-#     )
-#
-#     parser.add_argument(
-#         "-sp",
-#         "--split_perc",
-#         type=float,
-#         nargs='+',
-#         action="append",
-#         default=[],
-#         help="user input split percentage(0-1)",
-#     )
-#
-#     parser.add_argument(
-#         "--rseed",
-#         type=int,
-#         nargs='?',
-#         default=10,
-#         help="User input the random seed for the splitting of dataset",
-#     )
-#
-#     parser.add_argument(
-#         "--rand_split",
-#         action="store_true",
-#         help="Random split the dataset by specific split_perc"
-#     )
-#
-#     args = parser.parse_args()
-#
-#     return args
-
 
 def main(opt):
     """
@@ -159,18 +45,6 @@ def main(opt):
                 '1KAn5u6nKRJGhDJBZA_O8hWaaIEh63yXN',
                 pretrained_model_path + '/opt.txt')
 
-#         cattle_model_path = osp.join(paths.ROOT_PATH + '/../exp/mot/cattle_dla_pretrained')
-#         if not os.path.exists(cattle_model_path):
-#             os.makedirs(cattle_model_path)
-#         if not osp.exists(cattle_model_path + '/model_last.pth'):
-#             download_model.download_file_from_google_drive(
-#                 '10ekRqMiqY2HYqRsca9TD06LyzF7ik4f8',
-#                 cattle_model_path + '/model_last.pth')
-
-#         if not osp.exists(cattle_model_path + '/opt.txt'):
-#             download_model.download_file_from_google_drive(
-#                 '1-LsPdainXT6au7Nm0LEAJ3_KZyaV9nvH',
-#                 cattle_model_path + '/opt.txt')
 
         # check pretrained model
         models_name = [direc for direc in os.listdir(paths.MODEL_DIR_PATH)]
