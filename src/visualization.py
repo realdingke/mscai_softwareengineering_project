@@ -178,24 +178,12 @@ def visualization(opt, seq, output_root=None):
     with open(paths.PATHS_OBJ_PATH, 'rb') as f:
         paths_loader = pickle.load(f)
 
-        # gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
-        # project_id = opt.project
-        # api_key = opt.api
-        # creator_email = opt.email
-        root_path = paths_loader.TRAIN_DATA_PATH
-        # results_paths = paths_loader.RESULTS_PATHS
-        # client = load_cord_data(project_id, api_key)
-        # for results_path in results_paths:
-        #     results = _read_det_results(results_path)
-        #     _upload_results(client, results, root_path, creator_email, gmt_format)
-
-        project_id = '235aa1ec-8d5e-4253-b673-1386af826fae'  # Project ID of drone
-        api_key = 'vV_rHH11febK3F2ivQYO_qzlLO9nNTCPxaGblNrfJzg'
-        # result_path = '/content/drive/MyDrive/cattle_data/images/' + \
-        #               'results/cattle_dla_20/Video_of_cattle_1.mp4.txt'
-        result_path = osp.join(output_root, 'results.txt')
-        creator_email = 'grouproject851@gmail.com'
         gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
+        project_id = opt.project
+        api_key = opt.api
+        creator_email = opt.email
+        root_path = paths_loader.TRAIN_DATA_PATH
+        result_path = osp.join(output_root, 'results.txt')
         client = load_cord_data(project_id, api_key)
         results = _read_det_results(result_path)
         _upload_results(client, results, root_path, creator_email, gmt_format, restore=False)
@@ -205,23 +193,12 @@ def restore_gt(opt, seq, output_root=None):
         paths_loader = pickle.load(f)
         
         gt_path = osp.join(paths_loader.TRAIN_DATA_PATH, seq, 'gt', 'gt.txt')
-        # gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
-        # project_id = opt.project
-        # api_key = opt.api
-        # creator_email = opt.email
-        root_path = paths_loader.TRAIN_DATA_PATH
-        # results_paths = paths_loader.RESULTS_PATHS
-        # client = load_cord_data(project_id, api_key)
-        # for results_path in results_paths:
-        #     results = _read_det_results(results_path)
-        #     _upload_results(client, results, root_path, creator_email, gmt_format)
-
-        project_id = '235aa1ec-8d5e-4253-b673-1386af826fae'  # Project ID of drone
-        api_key = 'vV_rHH11febK3F2ivQYO_qzlLO9nNTCPxaGblNrfJzg'
-        # result_path = '/content/drive/MyDrive/cattle_data/images/' + \
-        #               'results/cattle_dla_20/Video_of_cattle_1.mp4.txt'
-        creator_email = 'grouproject851@gmail.com'
         gmt_format = '%a, %d %b %Y %H:%M:%S UTC'
+        project_id = opt.project
+        api_key = opt.api
+        creator_email = opt.email
+        root_path = paths_loader.TRAIN_DATA_PATH
+        creator_email = 'grouproject851@gmail.com'
         client = load_cord_data(project_id, api_key)
         gts = _read_det_results(gt_path)
         _upload_results(client, gts, root_path, creator_email, gmt_format, restore=True)

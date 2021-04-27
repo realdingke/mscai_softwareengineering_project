@@ -16,8 +16,7 @@ def mkdirs(d):
         os.makedirs(d)
 
 
-def load_cord_data(project_id='eec20d90-c014-4cd4-92ea-72341c3a1ab5',
-                   api_key='T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ'):
+def load_cord_data(project_id, api_key):
     try:
         client = CordClient.initialise(
             project_id,  # Project ID of car
@@ -67,7 +66,7 @@ def get_cls_info(root='/content/drive/MyDrive/car_data_MCMOT/images/train/'):
     return cls2id_dct, id2cls_dct_new
 
 
-def gen_obj_json(root='/content/drive/MyDrive/car_data_MCMOT/', client=load_cord_data()):
+def gen_obj_json(client, root='/content/drive/MyDrive/car_data_MCMOT/'):
     project = client.get_project()
     pattern = '(?<=\w)\s(?=\w)'
     obj_jsons_list = []

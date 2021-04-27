@@ -63,7 +63,8 @@ def gen_gt_information(client, data_root):
                 gt_list.append(gt_array)
         gt_list = np.array(gt_list)
         try:
-            idx = np.lexsort(gt_list.T[:2, :])  # 优先按照track id排序(对视频帧进行排序, 而后对轨迹ID进行排序)
+            # Prioritize sorting by track id (sort the video frames first, and then sort the track ID)
+            idx = np.lexsort(gt_list.T[:2, :])  
         except IndexError:
             seq_w_nolabel.append(seqs_str)
             break
@@ -135,7 +136,7 @@ def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
         seq_height = int(seq_info[seq_info.find('imHeight=') + 9:seq_info.find('\nimExt')])
         gt_file = np.loadtxt(gt_file_path, dtype=np.float64, delimiter=',')
 
-        # 优先按照track id排序(对视频帧进行排序, 而后对轨迹ID进行排序)
+        # Prioritize sorting by track id (sort the video frames first, and then sort the track ID)
         idx = np.lexsort(gt_file.T[:2, :])
 
         gt_file = gt_file[idx, :]
@@ -152,17 +153,18 @@ def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
             fid = int(fid)
             tid = int(tid)
 
-            # 判断是否是同一个track, 记录上一个track和当前track
-            if not tid == tid_last[cls] or idx == 0:  # not 的优先级比 == 高
+            # Determine whether it is the same track, record the previous track and the current track
+            if not tid == tid_last[cls] or idx == 0:  # not has a higher priority than ==
                 tid_curr[cls] += 1
                 tid_last[cls] = tid
 
-            # bbox中心点坐标
+            # center point coordinates of bbox
             x += w / 2
             y += h / 2
 
-            # 网label中写入track id, bbox中心点坐标和宽高(归一化到0~1)
-            # 第一列的0是默认只对一种类别进行多目标检测跟踪(0是类别)
+            # Write the track id, bbox center point coordinates and width and height to the label (normalized to 0~1)
+            # The 0 in the first column is only one category for multi-target detection and tracking by default 
+            # (0 is the category)
             label_str = '{:d} {:d} {:.6f} {:.6f} {:.6f} {:.6f}\n'.format(
                 int(cls),
                 int(tid_curr[cls]),
@@ -178,7 +180,7 @@ def gen_label_files(seq_names, data_path, save_path, cls2id_dct):
                 '{:06d}.txt'.format(int(fid)),
             )
 
-            with open(label_fpath, 'a') as f:  # 以追加的方式添加每一帧的label
+            with open(label_fpath, 'a') as f:  # Add the label of each frame in an append
                 f.write(label_str)
 
                 
@@ -243,8 +245,8 @@ def gen_clsid_info(client, data_root):
 
 
 # if __name__ == '__main__':
-#     project_id = 'eec20d90-c014-4cd4-92ea-72341c3a1ab5'
-#     api_key = 'T7zAcCv2uvgANe4JhSPDePLMTTf4jN-hYpXu-XdMXaQ'
+#     project_id = opt.project
+#     api_key = opt.api
 #     obj_type_dict = {
 #         'bus': 4,
 #         'car': 0,

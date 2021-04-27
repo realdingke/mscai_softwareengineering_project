@@ -1,0 +1,462 @@
+{
+	"info": {
+		"_postman_id": "38323b9b-6819-404e-ae07-343dd33d02a8",
+		"name": "Group Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Main",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{google cloud}}:5000/",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gen_info",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "pid",
+							"value": "",
+							"description": "Project id ",
+							"type": "text"
+						},
+						{
+							"key": "api",
+							"value": "",
+							"description": "API key",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{google cloud}}:5000/login",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Train_html",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{google cloud}}:5000/train_html",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						"train_html"
+					]
+				},
+				"description": "go to train main page"
+			},
+			"response": []
+		},
+		{
+			"name": "Train",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "train_seq",
+							"value": "Video_of_cattle_1.mp4",
+							"description": "Please type in the trainable videos you see in train_html",
+							"type": "text"
+						},
+						{
+							"key": "train_seq",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "model_type",
+							"value": "dla_34",
+							"description": "Plesase type in the type of model you want to train with",
+							"type": "text"
+						},
+						{
+							"key": "batch",
+							"value": "3",
+							"description": "Please type in the training batch size",
+							"type": "text"
+						},
+						{
+							"key": "lr",
+							"value": "1e-5",
+							"description": "Please type in the learning rate",
+							"type": "text"
+						},
+						{
+							"key": "epoch",
+							"value": "5",
+							"description": "Please type in the number of training epoch",
+							"type": "text"
+						},
+						{
+							"key": "rand_split",
+							"value": "True",
+							"description": "Please choose whther to randomly split the test dataset",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "rand_split",
+							"value": "False",
+							"type": "text"
+						},
+						{
+							"key": "split_perc",
+							"value": "0.8",
+							"description": "Please type in the train test spli ratio",
+							"type": "text"
+						},
+						{
+							"key": "rseed",
+							"value": "10",
+							"description": "Please type in the random seed for random split",
+							"type": "text"
+						},
+						{
+							"key": "exp_id",
+							"value": "default",
+							"description": "Please type in the experiment name(name the trained model)",
+							"type": "text"
+						},
+						{
+							"key": "lr_step",
+							"value": "10, 20",
+							"description": "Please type in the epoch number when the learning rate drops",
+							"type": "text"
+						},
+						{
+							"key": "add_test",
+							"value": "True",
+							"description": "Please choose whether you want to see the validation loss for training",
+							"type": "text"
+						},
+						{
+							"key": "add_test",
+							"value": "False",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "plot_loss",
+							"value": "True",
+							"description": "Please choose whether you want to plot the training epoch time",
+							"type": "text"
+						},
+						{
+							"key": "plot_loss",
+							"value": "False",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "save_time",
+							"value": "True",
+							"description": "Please choose whether you want to save the training time",
+							"type": "text"
+						},
+						{
+							"key": "save_time",
+							"value": "False",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{google cloud}}:5000/train",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						"train"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mctrack_html",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{google cloud}}:5000/mctrack_print",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						"mctrack_print"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mctrack",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "output_format",
+							"value": "text",
+							"description": "Please choose a output format",
+							"type": "text"
+						},
+						{
+							"key": "output_format",
+							"value": "video",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "track_time",
+							"value": "True",
+							"description": "Please choose whether to print the total tracking time",
+							"type": "text"
+						},
+						{
+							"key": "track_time",
+							"value": "False",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{google cloud}}:5000/mctrack",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						"mctrack"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mctrack_csv_result",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Track_html",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://{{google cloud}}:5000/track_html",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						"track_html"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Track",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "videos",
+							"value": "Video_of_cattle_1.mp4",
+							"description": "Please type in the trackable videos you see in track_html",
+							"type": "text"
+						},
+						{
+							"key": "videos",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "output_format",
+							"value": "text",
+							"description": "Please choose an output format",
+							"type": "text"
+						},
+						{
+							"key": "output_format",
+							"value": "video",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "model_type",
+							"value": "car_hrnet_pretrained",
+							"description": "Please type in the usable models you see in track_html",
+							"type": "text"
+						},
+						{
+							"key": "visual",
+							"value": "True",
+							"description": "Please Choose True or False for whether conduct visualization",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "visual",
+							"value": "False",
+							"type": "text"
+						},
+						{
+							"key": "overwrite",
+							"value": "True",
+							"description": "Please Choose True or False for whether overwrite the gt labels on cord platform",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "overwrite",
+							"value": "False",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{google cloud}}:5000/track",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						"track"
+					]
+				},
+				"description": "Tracking using capable models, return the tracked video with visualization results on cord"
+			},
+			"response": []
+		},
+		{
+			"name": "clean",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{google cloud}}:5000/clean",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						"clean"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "restore",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{google cloud}}:5000/restore",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						"restore"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "clean_all",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{google cloud}}:5000/clean_all",
+					"protocol": "http",
+					"host": [
+						"{{google cloud}}"
+					],
+					"port": "5000",
+					"path": [
+						"clean_all"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "google cloud",
+			"value": "34.105.199.239"
+		}
+	]
+}

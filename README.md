@@ -5,13 +5,13 @@ The project essentially rests upon ifzhang's fundamental approach of FairMOT (Gi
 
 ### Some demos/highlights
 Highlights on traffic datasets are below:
-![Highway traffic](demos/Highway_traffic.gif)
+![Highway traffic](demos/1.gif)
+![Highway traffic1](demos/2.gif)
+![Highway traffic3](demos/3.gif)
+![Highway traffic2](demos/4.gif)
 
 Highlights on visdrone datasets are below:
-![Cattle](demos/cattle.gif)
-
-### Overall structure of the pipeline
-![pipeline structure overview](demos/pipeline_structure_overview.jpg)
+![Cattle](demos/5.gif)
 
 
 
@@ -66,10 +66,12 @@ Then entering the container will automatically bring you to the program's root:
 The entire pipeline is designed to be able to run via two approaches: traditional CLI approach or the more user-friendly API.
 - - - -
 #### Below are instructions for running the pipeline via a CLI.
-- - - -
 
 - [x] CLI approach
 - [ ] API approach
+
+#### Overall structure of the pipeline flow using the CLI
+![pipeline structure overview](demos/pipeline_flow.png)
 
 
 #### Check and understand the dataset
@@ -87,7 +89,7 @@ Should the user choose to go through the full length of our pipeline, that is to
 
     python3 entry_point.py --train_track --project [project_id] --api [api_key]
 
-Using the `--train_track` flag will move onto the pipeline branch where a new model is trained with architecture, learning rate, epoch number, batch size etc. of user's choosing. Again you still need to manually enter the project id and api key to specify the dataset. Note by default this will train on all video with labels, should the user want to train only on certain video use `--ds` flag to specify the video names(this flag has action "append" meaning it can take multiple arguments in a row).
+Using the `--train_track` flag will move onto the pipeline branch where a new model is trained with architecture, learning rate, epoch number, batch size etc. of user's choosing. Again you still need to manually enter the project id and api key to specify the dataset. Note by default this will train on all video with labels, should the user want to train only on certain video use `--ds` flag to specify the video names(this flag has action "append" meaning it can take multiple arguments in a row). If the user intends to split the datasets into training and testing datasets, use `--split_perc` flag to specificy each video's train split ratio (The default setting of the train split ratio for all videos is 0.8 which is designed for the model selection part, if the user doesn't want to split, `--split_perc` should be 1 for all the videos). `--rand_split` flag would specify whether the training sequences would be randomly chosen.
 
 Then start training by running the `train.py` under `/src`, an example would be:
 
@@ -101,6 +103,14 @@ After the trained model is saved, should the user want to track video with this 
 
 The `--vs` flag will specify the name of the video you want to track on; `--specify_model` flag will specify the model to be used for tracking, `--arch` will specify the architecture of that model (note here the necessity of calling `--arch` has been removed as now the pipeline can automatically identify the model architecture from the model name specified). Finally the `--visual` flag will write the tracking results (bounding boxes at each frame) onto the Cord visualizer.
 
+#### Model Selection
+After the trained model is saved, the user could track the testing dataset and generate the statistical evaluation if the dataset has been split. The user could select a better model based on the statistical evaluation. 
+
+Start tracking by running the `mctrack.py` under `/src`, an example would be:
+    
+    python3 mctrack.py --load_model /content/mscai_softwareengineering_project/exp/mot/test_model_1/model_last.pth --exp_name "test_model_1" --output_format 'video'
+
+The `--exp_name` will specify the savename of the final evaluation result and the output videos; `--load_model` will specify the absolute path of the model to be used for tracking. `--output_format` will specify the output format, the default format is .txt file.
 
 #### Direct tracking
 Should the user wants to directly track using a pretrained model or previously-trained model, similar to above, under `/src` (root dir) first run:
@@ -112,9 +122,27 @@ This example code will run tracking with a pretrained model on specified video. 
 
 - - - -
 #### Below are instructions for running the pipeline via a API.
-- - - -
 
 - [ ] CLI approach
 - [x] API approach
 
+#### Overall structure of the pipeline flow using the API
+Check the below the flow of the API to have a general idea of how to use it.
+![pipeline structure overview](demos/api_flow.png)
 
+#### Run the API locally
+First cd to the root folder, then you can either open up a cmd window and run the below command to enter the API's main page endpoint:
+    
+    ./start.sh
+
+Or you can simply double click on the start.sh shell file and run it. You will still then end up in the main page.
+
+#### The main page
+The main page you should arrive at is shown below, type in the Project ID and API key provided by Cord and click generate project information, you will be redirected to a page conatining vital project dataset info i.e. videos with labels or without labels, helping you to a decision which video to be used for training or direct tracking.
+
+![api1](demos/api_1.png)
+
+#### The training page
+Then click the start training to be redirected to the training page where you an specify which model (arch, lr, epoch_num, batch_size etc.) to be trained on and which video.
+
+![api1](demos/api_2.png)

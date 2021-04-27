@@ -202,17 +202,17 @@ def eval_imgs_output_dets(opt,
                                          fps=1.0 / max(1e-5, timer.average_time))
 
         if frame_id > 0:
-            # 是否显示中间结果
+            # Whether to show intermediate results
             if show_image:
                 cv2.imshow('online_im', online_im)
             if save_dir is not None:
                 cv2.imwrite(os.path.join(save_dir, '{:05d}.jpg'.format(frame_id)), online_im)
 
-        # ----- 格式化并输出detection结果(txt)到指定目录
-        # 格式化
+        # ----- Format and output the detection result (txt) to the specified directory
+        # Format
         dets_list = format_dets_dict2dets_list(dets_dict, w=img_0.shape[1], h=img_0.shape[0])
 
-        # 输出label(txt)到指定目录
+        # Output label (txt) to the specified directory
         out_img_name = os.path.split(path)[-1]
         out_f_name = out_img_name.replace('.jpg', '.txt')
         out_f_path = out_dir + '/' + out_f_name
@@ -222,14 +222,13 @@ def eval_imgs_output_dets(opt,
                 w_h.write('%d %f %f %f %f %f\n' % (det[0], det[1], det[2], det[3], det[4], det[5]))
         print('{} written'.format(out_f_path))
 
-        # 处理完一帧, 更新frame_id
+        # After processing a frame, update frame_id
         frame_id += 1
     print('Total {:d} detection result output.\n'.format(frame_id))
 
-    # 写入最终结果save results
+    # save results
     write_results_dict(result_f_name, results_dict, data_type)
 
-    # 返回结果
     return frame_id, timer.average_time, timer.calls
 
 

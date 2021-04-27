@@ -29,7 +29,7 @@ def _gen_data_path_half(save_path,
                 for i in range(len_half):
                     image = images[i]  # 23 = image.find(mot_path[:5])
                     if osp.isfile(labels[i]):
-                        print(image[23:], file=f)  # 23 需要自动化?
+                        print(image[23:], file=f)  
     f.close()
 
 
