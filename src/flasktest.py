@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, send_from_directory, redirect, url_for, request, render_template
 import os
 import os.path as osp
+import sys
+import signal
 import pickle
 import re
 import json
@@ -11,6 +13,11 @@ from lib.opts import opts
 
 app = Flask(__name__)
 opt = opts().init()
+
+# ctrl-c keyboard interrupt
+def handler(signal, frame):
+  print('CTRL-C pressed!')
+  sys.exit(0)
 
 
 # @app.route("/")
@@ -299,4 +306,5 @@ def clean_all():
 
 
 if __name__ == '__main__':
+    signal.signal(signal.SIGINT, handler)
     app.run(host='0.0.0.0')
