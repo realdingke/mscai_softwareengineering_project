@@ -47,8 +47,10 @@ def beautify_results_table(df):
     df.columns =['Video Names'] + df.columns[1:].tolist()
     df['Video Names'] = video_names
     
+    #drop rows with no objs
+    df = df[(df['num_unique_objects'] != 0)]
+    
     return df
-
 
 def xlsx_to_html(input_path, output_path, file_name):
     xlsx_path = os.path.join(input_path, file_name)
