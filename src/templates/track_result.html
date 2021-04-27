@@ -38,10 +38,11 @@
 <body>
     <h2>Tracking results</h2>
     {% for video, values in results.items() %}
-        <td>{{ video }}:</td>
+        <p><td>{{ video }}:</td>
         {% for key, value in values.items() %}
             <td>{{ key }}:</td><td>{{ value }}</td>
         {% endfor %}
+        </p>
     {% endfor %}
     <h3>Next step:</h3>
     <p><a class="button" href="/train_html">click here to start new tracking</a></p>

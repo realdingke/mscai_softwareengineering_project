@@ -38,23 +38,27 @@
 <body>
     <h2>Project basic information</h2>
     <h4>Usable models</h4>
-    {% for model in results["models_name"] %}
+    <p>{% for model in results["models_name"] %}
         <td>{{ model }}</td>
     {% endfor %}
+    </p>
     <h4>Root path</h4>
-    <td>{{ results["root_path"] }}</td>
+    <p>{{ results["root_path"] }}</p>
     <h4>Videos in this project</h4>
-    {% for seq_all in results["seq_info"] %}
+    <p>{% for seq_all in results["seq_info"] %}
         <td>{{ seq_all }}</td>
     {% endfor %}
+    </p>
     <h4>Videos have ground truth labels</h4>
-    {% for seq_with in results["seq_with_label"] %}
+    <p>{% for seq_with in results["seq_with_label"] %}
         <td>{{ seq_with }}</td>
     {% endfor %}
+    </p>
     <h4>Videos without ground truth labels</h4>
-    {% for seq_without in results["seq_without_label"] %}
+    <p>{% for seq_without in results["seq_without_label"] %}
         <td>{{ seq_without }}</td>
     {% endfor %}
+    </p>
     <h3>Next step:</h3>
     <p><a class="button" href="/train_html">click here to start training</a></p>
     <p><a class="button" href="/track_html">click here to start tracking</a></p>

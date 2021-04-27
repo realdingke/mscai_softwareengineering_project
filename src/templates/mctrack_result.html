@@ -37,20 +37,22 @@
 </head>
 <body>
     <h2>Results</h2>
-    {% for seq, values in results_track['det_path'].items() %}
+    <p>{% for seq, values in results_track['det_path'].items() %}
         <td>{{ seq }}:</td><td>{{ values }}</td>
     {% endfor %}
+    </p>
     <h4>tracking total time:</h4><p>{{results_track['tracking_time']['total_time']}}</p>
 
-    {% for seq, values in results_track['tracking_time']['time_sequences'].items() %}
+    <p>{% for seq, values in results_track['tracking_time']['time_sequences'].items() %}
         <td>{{ seq }}:</td><td>{{ values }}</td>
     {% endfor %}
+    </p>
 
     <div class="if/else">
               {% if opt.save_video == True %}
-                {% for seq, values in results_track['video_path'].items() %}
+                <p>{% for seq, values in results_track['video_path'].items() %}
                     <td>{{ seq }}:</td><td>{{ values }}</td>
-                {% endfor %}
+                {% endfor %} </p>
               {% endif %}
               </div>
 <p><input type="button" value="Evaluation Results" onclick="window.open('/mctrack_evaluation/{{results_track["summary_path"]}}')"/></p>
