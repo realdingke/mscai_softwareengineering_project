@@ -31,10 +31,29 @@ import pandas as pd
 from lib.tracking_utils.utils import mkdir_if_missing
 from lib.opts import opts
 
+def beautify_results_table(df):
+    # fix missing headings
+    df = df.rename(columns = {'Unnamed: 0':'datasets'})
+    
+    # modify the original dataset column to house classname and add a new column for video name at front
+    # note video_names do not support '-' in the original seq_names 
+    video_names = [compound_name.split('-')[0] for compound_name in df['datasets']]
+    class_name = [compound_name.split('-')[1] for compound_name in df['datasets']]
+    
+    df['datasets'] = class_names
+    df = df.rename(columns = {'datasets':'Class Names'})
+    
+    df = df.reset_index()
+    df.columns =['Video Names'] + df.columns[1:].tolist()
+    df['Video Names'] = video_names
+    
+    return df.set_index('Video Names')
+
 
 def xlsx_to_html(input_path, output_path, file_name):
     xlsx_path = os.path.join(input_path, file_name)
     df = pd.read_excel(xlsx_path,engine='openpyxl')
+    df = beautify_results_table(df)
     csv_path = os.path.join(input_path, f'{file_name[:-5]}.csv')
     df.to_csv(csv_path, encoding='utf-8', index=False)
     csv_file = pd.read_csv(csv_path)
