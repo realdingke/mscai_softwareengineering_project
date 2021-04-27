@@ -36,9 +36,9 @@ def beautify_results_table(df):
     df = df.rename(columns = {'Unnamed: 0':'datasets'})
     
     # modify the original dataset column to house classname and add a new column for video name at front
-    # note video_names do not support '-' in the original seq_names 
+    # note video_names do not support '-' in the original seq_names
     video_names = [compound_name.split('-')[0] for compound_name in df['datasets']]
-    class_name = [compound_name.split('-')[1] for compound_name in df['datasets']]
+    class_names = [compound_name.split('-')[1] for compound_name in df['datasets'][:-1]] + ['OVERALL']
     
     df['datasets'] = class_names
     df = df.rename(columns = {'datasets':'Class Names'})
@@ -47,7 +47,7 @@ def beautify_results_table(df):
     df.columns =['Video Names'] + df.columns[1:].tolist()
     df['Video Names'] = video_names
     
-    return df.set_index('Video Names')
+    return df
 
 
 def xlsx_to_html(input_path, output_path, file_name):
