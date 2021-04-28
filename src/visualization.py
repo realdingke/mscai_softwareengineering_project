@@ -113,7 +113,7 @@ def _upload_results(opt,
             seqs_str = re.sub(pattern, '_', seqs_str)
         except:
             seqs_str = seqs_str
-        if seqs_str in seqs_name_dict['labeled_seqs']:
+        if seqs_str in seqs:
             if not opt.overwrite:
                 continue
         result_path = osp.join(output_roots[index], 'results.txt')
