@@ -265,7 +265,7 @@ def mctrack_main_process():
     return render_template("mctrack_result.html", opt=opt_track, results_track=results_dict_track)
 
 @app.route('/track', methods=['POST', 'PUT'])
-def track():
+def direct_track():
     with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'rb') as f:
         opt = pickle.load(f)
     opt.track = True
