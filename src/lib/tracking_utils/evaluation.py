@@ -242,7 +242,7 @@ class MCEvaluator(object):
 
     def get_summary(self, accs, names, metrics=('mota', 'num_switches', 'idp', 'idr', 'idf1', 'precision', 'recall')):
         names = copy.deepcopy(names)
-        names = [name + f"-{self.CLS_NAME_DCT[idx]}" for name in names for idx in range(len(self.CLS_NAME_DCT))]
+        names = [name.split('.')[0] + f"-{self.CLS_NAME_DCT[idx]}" for name in names for idx in range(len(self.CLS_NAME_DCT))]
         if metrics is None:
             metrics = mm.metrics.motchallenge_metrics
         metrics = copy.deepcopy(metrics)
