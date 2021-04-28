@@ -84,7 +84,8 @@ def _upload_results(opt,
                     root_path='/content/drive/MyDrive/cattle_data/images/train/',
                     creator_email='grouproject851@gmail.com',
                     gmt_format='%a, %d %b %Y %H:%M:%S UTC',
-                    restore=False):
+                    restore=False,
+                    clean=True):
     """"""
 
     id2cls_dct_path = osp.join(root_path, 'id2cls.json')
@@ -140,6 +141,9 @@ def _upload_results(opt,
         )
         deleted_frames = set()
         ####### for restore gt
+        if clean:
+            list(label['data_units'].values())[0]['labels'] = {}
+            list(label['data_units'].values())[0]['labels']['0'] = {'objects': [], 'classifications': []}
         if restore:
             for key in list(label['data_units'].values())[0]['labels'].keys():
                 list(label['data_units'].values())[0]['labels'][key] = {'objects': [], 'classifications': []}
@@ -198,7 +202,7 @@ def visualization(opt, seqs, output_roots=[]):
 #         result_path = osp.join(output_root, 'results.txt')
         client = load_cord_data(project_id, api_key)
 #         results = _read_det_results(result_path)
-        _upload_results(opt, client, seqs, output_roots, root_path, creator_email, gmt_format, restore=False)
+        _upload_results(opt, client, seqs, output_roots, root_path, creator_email, gmt_format, restore=False, clean=True)
         
 def restore_gt(opt, seq, output_root=None):
     with open(paths.PATHS_OBJ_PATH, 'rb') as f:
