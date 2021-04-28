@@ -114,8 +114,11 @@ def _upload_results(client,
             root_path, seqs_str,
             f"{seqs_str}_tid2objhash.json",
         )
-        with open(tid2objhash_dct_path, 'r') as f:
-            tid2objhash_dct = json.load(f)
+        try:
+            with open(tid2objhash_dct_path, 'r') as f:
+                tid2objhash_dct = json.load(f)
+        except:
+            tid2objhash_dct = {}
         seq_ini_file = osp.join(root_path, f"{seqs_str}", 'seqinfo.ini')
         seq_info = open(seq_ini_file).read()
         seq_width = int(
