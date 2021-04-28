@@ -117,6 +117,8 @@ def _upload_results(opt,
         if seqs_str in seqs:
             if not opt.overwrite:
                 continue
+            esle:
+                pass
         else:
             continue
         result_path = osp.join(output_roots[index], 'results.txt')
