@@ -235,9 +235,11 @@ def main(opt):
             opt.reid_cls_ids = id_str
             
         result_roots = []
+        seqs = []
 
         if len(opt.input_video) != 0:
             video_name = opt.input_video.split("/")[-1][:-4]
+            seqs.append(video_name)
             if opt.output_root == '../results':
                 opt.output_root = osp.join(opt.output_root, video_name)
                 result_roots.append(opt.output_root)
@@ -255,6 +257,7 @@ def main(opt):
                     opt.output_root = osp.join(opt.output_root, seq)
                     result_roots.append(opt.output_root)
                     seq_name = seq.split('.')[-2]
+                    seqs.append(seq)
                     output_video_path = opt.output_root + f'/{seq_name}_track.mp4'
                     if osp.exists(output_video_path):
                         os.remove(output_video_path)
@@ -265,6 +268,7 @@ def main(opt):
         else:
             for seq in opt.tracking_video_selection[0]:
                 if opt.output_root == '../results':
+                    seqs.append(seq)
                     opt.output_root = osp.join(opt.output_root, seq)
                     result_roots.append(opt.output_root)
                     seq_name = seq.split('.')[-2]
@@ -278,20 +282,20 @@ def main(opt):
 
 
         if opt.visual:
-            seqs_name_path = paths_loader.SEQS_NAME_PATH
-            print(paths_loader.SEQS_NAME_PATH)
-            with open(seqs_name_path, 'rb') as f:
-                seqs_name_dict = pickle.load(f)
-            if seqs_name_dict['empty_seqs'] is None:
-                seqs = seqs_name_dict['labeled_seqs']
-            else:
-                seqs = seqs_name_dict['empty_seqs'] + seqs_name_dict['labeled_seqs']
+#             seqs_name_path = paths_loader.SEQS_NAME_PATH
+#             print(paths_loader.SEQS_NAME_PATH)
+#             with open(seqs_name_path, 'rb') as f:
+#                 seqs_name_dict = pickle.load(f)
+#             if seqs_name_dict['empty_seqs'] is None:
+#                 seqs = seqs_name_dict['labeled_seqs']
+#             else:
+#                 seqs = seqs_name_dict['empty_seqs'] + seqs_name_dict['labeled_seqs']
            
 #             if seq in seqs_name_dict['labeled_seqs']:
                 # usr_input = bool(
                 #     input(f"Warning: Are you sure you want to overwrite the gt of {seq} in Cord? True/False"))
 #                 if opt.overwrite:
-            visualization.visualization(opt, seqs, output_roots=result_roots)
+            visualization.visualization(opt, seqs=seqs, output_roots=result_roots)
 #             else:
 #                 visualization.visualization(opt, output_root=output_roots)
     if opt.restore:
