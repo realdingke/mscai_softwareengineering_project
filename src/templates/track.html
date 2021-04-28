@@ -42,7 +42,7 @@
         enctype = "multipart/form-data">
          <p><label for="videos">Tracking videos:</label></p>
          <p>{% for seq in seqs %}
-             <input type="checkbox" id="videos" name="videos" value={{ seq }} />{{ seq }}
+             <input type="checkbox" id="videos" name="videos" value={{ seq }} checked={{ seq }} />{{ seq }}
          {% endfor %}</p>
          <p><label for="model_type">Model selection:</label></p>
          <p><select class="form-control" id="model_type" name="model_type">
