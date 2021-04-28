@@ -117,6 +117,8 @@ def _upload_results(opt,
         if seqs_str in seqs:
             if not opt.overwrite:
                 continue
+        else:
+            continue
         result_path = osp.join(output_roots[index], 'results.txt')
         index += 1
         results = _read_det_results(result_path)
