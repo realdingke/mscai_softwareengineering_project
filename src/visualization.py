@@ -77,8 +77,10 @@ def _gen_new_obj(tid,
     return data_dct
 
 
-def _upload_results(client,
-                    results,
+def _upload_results(opt,
+                    client,
+                    seqs, 
+                    output_roots,
                     root_path='/content/drive/MyDrive/cattle_data/images/train/',
                     creator_email='grouproject851@gmail.com',
                     gmt_format='%a, %d %b %Y %H:%M:%S UTC',
@@ -98,6 +100,7 @@ def _upload_results(client,
             hexcolor_code = gen_random_hexcolor()
         id2color_dict[clsid] = hexcolor_code
     project = client.get_project()
+    index = 0
     for label_uid in project.get_labels_list():
         try:
             label = client.get_label_row(label_uid)
@@ -110,6 +113,12 @@ def _upload_results(client,
             seqs_str = re.sub(pattern, '_', seqs_str)
         except:
             seqs_str = seqs_str
+        if seqs_str in seqs_name_dict['labeled_seqs']:
+            if not opt.overwrite:
+                continue
+        result_path = osp.join(output_roots[index], 'results.txt')
+        index += 1
+        results = _read_det_results(result_path)
         tid2objhash_dct_path = osp.join(
             root_path, seqs_str,
             f"{seqs_str}_tid2objhash.json",
@@ -177,7 +186,7 @@ def _upload_results(client,
         client.save_label_row(label_uid, updated)
 
 
-def visualization(opt, seq, output_root=None):
+def visualization(opt, seqs, output_roots=[]):
     with open(paths.PATHS_OBJ_PATH, 'rb') as f:
         paths_loader = pickle.load(f)
 
@@ -186,10 +195,10 @@ def visualization(opt, seq, output_root=None):
         api_key = opt.api
         creator_email = opt.email
         root_path = paths_loader.TRAIN_DATA_PATH
-        result_path = osp.join(output_root, 'results.txt')
+#         result_path = osp.join(output_root, 'results.txt')
         client = load_cord_data(project_id, api_key)
-        results = _read_det_results(result_path)
-        _upload_results(client, results, root_path, creator_email, gmt_format, restore=False)
+#         results = _read_det_results(result_path)
+        _upload_results(opt, client, seqs, output_roots, root_path, creator_email, gmt_format, restore=False)
         
 def restore_gt(opt, seq, output_root=None):
     with open(paths.PATHS_OBJ_PATH, 'rb') as f:
