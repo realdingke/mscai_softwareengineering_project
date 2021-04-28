@@ -233,11 +233,14 @@ def main(opt):
             cls_ids_ls = list(data.keys())
             id_str = ", ".join(cls_ids_ls)
             opt.reid_cls_ids = id_str
+            
+        result_roots = []
 
         if len(opt.input_video) != 0:
             video_name = opt.input_video.split("/")[-1][:-4]
             if opt.output_root == '../results':
                 opt.output_root = osp.join(opt.output_root, video_name)
+                result_roots.append(opt.output_root)
                 track_result = demo.run_demo(opt)
                 result_dict[video_name] = track_result
 
@@ -250,6 +253,7 @@ def main(opt):
                 empty_seqs_path = osp.join(paths_loader.TRAIN_DATA_PATH, seq, seq)
                 if opt.output_root == '../results':
                     opt.output_root = osp.join(opt.output_root, seq)
+                    result_roots.append(opt.output_root)
                     seq_name = seq.split('.')[-2]
                     output_video_path = opt.output_root + f'/{seq_name}_track.mp4'
                     if osp.exists(output_video_path):
@@ -262,6 +266,7 @@ def main(opt):
             for seq in opt.tracking_video_selection[0]:
                 if opt.output_root == '../results':
                     opt.output_root = osp.join(opt.output_root, seq)
+                    result_roots.append(opt.output_root)
                     seq_name = seq.split('.')[-2]
                     output_video_path = opt.output_root + f'/{seq_name}_track.mp4'
                     if osp.exists(output_video_path):
@@ -281,14 +286,14 @@ def main(opt):
                 seqs = seqs_name_dict['labeled_seqs']
             else:
                 seqs = seqs_name_dict['empty_seqs'] + seqs_name_dict['labeled_seqs']
-            for seq in seqs:
-                if seq in seqs_name_dict['labeled_seqs']:
-                    # usr_input = bool(
-                    #     input(f"Warning: Are you sure you want to overwrite the gt of {seq} in Cord? True/False"))
-                    if opt.overwrite:
-                        visualization.visualization(opt, seq, output_root=output_root)
-                else:
-                    visualization.visualization(opt, seq, output_root=output_root)
+           
+#             if seq in seqs_name_dict['labeled_seqs']:
+                # usr_input = bool(
+                #     input(f"Warning: Are you sure you want to overwrite the gt of {seq} in Cord? True/False"))
+#                 if opt.overwrite:
+            visualization.visualization(opt, seqs, output_root=output_roots)
+#             else:
+#                 visualization.visualization(opt, output_root=output_roots)
     if opt.restore:
         file_name_path = paths.PATHS_OBJ_PATH
         with open(file_name_path, 'rb') as f:
