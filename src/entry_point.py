@@ -291,7 +291,7 @@ def main(opt):
                 # usr_input = bool(
                 #     input(f"Warning: Are you sure you want to overwrite the gt of {seq} in Cord? True/False"))
 #                 if opt.overwrite:
-            visualization.visualization(opt, seqs, output_root=result_roots)
+            visualization.visualization(opt, seqs, output_roots=result_roots)
 #             else:
 #                 visualization.visualization(opt, output_root=output_roots)
     if opt.restore:
