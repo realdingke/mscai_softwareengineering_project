@@ -111,7 +111,7 @@ def train_track():
         opt = pickle.load(f)
     # Entry_point
     opt.train_track = True
-    train_seq = request.form.getlist('train_seq')
+    train_seq = request.args.getlist('train_seq')
     if len(train_seq) > 0:
         opt.dataset_selection = train_seq
     if request.values.get('rand_split') == 'True':
@@ -269,7 +269,7 @@ def mctrack_main_process():
         videos = request.form.getlist('videos')
         if len(videos) > 0:
             opt.tracking_video_selection = [videos]
-        output_format = request.values.get('output_format')
+        output_format = request.args.get('output_format')
         if output_format != '-- Choose --':
             opt.output_format = output_format
         model_type = request.values.get('model_type')
