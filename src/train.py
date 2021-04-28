@@ -197,7 +197,8 @@ def train(opt, opt_2=None):
 
     print('Setting up data...')
     Dataset = get_dataset(opt.dataset, opt.task, opt.multi_scale)  # if opt.task==mot -> JointDataset
-    f = open(opt.data_cfg)  # choose which dataset to train '../src/lib/cfg/mot15.json',
+    # f = open(opt.data_cfg)  # choose which dataset to train '../src/lib/cfg/mot15.json',
+    f = open(f"/home/user/src/lib/cfg/{opt.json_name}.json")
     data_config = json.load(f)
     trainset_paths = data_config['train']  # 训练集路径
     dataset_root = data_config['root']  # 数据集所在目录

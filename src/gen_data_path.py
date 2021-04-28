@@ -346,18 +346,18 @@ def generate_json(name,
         "root": f"{root_path}",
         "train":
             {
-                f"{name}": f"./data/{name}.train"
+                f"{name}": f"/home/user/src/data/{name}.train"
             },
         "test_emb":
             {
-                f"{name}": f"./data/{name}.emb"
+                f"{name}": f"/home/user/src/data/{name}.emb"
             },
         "test":
 #            {
 #                f"{name}": f"./data/{name}.val"
 #            }
             {
-                f"{name}": f"./data/{name}.test"
+                f"{name}": f"/home/user/src/data/{name}.test"
             }
     }
     with open(osp.join(cfg_path, f"{name}.json"), "w") as f:

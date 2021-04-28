@@ -4,13 +4,16 @@ import os.path as osp
 import pickle
 import re
 import json
-import entry_point, paths, train, mctrack
+from entry_point import main
+import paths
+from train import train
+from mctrack import track
 from paths import CLIENT_DATA_PATH
 from clean import clean_files_a
 from lib.opts import opts
 
 app = Flask(__name__)
-opt = opts().init()
+# opt = opts().init()
 
 
 # @app.route("/")
@@ -63,6 +66,7 @@ def mctrack_print():
 def mctrack_evaluation(result_name):
     return render_template(result_name)
 
+
 def exception_handler(func):
     def wrapper(*args, **kwargs):
         try:
@@ -80,19 +84,24 @@ def exception_handler(func):
 
 @app.route('/login', methods=['POST', 'PUT'])
 def login():
+    opt = opts().init()
     opt.gen_info = True
     if request.form['pid'] != '':
         opt.project = request.form['pid']
     if request.form['api'] != '':
         opt.api = request.form['api']
     # opt.email = request.form['email']
-    results_dict = entry_point.main(opt)
+    results_dict = main(opt)
     opt.gen_info = False
+    with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'wb') as f:
+        pickle.dump(opt, f)
     return render_template("gen_info.html", results=results_dict)
 
 
 @app.route('/train', methods=['POST', 'PUT'])
 def train_track():
+    with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'rb') as f:
+        opt = pickle.load(f)
     # Entry_point
     opt.train_track = True
     train_seq = request.form.getlist('train_seq')
@@ -109,10 +118,10 @@ def train_track():
         opt.split_perc = [[float(sp.strip()) for sp in split_perc.split()]]
     if request.form['name'] != '':
         opt.json_name = request.form['name']
-    results_dict_train_track = entry_point.main(opt)
+    results_dict_train_track = main(opt)
 
     # coped from train main function
-    
+
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # '0, 1'
     opt_train = opts().parse()
 
@@ -174,9 +183,11 @@ def train_track():
     # if request.form[] != '':
     #     opt_train.num_iters = request.form[]
     if opt_train.add_test_dataset:
-        results_dict_train = train.train(opt_train, opt_2)
+        results_dict_train = train(opt_train, opt_2)
     else:
-        results_dict_train = train.train(opt_train)
+        results_dict_train = train(opt_train)
+    with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'wb') as f:
+        pickle.dump(opt, f)
 
     return render_template("train_result.html",
                            opt=opt_train,
@@ -187,6 +198,8 @@ def train_track():
 
 @app.route('/mctrack', methods=['POST', 'PUT'])
 def mctrack_main_process():
+    with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'rb') as f:
+        opt = pickle.load(f)
     # Coped from mctrack main function
 
     # os.environ['CUDA_VISIBLE_DEVICES'] = '1'  # 0
@@ -204,94 +217,107 @@ def mctrack_main_process():
     if request.values.get('track_time') == 'True':
         opt_track.save_track_time = True
     else:
-        opt_track.save_track_time = False
-    # if request.form[] != '':
-    #     opt.conf_thres = request.form[]
-    file_name_path = paths.PATHS_OBJ_PATH
-    if os.path.isfile(file_name_path):
-        with open(file_name_path, 'rb') as f:
-            path_object = pickle.load(f)
-        load_model_ls = opt_track.load_model.split("/")
-        model_name_path = "/".join(load_model_ls[:-1])
-        opt_path = osp.join(model_name_path, 'opt.txt')
-        with open(opt_path, "r") as f:
-            content = f.read()
-        pattern = re.compile('arch: [a-z]+_[0-9]+')
-        arch = re.findall(pattern, content)
-        opt_track.arch = arch[0][6:]
-        if not opt_track.val_mot16:
-            data_root = path_object.TEST_DIR_NAME_PATH
-            seqs_str = os.listdir(data_root)
-            seqs_str = '  \n'.join(seqs_str)
+        file_name_path = paths.PATHS_OBJ_PATH
+        if os.path.isfile(file_name_path):
+            with open(file_name_path, 'rb') as f:
+                path_object = pickle.load(f)
+            load_model_ls = opt_track.load_model.split("/")
+            model_name_path = "/".join(load_model_ls[:-1])
+            opt_path = osp.join(model_name_path, 'opt.txt')
+            with open(opt_path, "r") as f:
+                content = f.read()
+            pattern = re.compile('arch: [a-z]+_[0-9]+')
+            arch = re.findall(pattern, content)
+            opt_track.arch = arch[0][6:]
+            if not opt_track.val_mot16:
+                data_root = path_object.TEST_DIR_NAME_PATH
+                seqs_str = os.listdir(data_root)
+                seqs_str = '  \n'.join(seqs_str)
 
-    # convert whitespace in between filename into '_'
-    pattern = '(?<=\w)\s(?=\w)'
-    try:
-        seqs_str = re.sub(pattern, '_', seqs_str)
-    except:
-        seqs_str = seqs_str
+        # convert whitespace in between filename into '_'
+        pattern = '(?<=\w)\s(?=\w)'
+        try:
+            seqs_str = re.sub(pattern, '_', seqs_str)
+        except:
+            seqs_str = seqs_str
 
-    seqs = [seq.strip() for seq in seqs_str.split()]
-    # seqs = [string.replace('_', ' ') for string in seqs]
+        seqs = [seq.strip() for seq in seqs_str.split()]
+        results_dict_track = track(opt_track,
+                                   data_root=data_root,
+                                   seqs=seqs,
+                                   exp_name=opt_track.exp_name,
+                                   show_image=False,
+                                   save_images=False,
+                                   save_videos=False)
+        opt.train_track = False
+        with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'wb') as f:
+            pickle.dump(opt, f)
+        return render_template("mctrack_result.html", opt=opt_track, results_track=results_dict_track)
 
-    results_dict_track = mctrack.track(opt_track,
-                                       data_root=data_root,
-                                       seqs=seqs,
-                                       exp_name=opt_track.exp_name,
-                                       show_image=False,
-                                       save_images=False,
-                                       save_videos=False)
-    opt.train_track = False
-    return render_template("mctrack_result.html", opt=opt_track, results_track=results_dict_track)
-
-@app.route('/track', methods=['POST', 'PUT'])
-def track():
-    opt.track = True
-    videos = request.form.getlist('videos')
-    if len(videos) > 0:
-        opt.tracking_video_selection = [videos]
-    output_format = request.values.get('output_format')
-    if output_format != '-- Choose --':
-        opt.output_format = output_format
-    model_type = request.values.get('model_type')
-    if model_type != '-- Choose --':
-        opt.specified_model = model_type
-    if request.values.get('visual') == 'True':
-        opt.visual = True
-    else:
-        opt.visual = False
-    if request.values.get('overwrite') == 'True':
-        opt.overwrite = True
-    else:
-        opt.overwrite = False
-    results_dict = entry_point.main(opt)
-    opt.track = False
-    return render_template("track_result.html", results=results_dict)
+    @app.route('/track', methods=['POST', 'PUT'])
+    def track():
+        with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'rb') as f:
+            opt = pickle.load(f)
+        opt.track = True
+        videos = request.form.getlist('videos')
+        if len(videos) > 0:
+            opt.tracking_video_selection = [videos]
+        output_format = request.values.get('output_format')
+        if output_format != '-- Choose --':
+            opt.output_format = output_format
+        model_type = request.values.get('model_type')
+        if model_type != '-- Choose --':
+            opt.specified_model = model_type
+            with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'wb') as f:
+                pickle.dump(opt, f)
+        if request.values.get('visual') == 'True':
+            opt.visual = True
+        else:
+            opt.visual = False
+        if request.values.get('overwrite') == 'True':
+            opt.overwrite = True
+        else:
+            opt.overwrite = False
+        results_dict = main(opt)
+        opt.track = False
+        with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'wb') as f:
+            pickle.dump(opt, f)
+        return render_template("track_result.html", results=results_dict)
 
 
 @app.route('/clean', methods=['GET'])
 def clean():
     clean_files_a()
-    # return "<b><a href = '/'>click here to return to main page</a></b>"
+    # return "<b><a href = ' '>click here to return to main page</ a></b>"
     return render_template("dummy.html")
 
 
 @app.route('/restore', methods=['GET'])
 def restore():
+    with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'rb') as f:
+        opt = pickle.load(f)
     opt.restore = True
-    _ = entry_point.main(opt)
+    _ = main(opt)
     opt.restore = False
-    # return "<b><a href = '/'>click here to return to main page</a></b>"
+    with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'wb') as f:
+        pickle.dump(opt, f)
+    # return "<b><a href = '/'>click here to return to main page</ a></b>"
     return render_template("dummy.html")
 
 
 @app.route('/clean_all', methods=['GET'])
 def clean_all():
+    with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'rb') as f:
+        opt = pickle.load(f)
     opt.clean_model = True
-    _ = entry_point.main(opt)
+    _ = main(opt)
     opt.clean_model = False
-    # return "<b><a href = '/'>click here to return to main page</a></b>"
+    with open(osp.join(CLIENT_DATA_PATH, 'opt_data.data'), 'wb') as f:
+        pickle.dump(opt, f)
+    # return "<b><a href = '/'>click here to return to main page</ a></b>"
     return render_template("dummy.html")
+
+
 # @app.route('/display_pic', methods=['POST', 'PUT'])
 # def display_pics():
 #     pics =
@@ -299,4 +325,4 @@ def clean_all():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug='True')

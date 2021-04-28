@@ -38,7 +38,7 @@
 <body>
     <h2>Type in the information needed for training</h2>
     <h4>Type the videos that you want to use for training or leave blank for training all the trainable seqs</h4>
-    <form action = "http://localhost:5000/train" method = "post">
+    <form action = "/train" method = "post">
          <label for="train_seq">Training videos:</label>
          <p>{% for seq in seqs %}
              <input type="checkbox" id="train_seq" name="train_seq" value={{ seq }} />{{ seq }}

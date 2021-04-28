@@ -24,18 +24,40 @@ import json
 # }
 
 def get_cls_info():
-    """load the saved class dict info"""
-    with open(paths.PATHS_OBJ_PATH, 'rb') as f:
-        paths_loader = pickle.load(f)
-    with open(osp.join(paths_loader.TRAIN_DATA_PATH, 'cls2id.json'), 'r') as f:
-        cls2id_dct = json.load(f)
-    with open(osp.join(paths_loader.TRAIN_DATA_PATH, 'id2cls.json'), 'r') as f:
-        id2cls_dct = json.load(f)
-        id2cls_dct_new = {}
-        for i in id2cls_dct.keys():
-            id2cls_dct_new[int(i)] = id2cls_dct[i]
+    with open(osp.join(paths.CLIENT_DATA_PATH, 'opt_data.data'), 'rb') as f:
+        opt = pickle.load(f)
+    pre_model_path = osp.join(paths.ROOT_PATH, "..", "exp", "mot", "hrnet_pretrained", "model_last.pth")
+    if opt.specified_model == 'hrnet_pretrained' or opt.load_model == pre_model_path:
+        model_name = opt.specified_model
+        model_path = osp.join(paths.ROOT_PATH, "..", "exp", "mot", model_name, "model_last.pth")
+        cls2id_dct = {
+                                'car': 0,
+                                'bicycle': 1,
+                                'person': 2,
+                                'cyclist': 3,
+                                'tricycle': 4
+                            }
+        id2cls_dct = id2cls = {
+                        0: 'car',
+                        1: 'bicycle',
+                        2: 'person',
+                        3: 'cyclist',
+                        4: 'tricycle'
+                    }
+        return cls2id_dct, id2cls_dct
+    else:
+        """load the saved class dict info"""
+        with open(paths.PATHS_OBJ_PATH, 'rb') as f:
+            paths_loader = pickle.load(f)
+        with open(osp.join(paths_loader.TRAIN_DATA_PATH, 'cls2id.json'), 'r') as f:
+            cls2id_dct = json.load(f)
+        with open(osp.join(paths_loader.TRAIN_DATA_PATH, 'id2cls.json'), 'r') as f:
+            id2cls_dct = json.load(f)
+            id2cls_dct_new = {}
+            for i in id2cls_dct.keys():
+                id2cls_dct_new[int(i)] = id2cls_dct[i]
 
-    return cls2id_dct, id2cls_dct_new
+        return cls2id_dct, id2cls_dct_new
 
 
 # CLS2ID = {'cattle': 0 }   ##大写

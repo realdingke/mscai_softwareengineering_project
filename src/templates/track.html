@@ -38,7 +38,7 @@
 <body>
     <h2>Type in the information needed for tracking</h2>
     <h4>Type in the videos on the cord platform that you want to directly track or upload your own video</h4>
-    <form action = "http://localhost:5000/track" method = "post"
+    <form action = "/track" method = "post"
         enctype = "multipart/form-data">
          <p><label for="videos">Tracking videos:</label></p>
          <p>{% for seq in seqs %}
