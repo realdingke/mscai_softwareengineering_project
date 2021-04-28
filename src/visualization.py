@@ -117,7 +117,7 @@ def _upload_results(opt,
         if seqs_str in seqs:
             if not opt.overwrite:
                 continue
-            esle:
+            else:
                 pass
         else:
             continue
